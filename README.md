@@ -1,7 +1,7 @@
 npmbot
 ======
 
-this npm chat bot is fully operational
+this npm Slack chat battlestation is not yet fully operational. 
 
 ## deploying
 
@@ -11,6 +11,7 @@ Run it somewhere. Point your Slack webhook endpoint at its url.
 
 ### configuration
 
+Example:
 
 ```javascript
 module.exports = 
@@ -26,10 +27,10 @@ module.exports =
     {
         npm: {},
         fastly: { apikey: 'my-key-here' },
+        statuscats: {},
     }
 };
 ```
-
 
 ## writing plugins
 
@@ -37,8 +38,7 @@ Plugins must be objects with three required functions. The constructor takes an 
 
 ### `new Plugin(opts)`
 
-The required content of the options is up to the plugin itself.
-The object will always be present and will always have a [bunyan](https://github.com/trentm/node-bunyan) logger object in the `log` field.
+The required content of the options is up to the plugin itself. The options object will always be present and will always have a [bunyan](https://github.com/trentm/node-bunyan) logger object in the `log` field.
 
 ### `matches(str)`
 
@@ -46,7 +46,7 @@ A synchronous function that takes a string. Returns true if this plugin wants to
 
 ### `respond(str, callback)`
 
-A function that takes a string and a node errorback. The callback must respond with a text string containing the response.
+A function that takes a string and a node errorback. The callback must respond with a text string containing the response. You may also return a promise if you wish.
 
 ### `help()`
 
@@ -54,10 +54,10 @@ Synchronously return a usage string.
 
 ### Example 
 
-```javascript
-var P = require('bluebird');
+Here's a simple plugin.
 
-function OwlPlugin() { };
+```javascript
+module.exports = function OwlPlugin() { };
 
 OwlPlugin.prototype.matches = function matches(msg)
 {
