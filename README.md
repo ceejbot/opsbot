@@ -1,7 +1,8 @@
-opsbot
-======
+# opsbot
 
 this npm operations Slack chat battlestation is not yet fully operational. 
+
+[![Build Status](https://secure.travis-ci.org/ceejbot/opsbot.png)](http://travis-ci.org/ceejbot/opsbot) [![Dependencies](https://david-dm.org/ceejbot/opsbot.png)](https://david-dm.org/ceejbot/opsbot)
 
 ## deploying
 
@@ -36,19 +37,19 @@ module.exports =
 
 Plugins must be objects with three required functions. The constructor takes an options object.
 
-### `new Plugin(opts)`
+#### `new Plugin(opts)`
 
 The required content of the options is up to the plugin itself. The options object will always be present and will always have a [bunyan](https://github.com/trentm/node-bunyan) logger object in the `log` field.
 
-### `matches(str)`
+#### `matches(str)`
 
 A synchronous function that takes a string. Returns true if this plugin wants to handle the message, false otherwise. By convention and in order to be kind to fellow plugin authors, make this match on the prefix of incoming message. For instance `npm koa` might return information about the `koa` package on npm.
 
-### `respond(str, callback)`
+#### `respond(str, callback)`
 
 A function that takes a string and a node errorback. The callback must respond with a text string containing the response. You may also return a promise if you wish.
 
-### `help()`
+#### `help()`
 
 Synchronously return a usage string.
 
@@ -61,7 +62,7 @@ module.exports = function OwlPlugin() { };
 
 OwlPlugin.prototype.matches = function matches(msg)
 {
-    return msg.matches(/ORLY\?/);
+    return msg.match(/ORLY\?/);
 };
 
 OwlPlugin.prototype.respond = function respond(msg, callback)
