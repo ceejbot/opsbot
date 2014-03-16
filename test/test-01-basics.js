@@ -1,11 +1,10 @@
 /*global describe:true, it:true, before:true, after:true */
 
 var
-	chai   = require('chai'),
-	assert = chai.assert
+    demand = require('must')
 	;
 
-describe('NPMBot', function()
+describe('server', function()
 {
 	it('has tests');
 });

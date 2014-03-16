@@ -11,5 +11,6 @@ module.exports =
     {
         npm: {},
         fastly: { apikey: 'my-key-here' },
+        statuscats: {},
     }
 };

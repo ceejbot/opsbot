@@ -5,11 +5,12 @@ var
     config  = require('./config')
     ;
 
-var restifyOpts =
-{
-    log: logging(config)
-};
+var log = logging(config);
+config.log = log;
+
+var restifyOpts = { log: log };
 var server = restify.createServer(restifyOpts);
+
 var bot = new Bot(config);
 
 server.use(restify.acceptParser(server.acceptable));
@@ -38,18 +39,23 @@ function message(request, response, next)
         return next();
     }
 
-    var commandLog = req.log.child(
+    var commandLog = request.log.child(
     {
         command: request.body.text,
         sender:  request.body.user_name,
         channel: request.body.channel_name,
     });
 
-    bot.handleMessage(request.body.text)
+    bot.handleMessage(request.body)
     .then(function(reply)
     {
-        commandLog.info(reply.message);
-        response.json(200, { text: reply.message, channel: request.body.channel_name });
+        if (!reply)
+            response.send(200)
+        else
+        {
+            commandLog.info(reply.message);
+            response.json(200, { text: reply.message, channel: request.body.channel_name });
+        }
         next();
     }, function(err)
     {

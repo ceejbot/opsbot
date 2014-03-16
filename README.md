@@ -44,9 +44,9 @@ The object will always be present and will always have a [bunyan](https://github
 
 A synchronous function that takes a string. Returns true if this plugin wants to handle the message, false otherwise. By convention and in order to be kind to fellow plugin authors, make this match on the prefix of incoming message. For instance `npm koa` might return information about the `koa` package on npm.
 
-### `respond(str)`
+### `respond(str, callback)`
 
-A function that returns a promise with the plugin's response message. This promise must resolve to a string. (I bet I'm going to want to be more flexible here.)
+A function that takes a string and a node errorback. The callback must respond with a text string containing the response.
 
 ### `help()`
 
@@ -64,9 +64,9 @@ OwlPlugin.prototype.matches = function matches(msg)
     return msg.matches(/ORLY\?/);
 };
 
-OwlPlugin.prototype.respond = function respond(msg)
+OwlPlugin.prototype.respond = function respond(msg, callback)
 {
-    return P.resolve('YA RLY');
+    callback(null, 'YA RLY');
 };
 
 OwlPlugin.prototype.help = function help()
