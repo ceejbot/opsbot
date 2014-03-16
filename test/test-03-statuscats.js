@@ -42,7 +42,7 @@ describe('StatusCats', function()
         plugin.respond('statuscat 404', function(err, response)
         {
             demand(err).be.null();
-            response.must.be.a.string();
+            response.must.be.truthy();
             done();
         });
     });
@@ -65,8 +65,11 @@ describe('StatusCats', function()
         plugin.respond('statuscat 404', function(err, response)
         {
             demand(err).be.null();
-            response.must.be.a.string();
-            response.must.equal('http://httpcats.herokuapp.com/404');
+            response.must.be.an.object();
+            response.must.have.property('text');
+            response.text.must.be.a.string();
+            response.text.must.match('httpcats.herokuapp.com\/404');
+
             done();
         });
     });

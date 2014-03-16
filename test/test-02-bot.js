@@ -122,8 +122,9 @@ describe('Bot', function()
             bot.handleMessage({text: 'test: statuscat 503'})
             .then(function(reply)
             {
-                reply.must.be.a.string();
-                reply.must.equal('http://httpcats.herokuapp.com/503');
+                reply.must.be.an.object();
+                reply.must.have.property('text');
+                reply.text.must.match('httpcats.herokuapp.com\/503');
                 done();
             }, function(err)
             {
@@ -136,8 +137,8 @@ describe('Bot', function()
             bot.handleMessage({text: 'statuscat 503'})
             .then(function(reply)
             {
-                reply.must.be.a.string();
-                reply.must.equal('http://httpcats.herokuapp.com/503');
+                reply.must.be.an.object();
+                reply.text.must.match('httpcats.herokuapp.com\/503');
                 done();
             }, function(err)
             {
