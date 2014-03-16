@@ -1,7 +1,7 @@
-npmbot
+opsbot
 ======
 
-this npm Slack chat battlestation is not yet fully operational. 
+this npm operations Slack chat battlestation is not yet fully operational. 
 
 ## deploying
 

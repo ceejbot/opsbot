@@ -1,7 +1,7 @@
 {
-  "name": "npmbot",
+  "name": "opsbot",
   "version": "0.0.1",
-  "description": "operations chat bot",
+  "description": "npm operations chat bot",
   "main": "index.js",
   "directories": {
     "test": "test"
