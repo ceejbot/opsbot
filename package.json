@@ -8,13 +8,17 @@
   },
   "dependencies": {
     "restify": "~2.6.3",
-    "bluebird": "~1.1.0"
+    "bluebird": "~1.1.0",
+    "bunyan-prettystream": "^0.1.3",
+    "bunyan": "^0.22.1"
   },
   "devDependencies": {
     "must": "^0.11.0",
     "mocha": "^1.18.0"
   },
   "scripts": {
+    "start": "node server.js",
+    "dev": "NODE_ENV=dev node server.js",
     "test": "mocha -R spec test/*.js"
   },
   "repository": {

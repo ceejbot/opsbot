@@ -1,20 +1,27 @@
 var
-    Bot     = require('./index'),
-    restify = require('restify')
+    Bot     = require('./lib/bot'),
+    logging = require('./lib/logging'),
+    restify = require('restify'),
+    config  = require('./config')
     ;
 
-var bot = new Bot();
-
-var server = restify.createServer();
+var restifyOpts =
+{
+    log: logging(config)
+};
+var server = restify.createServer(restifyOpts);
+var bot = new Bot(config);
 
 server.use(restify.acceptParser(server.acceptable));
 server.use(restify.queryParser());
+server.use(logEachRequest);
 server.use(restify.gzipResponse());
 server.use(restify.bodyParser({ mapParams: false }));
 
 server.get('/ping', ping);
 server.post('/message', message);
 server.listen(process.env.port || 3000);
+server.log.info('listening on ' + (process.env.port || 3000));
 
 function ping(request, response, next)
 {
@@ -51,3 +58,10 @@ function message(request, response, next)
         next();
     }).done();
 }
+
+function logEachRequest(request, response, next)
+{
+    request.log.info(request.method, request.url);
+    next();
+}
+
