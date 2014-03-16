@@ -17,10 +17,10 @@ NPMPlugin.prototype.matches = function matches(msg)
 
 NPMPlugin.prototype.respond = function respond(msg)
 {
-
+    return P.resolve(null);
 };
 
 NPMPlugin.prototype.help = function help(msg)
 {
-
+    return 'npm: not implemented yet';
 };

@@ -20,7 +20,7 @@
   },
   "scripts": {
     "start": "node server.js",
-    "dev": "NODE_ENV=dev node server.js",
+    "dev": "NODE_ENV=dev PORT=4040 node server.js",
     "test": "mocha -R spec test/*.js"
   },
   "repository": {

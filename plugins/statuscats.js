@@ -19,10 +19,18 @@ StatusCats.prototype.respond = function respond(msg, callback)
         return callback(null, this.help());
 
     var code = matches[1];
-    callback(null, 'http://httpcats.herokuapp.com/' + code);
+
+    var reply =
+    {
+        text: 'http://httpcats.herokuapp.com/' + code + '.jpg',
+        parse: 'full',
+        unfurl_links: true
+    };
+
+    callback(null, reply);
 };
 
 StatusCats.prototype.help = function help(msg)
 {
-    return 'statuscat: get an http status cat image\nUsage: statuscat <status-code>';
+    return 'statuscat: get an http status cat image\nUsage: statuscat *status-code*';
 };

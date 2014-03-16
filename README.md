@@ -6,9 +6,9 @@ this npm operations Slack chat battlestation is not yet fully operational.
 
 ## deploying
 
-TBD
+Clone the repo somewhere. Copy `config.example.js` to `config.js`. Edit to your taste. You can have it log to console and/or log to a file depending on how you want to keep its logs. `npm start` runs the bot in prod mode. `npm run dev` will run it with pretty-printed console output.
 
-Run it somewhere. Point your Slack webhook endpoint at its url.
+Set up an outgoing webhook in Slack that points to `/messages` on your deployment URI. Set up a trigger word for the integration that is the botname you've configured. You can alternatively have the bot sent all traffic from a single channel.
 
 ### configuration
 

@@ -1,7 +1,7 @@
 module.exports =
 {
     botname: 'hermione',
-    token: 'required-token-here',
+    token: 'slack-integration-token-here',
     logging:
     {
         console: true,

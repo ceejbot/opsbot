@@ -1,4 +1,5 @@
 var
+    _       = require('lodash'),
     Bot     = require('./lib/bot'),
     logging = require('./lib/logging'),
     restify = require('restify'),
@@ -21,8 +22,8 @@ server.use(restify.bodyParser({ mapParams: false }));
 
 server.get('/ping', ping);
 server.post('/message', message);
-server.listen(process.env.port || 3000);
-server.log.info('listening on ' + (process.env.port || 3000));
+server.listen(process.env.PORT || 3000);
+server.log.info('listening on ' + (process.env.PORT || 3000));
 
 function ping(request, response, next)
 {
@@ -32,6 +33,11 @@ function ping(request, response, next)
 
 function message(request, response, next)
 {
+    if (request.body.token !== config.token)
+    {
+        return next(new restify.ForbiddenError('Go away.'));
+    }
+
     // We do not respond to our own messages.
     if (request.body.user_name === 'slackbot')
     {
@@ -51,10 +57,12 @@ function message(request, response, next)
     {
         if (!reply)
             response.send(200)
+        else if (_.isString(reply))
+            response.json(200, { text: reply, channel: request.body.channel_name });
         else
         {
-            commandLog.info(reply.message);
-            response.json(200, { text: reply.message, channel: request.body.channel_name });
+            var full =_.extend({ channel: request.body.channel_name }, reply);
+            response.json(200, full);
         }
         next();
     }, function(err)
