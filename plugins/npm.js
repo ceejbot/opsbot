@@ -48,7 +48,7 @@ NPMPlugin.prototype.respond = function respond(msg)
 
         struct.fields.push({ title: 'More info', value: '<https://npmjs.org/package/' + package + '>' })
 
-        if (obj.author) struct.fields.push({ title: 'author', value: obj.author.name + ' &lt;' + obj.author.email + '&gt;', short: true });
+        if (obj.author) struct.fields.push({ title: 'author', value: obj.author.name + ' &lt;' + obj.author.email + '&gt;' });
         if (obj.maintainers)
         {
             var tmp = _.map(obj.maintainers, function(m)
