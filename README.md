@@ -18,7 +18,7 @@ Example:
 module.exports = 
 {
     botname: 'hermione',
-    token: 'required-token-here',
+    token: 'slack-integration-token-here',
     logging:
     {
         console: true,
@@ -26,20 +26,26 @@ module.exports =
     },
     plugins:
     {
-        npm: {},
+        npm: { /* plugin opts here */ },
         fastly: { apikey: 'my-key-here' },
-        statuscats: {},
+        statuscats: { /* no options needed */ },
     }
 };
 ```
 
+## built-in commands
+
+`botname: help`: return a help message
+
+`botname: status`: return status; not yet implemented and might not be needed!
+
 ## writing plugins
 
-Plugins must be objects with three required functions. The constructor takes an options object.
+Plugins must be objects with three required functions. 
 
 #### `new Plugin(opts)`
 
-The required content of the options is up to the plugin itself. The options object will always be present and will always have a [bunyan](https://github.com/trentm/node-bunyan) logger object in the `log` field.
+The constructor takes an options object. The required content of the options is up to the plugin itself. The options object will always be present and will always have a [bunyan](https://github.com/trentm/node-bunyan) logger object in the `log` field.
 
 #### `matches(str)`
 
@@ -47,7 +53,9 @@ A synchronous function that takes a string. Returns true if this plugin wants to
 
 #### `respond(str, callback)`
 
-A function that takes a string and a node errorback. The callback must respond with a text string containing the response. You may also return a promise if you wish.
+A function that takes a string and a node errorback. The callback must respond with a text string containing the response. You may also return a promise if you wish. The official promises library of opsbot is [bluebird](https://github.com/petkaantonov/bluebird).
+
+`respond()` may also return a fully-structured message with attachments as documented in [the Slack API](https://api.slack.com/docs/attachments). The response handler will decorate the response with any missing required fields.
 
 #### `help()`
 

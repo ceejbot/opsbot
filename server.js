@@ -58,10 +58,14 @@ function message(request, response, next)
         if (!reply)
             response.send(200)
         else if (_.isString(reply))
+        {
+            commandLog.info(reply);
             response.json(200, { text: reply, channel: request.body.channel_name });
+        }
         else
         {
             var full =_.extend({ channel: request.body.channel_name }, reply);
+            commandLog.info('full message sent');
             response.json(200, full);
         }
         next();
@@ -78,4 +82,3 @@ function logEachRequest(request, response, next)
     request.log.info(request.method, request.url);
     next();
 }
-

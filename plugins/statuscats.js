@@ -1,6 +1,6 @@
 // Get an http status cat image.
 
-var pattern = /statuscat\s+(\d+)/
+var pattern = /statuscats?\s+(\d+)/
 
 var StatusCats = module.exports = function StatusCats(opts)
 {

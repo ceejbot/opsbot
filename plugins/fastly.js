@@ -1,14 +1,16 @@
-// Fastly API questions
+// answer questions about Fastly status
+// NOT YET IMPLEMENTED
 
 var
     P       = require('bluebird'),
-    Request = require('request')
+    restify = require('restify')
     ;
 
 var Fastly = module.exports = function Fastly(opts)
 {
     this.apikey = opts.apikey;
-
+    this.client = restify.createClient({ url: 'https://api.fastly.com'});
+    // TODO
 };
 
 Fastly.prototype.matches = function matches(msg)
