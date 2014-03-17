@@ -83,3 +83,15 @@ OwlPlugin.prototype.help = function help()
     return 'If you say ORLY?, you get the obvious response.';
 };
 ```
+
+## TODO
+
+I'm running this against our Slack chat already, though it doesn't do much yet. The two existing plugins work perfectly well! There's some chance I might streamline the plugin API to use either only promises or only callbacks because I don't like its messiness right now.
+
+- make plugins loadable from installed modules as well as the plugins directory
+- clean up & finalize plugin API
+- write more plugins
+
+## License
+
+MIT
