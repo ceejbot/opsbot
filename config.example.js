@@ -2,6 +2,7 @@ module.exports =
 {
     botname: 'hermione',
     token: 'slack-integration-token-here',
+    hook: 'your-slack-incoming-webhook-uri-here',
     logging:
     {
         console: true,
@@ -10,7 +11,7 @@ module.exports =
     plugins:
     {
         npm: {},
-        fastly: { apikey: 'my-key-here' },
+        fastly: { apikey: 'your-key-here' },
         statuscats: {},
     }
 };

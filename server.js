@@ -11,6 +11,7 @@ config.log = log;
 
 var restifyOpts = { log: log };
 var server = restify.createServer(restifyOpts);
+var client = restify.createJSONClient({ url: config.hook });
 
 var bot = new Bot(config);
 
@@ -64,9 +65,15 @@ function message(request, response, next)
         }
         else
         {
-            var full =_.extend({ channel: request.body.channel_name }, reply);
-            commandLog.info('full message sent');
-            response.json(200, full);
+            response.send(200);
+            var full =_.extend(
+            {
+                channel:    '#' + request.body.channel_name,
+                username:   config.botname,
+                link_names: 1
+            }, reply);
+
+            postToWebhook(full, commandLog);
         }
         next();
     }, function(err)
@@ -81,4 +88,16 @@ function logEachRequest(request, response, next)
 {
     request.log.info(request.method, request.url);
     next();
+}
+
+function postToWebhook(message, logger)
+{
+    client.post('', message, function(err, req, res, obj)
+    {
+        if (err) logger.error({error: err}, 'error posting to webhook');
+        else if (res.statusCode === 200)
+        {
+            logger.info('full message posted to incoming webhook');
+        }
+    });
 }
