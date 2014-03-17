@@ -10,25 +10,28 @@ Clone the repo somewhere. Copy `config.example.js` to `config.js`. Edit to your 
 
 Set up an outgoing webhook in Slack that points to `/messages` on your deployment URI. Set up a trigger word for the integration that is the botname you've configured. You can alternatively have the bot sent all traffic from a single channel.
 
-### configuration
+Set up an incoming webhook in Slack. Add its full URI (with token) to the 'hook' field in your config.
 
-Example:
+List the plugins you want to load as fields in the `plugins` hash. The value should be an object with any required configuration for the plugin. 
+
+Example configuration:
 
 ```javascript
-module.exports = 
+module.exports =
 {
     botname: 'hermione',
     token: 'slack-integration-token-here',
+    hook: 'your-slack-incoming-webhook-uri-here',
     logging:
-    {
-        console: true,
+    { 
+        console: false,
         path: '/var/log'
     },
     plugins:
     {
-        npm: { /* plugin opts here */ },
-        fastly: { apikey: 'my-key-here' },
-        statuscats: { /* no options needed */ },
+        fastly: { apikey: 'your-key-here' },
+        npm: {},
+        statuscats: {},
     }
 };
 ```
