@@ -2,7 +2,8 @@
 
 var
     _       = require('lodash'),
-    P       = require('bluebird')
+    moment  = require('moment'),
+    P       = require('bluebird'),
     restify = require('restify')
     ;
 
@@ -24,6 +25,7 @@ NPMPlugin.prototype.matches = function matches(msg)
 
 NPMPlugin.prototype.respond = function respond(msg)
 {
+    var tmp;
     var matches = msg.trim().match(this.pattern);
     if (!matches) return P.resolve(this.help());
 
@@ -51,7 +53,7 @@ NPMPlugin.prototype.respond = function respond(msg)
         if (obj.author) struct.fields.push({ title: 'author', value: obj.author.name + ' &lt;' + obj.author.email + '&gt;' });
         if (obj.maintainers)
         {
-            var tmp = _.map(obj.maintainers, function(m)
+            tmp = _.map(obj.maintainers, function(m)
             {
                 return m.name + ' &lt;' + m.email + '&gt;';
             }).join(', ');
@@ -60,14 +62,16 @@ NPMPlugin.prototype.respond = function respond(msg)
 
         if (obj.contributors)
         {
-            var tmp = _.pluck(obj.contributors, 'name').join(', ');
+            tmp = _.pluck(obj.contributors, 'name').join(', ');
             struct.fields.push({ title: 'contributors', value: tmp });
         }
 
         if (obj.homepage) struct.fields.push({ title: 'homepage', value: '<' + obj.homepage + '>', short: true });
+        if (obj.repository.url) struct.fields.push({ title: 'repo', value: '<' + obj.repository.url + '>', short: true });
         struct.fields.push({ title: 'version', value: latestrev, short: true });
-        struct.fields.push({ title: 'updated', value: obj.time[latestrev], short: true });
-        struct.fields.push({ title: 'repo', value: '<' + obj.repository.url + '>', short: true });
+
+        var updated = moment(obj.time[latestrev]);
+        struct.fields.push({ title: 'updated', value: updated.calendar(), short: true });
 
         var license = obj.versions[latestrev].license;
         if (!license)
