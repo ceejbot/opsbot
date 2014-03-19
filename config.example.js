@@ -13,5 +13,12 @@ module.exports =
         npm: {},
         fastly: { apikey: 'your-key-here' },
         statuscats: {},
+        trello:
+        {
+            key:      'your-api-key',
+            token:    'your-token',
+            list:     'list-id-to-show',
+            createIn: 'list-id-for-new-cards'
+        },
     }
 };
