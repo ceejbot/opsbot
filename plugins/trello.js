@@ -1,3 +1,15 @@
+/*
+
+List Trello cards & create new cards.
+
+You will need to generate a developer key and a user token that has
+access to the board & lists you wish to use.
+
+https://trello.com/docs/gettingstarted/index.html#getting-an-application-key
+https://trello.com/1/appKey/generate
+
+*/
+
 var
     _      = require('lodash'),
     assert = require('assert'),
@@ -8,8 +20,9 @@ var
 var TrelloPlugin = module.exports = function TrelloPlugin(opts)
 {
     assert(opts && _.isObject(opts), 'you must pass an options object');
-    assert(opts.key && _.isString(opts.key), 'you must pass a key option');
-    assert(opts.token && _.isString(opts.token), 'you must pass a token option');
+    assert(opts.key && _.isString(opts.key), 'you must pass a `key` option');
+    assert(opts.token && _.isString(opts.token), 'you must pass a `token` option');
+    assert(opts.list && _.isString(opts.list), 'you must pass a list id in the `list` option');
 
     this.client = P.promisifyAll(new Trello(opts.key, opts.token));
     this.list = opts.list;
@@ -17,11 +30,11 @@ var TrelloPlugin = module.exports = function TrelloPlugin(opts)
     this.log = opts.log;
 };
 
+TrelloPlugin.prototype.pattern  = /^trello\s+(\w+)\s?(.*)$/;
 TrelloPlugin.prototype.client   = null;
 TrelloPlugin.prototype.list     = null;
 TrelloPlugin.prototype.createIn = null;
 TrelloPlugin.prototype.promises = true;
-TrelloPlugin.prototype.pattern  = /^trello\s+(\w+)\s?(.*)$/;
 
 TrelloPlugin.prototype.matches = function matches(msg)
 {
