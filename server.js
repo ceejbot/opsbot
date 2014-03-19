@@ -97,7 +97,7 @@ function postToWebhook(message, logger)
             logger.error({error: err}, 'error posting to webhook');
         else if (res.statusCode === 200)
         {
-            logger.info(message, 'response posted');
+            logger.info('response posted: ' + message.text);
         }
     });
 }
