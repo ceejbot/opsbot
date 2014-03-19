@@ -94,7 +94,7 @@ function postToWebhook(message, logger)
     client.post('', message, function(err, req, res, obj)
     {
         if (err)
-            logger.error({error: err}, 'error posting to webhook');
+            logger.error({error: err, message: message}, 'error posting to webhook');
         else if (res.statusCode === 200)
         {
             logger.info('response posted: ' + message.text);
