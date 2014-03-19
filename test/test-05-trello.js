@@ -7,6 +7,7 @@ var
 
 describe('Trello plugin', function()
 {
+    var fakeopts = { key: 'foo', token: 'bar', board: 'board', list: 'baz' };
 
     describe('basics', function()
     {
@@ -24,7 +25,7 @@ describe('Trello plugin', function()
 
         it('can be constructed', function()
         {
-            var plugin = new Trello({ key: 'foo', token: 'bar', 'list': 'baz' });
+            var plugin = new Trello(fakeopts);
             plugin.must.be.truthy();
             plugin.must.have.property('help');
             plugin.help.must.be.a.function();
@@ -36,7 +37,7 @@ describe('Trello plugin', function()
 
         it('implements help() correctly', function()
         {
-            var plugin = new Trello({ key: 'foo', token: 'bar', 'list': 'baz' });
+            var plugin = new Trello(fakeopts);
             var help = plugin.help();
             help.must.be.an.object();
             help.must.have.property('trello');
@@ -45,7 +46,7 @@ describe('Trello plugin', function()
 
         it('implements matches() correctly', function()
         {
-            var plugin = new Trello({ key: 'foo', token: 'bar', 'list': 'baz' });
+            var plugin = new Trello(fakeopts);
             plugin.matches('NOT VALID').must.be.false();
             plugin.matches('trello help').must.be.true();
             plugin.matches('trello card').must.be.true();
@@ -54,7 +55,7 @@ describe('Trello plugin', function()
 
         it('implements respond() correctly', function(done)
         {
-            var plugin = new Trello({ key: 'foo', token: 'bar', 'list': 'baz' });
+            var plugin = new Trello(fakeopts);
 
             var reply = plugin.respond('trello asdf');
             reply.must.be.an.object();
