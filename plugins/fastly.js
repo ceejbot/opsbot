@@ -25,7 +25,10 @@ Fastly.prototype.respond = function respond(msg)
 
 Fastly.prototype.help = function help(msg)
 {
-    return 'fastly errors\n fastly 503s\nfastly requests\n';
+    return {
+        fastly: 'get & set DNS info from fastly',
+        usage: 'TBD'
+    };
 };
 
 

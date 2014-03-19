@@ -62,7 +62,14 @@ A function that takes a string and a node errorback. The callback must respond w
 
 #### `help()`
 
-Synchronously return a usage string.
+Synchronously return an object with usage information. Each key/value pair in the object is displayed as a table-formatted item in a Slack message attachment. By convention, include the name of your plugin as a key with its description as the value for the first of those key/value pairs. For instance:
+
+```javascript
+{
+    'frobber': 'frob the zorkmids',
+    usage: 'frobber start\nfrobber stop'
+}
+```
 
 ### Example 
 
@@ -83,7 +90,9 @@ OwlPlugin.prototype.respond = function respond(msg, callback)
 
 OwlPlugin.prototype.help = function help()
 {
-    return 'If you say ORLY?, you get the obvious response.';
+    return  {
+        OWL: 'If you say ORLY?, you get the obvious response.',
+    };
 };
 ```
 

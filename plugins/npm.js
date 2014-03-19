@@ -102,5 +102,8 @@ NPMPlugin.prototype.respond = function respond(msg)
 
 NPMPlugin.prototype.help = function help(msg)
 {
-    return 'npm: get information about packages\nUsage: npm *packagename*';
+    return {
+        npm: 'get information about packages',
+        usage: 'npm *packagename*'
+    };
 };

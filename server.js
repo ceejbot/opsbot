@@ -39,14 +39,17 @@ function message(request, response, next)
         return next(new restify.ForbiddenError('Go away.'));
     }
 
+    // We send a 200 immediately. Any response the bot makes will
+    // go into a post to the incoming webhook at our leisure.
+    response.send(200);
+
     // We do not respond to our own messages.
     if (request.body.user_name === 'slackbot')
     {
-        response.send(200);
         return next();
     }
 
-    var commandLog = request.log.child(
+    var reqlog = request.log.child(
     {
         command: request.body.text,
         sender:  request.body.user_name,
@@ -56,16 +59,12 @@ function message(request, response, next)
     bot.handleMessage(request.body)
     .then(function(reply)
     {
-        if (!reply)
-            response.send(200)
-        else if (_.isString(reply))
+        if (reply && _.isString(reply))
         {
-            commandLog.info(reply);
-            response.json(200, { text: reply, channel: request.body.channel_name });
+            postToWebhook({ text: reply, channel: request.body.channel_name }, reqlog);
         }
-        else
+        else if (reply && _.isObject(reply))
         {
-            response.send(200);
             var full =_.extend(
             {
                 channel:    '#' + request.body.channel_name,
@@ -73,13 +72,13 @@ function message(request, response, next)
                 link_names: 1
             }, reply);
 
-            postToWebhook(full, commandLog);
+            postToWebhook(full, reqlog);
         }
         next();
     }, function(err)
     {
-        commandLog.warn({ error: err }, 'error constructing reply');
-        response.json(200, { text: err.message, channel: request.body.channel_name });
+        reqlog.warn({ error: err }, 'error constructing reply');
+        postToWebhook({ text: err.message, channel: request.body.channel_name }, reqlog);
         next();
     }).done();
 }
@@ -94,10 +93,11 @@ function postToWebhook(message, logger)
 {
     client.post('', message, function(err, req, res, obj)
     {
-        if (err) logger.error({error: err}, 'error posting to webhook');
+        if (err)
+            logger.error({error: err}, 'error posting to webhook');
         else if (res.statusCode === 200)
         {
-            logger.info('full message posted to incoming webhook');
+            logger.info(message, 'response posted');
         }
     });
 }
