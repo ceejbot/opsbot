@@ -23,8 +23,9 @@ describe('StatusCats', function()
     {
         var plugin = new StatusCats();
         var help = plugin.help();
-        help.must.be.a.string();
-        help.length.must.be.above(0);
+        help.must.be.an.object();
+        help.must.have.property('statuscat');
+        help.statuscat.must.be.a.string();
     });
 
     it('implements matches() correctly', function()
@@ -53,8 +54,9 @@ describe('StatusCats', function()
         plugin.respond('statuscat asdf', function(err, response)
         {
             demand(err).be.null();
-            response.must.be.a.string();
-            response.match(/Usage:/).must.be.truthy();
+            response.must.be.an.object();
+            response.must.have.property('statuscat');
+            response.statuscat.must.be.a.string();
             done();
         });
     });

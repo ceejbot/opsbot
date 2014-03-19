@@ -23,8 +23,9 @@ describe('npm plugin', function()
     {
         var plugin = new NPM();
         var help = plugin.help();
-        help.must.be.a.string();
-        help.length.must.be.above(0);
+        help.must.be.an.object();
+        help.must.have.property('npm');
+        help.npm.must.be.a.string();
     });
 
     it('implements matches() correctly', function()
@@ -56,8 +57,8 @@ describe('npm plugin', function()
         plugin.respond('npm')
         .then(function(response)
         {
-            response.must.be.a.string();
-            response.must.match(/Usage/);
+            response.must.be.an.object();
+            response.must.have.property('npm');
             done();
         }, function(err)
         {

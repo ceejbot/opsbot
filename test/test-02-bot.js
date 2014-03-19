@@ -104,12 +104,16 @@ describe('Bot', function()
             bot.handleMessage({ text: 'test: help' })
             .then(function(reply)
             {
-                reply.must.be.a.string();
+                reply.must.be.an.object();
+                reply.must.have.property('text');
+                reply.text.must.match(/^HELP/);
                 return bot.handleMessage({ text: 'test: help    ' });
             })
             .then(function(reply)
             {
-                reply.must.be.a.string();
+                reply.must.be.an.object();
+                reply.must.have.property('text');
+                reply.text.must.match(/^HELP/);
                 done();
             }, function(err)
             {
