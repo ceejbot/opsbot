@@ -8,6 +8,17 @@ access to the board & lists you wish to use.
 https://trello.com/docs/gettingstarted/index.html#getting-an-application-key
 https://trello.com/1/appKey/generate
 
+Configuration:
+
+trello:
+{
+    key:      'your-trello-api-key',
+    token:    'your-trello-user-token',
+    board:    'board-id',
+    createIn: 'list-id-of-default',
+    list:     'list-id',
+}
+
 */
 
 var
@@ -22,6 +33,7 @@ var TrelloPlugin = module.exports = function TrelloPlugin(opts)
     assert(opts && _.isObject(opts), 'you must pass an options object');
     assert(opts.key && _.isString(opts.key), 'you must pass a `key` option');
     assert(opts.token && _.isString(opts.token), 'you must pass a `token` option');
+    assert(opts.board && _.isString(opts.board), 'you must pass a `board` option');
     assert(opts.list && _.isString(opts.list), 'you must pass a list id in the `list` option');
 
     this.client = P.promisifyAll(new Trello(opts.key, opts.token));

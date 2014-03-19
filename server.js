@@ -9,6 +9,8 @@ var
 var log = logging(config);
 config.log = log;
 
+config.listen = process.env.PORT || config.listen || 3000;
+
 var restifyOpts = { log: log };
 var server = restify.createServer(restifyOpts);
 var client = restify.createJSONClient({ url: config.hook });
@@ -23,8 +25,8 @@ server.use(restify.bodyParser({ mapParams: false }));
 
 server.get('/ping', ping);
 server.post('/message', message);
-server.listen(process.env.PORT || 3000);
-server.log.info('listening on ' + (process.env.PORT || 3000));
+server.listen(config.listen);
+server.log.info('listening on ' + config.listen);
 
 function ping(request, response, next)
 {

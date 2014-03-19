@@ -1,6 +1,6 @@
 # opsbot
 
-this npm operations Slack chat battlestation is not yet fully operational. 
+Hermione the npm operations [Slack](https://slack.com) chat battlestation is not yet fully operational. 
 
 [![Build Status](https://secure.travis-ci.org/ceejbot/opsbot.png)](http://travis-ci.org/ceejbot/opsbot) [![Dependencies](https://david-dm.org/ceejbot/opsbot.png)](https://david-dm.org/ceejbot/opsbot)
 
@@ -95,6 +95,10 @@ OwlPlugin.prototype.help = function help()
     };
 };
 ```
+
+## Credits
+
+Hermione the Opsbot is built on [node-restify](http://mcavage.me/node-restify/).
 
 ## TODO
 
