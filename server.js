@@ -61,7 +61,13 @@ function message(request, response, next)
     {
         if (reply && _.isString(reply))
         {
-            postToWebhook({ text: reply, channel: request.body.channel_name }, reqlog);
+            postToWebhook(
+            {
+                text:       reply,
+                channel:    '#' + request.body.channel_name,
+                username:   config.botname,
+                link_names: 1
+            }, reqlog);
         }
         else if (reply && _.isObject(reply))
         {
