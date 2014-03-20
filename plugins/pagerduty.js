@@ -22,6 +22,7 @@ var
 
 var PagerDuty = module.exports = function PagerDuty(opts)
 {
+    assert(opts && _.isObject(opts), 'you must pass an options object');
     assert(opts.apikey && _.isString(opts.apikey), 'you must pass an `apikey` option');
     assert(opts.urlprefix && _.isString(opts.urlprefix), 'you must pass a `urlprefix` option');
 
@@ -36,7 +37,7 @@ var PagerDuty = module.exports = function PagerDuty(opts)
 };
 
 PagerDuty.prototype.client = null;
-PagerDuty.prototype.pattern = /^pagerduty\s+(\w+)$/;
+PagerDuty.prototype.pattern = /^pagerduty\s+(\w+)\s*$/;
 
 PagerDuty.prototype.matches = function matches(msg)
 {
