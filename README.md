@@ -110,4 +110,4 @@ I'm running this against our Slack chat already, though it doesn't do much yet. 
 
 ## License
 
-MIT
+[ISC](http://opensource.org/licenses/ISC)

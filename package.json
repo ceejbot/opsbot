@@ -13,7 +13,8 @@
     "bluebird": "^1.1.0",
     "lodash": "^2.4.1",
     "moment": "^2.5.1",
-    "node-trello": "^0.1.4"
+    "node-trello": "^0.1.4",
+    "request": "^2.34.0"
   },
   "devDependencies": {
     "mocha": "^1.18.0",
@@ -26,7 +27,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/ceejbot/npmbot.git"
+    "url": "git://github.com/ceejbot/opsbot.git"
   },
   "keywords": [
     "npm",
@@ -36,9 +37,9 @@
     "slack"
   ],
   "author": "C J Silverio <ceej@npmjs.com>",
-  "license": "MIT",
+  "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ceejbot/npmbot/issues"
+    "url": "https://github.com/ceejbot/opsbot/issues"
   },
-  "homepage": "https://github.com/ceejbot/npmbot"
+  "homepage": "https://github.com/ceejbot/opsbot"
 }

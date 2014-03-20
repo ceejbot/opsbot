@@ -51,6 +51,9 @@ function message(request, response, next)
         return next();
     }
 
+    var channel = request.body.channel_name;
+    if (channel[0] !== '#') channel = '#' + channel;
+
     var reqlog = request.log.child(
     {
         command: request.body.text,
@@ -65,19 +68,24 @@ function message(request, response, next)
         {
             postToWebhook(
             {
-                text:       reply,
-                channel:    '#' + request.body.channel_name,
-                username:   config.botname,
-                link_names: 1
+                text:         reply,
+                channel:      channel,
+                username:     config.botname,
+                link_names:   1,
+                parse:        'full',
+                unfurl_links: true
             }, reqlog);
         }
         else if (reply && _.isObject(reply))
         {
             var full =_.extend(
             {
-                channel:    '#' + request.body.channel_name,
-                username:   config.botname,
-                link_names: 1
+                channel:      channel,
+                username:     config.botname,
+                link_names:   1,
+                parse:        'full',
+                unfurl_links: true
+
             }, reply);
 
             postToWebhook(full, reqlog);
@@ -86,7 +94,7 @@ function message(request, response, next)
     }, function(err)
     {
         reqlog.warn({ error: err }, 'error constructing reply');
-        postToWebhook({ text: err.message, channel: request.body.channel_name }, reqlog);
+        postToWebhook({ text: err.message, channel: channel }, reqlog);
         next();
     }).done();
 }

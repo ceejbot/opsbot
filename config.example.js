@@ -23,5 +23,10 @@ module.exports =
             list:     'list-id-to-show',
             createIn: 'list-id-for-new-cards'
         },
+        pagerduty:
+        {
+            apikey:    'your-key-here',
+            urlprefix: 'acme-inc'
+        },
     }
 };
