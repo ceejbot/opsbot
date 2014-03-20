@@ -56,9 +56,9 @@ A synchronous function that takes a string. Returns true if this plugin wants to
 
 #### `respond(str, callback)`
 
-A function that takes a string and a node errorback. The callback must respond with a text string containing the response. You may also return a promise if you wish. The official promises library of opsbot is [bluebird](https://github.com/petkaantonov/bluebird).
+A function that takes a string and a node errorback. The callback must respond with a text string containing the response. `respond()` may also return a fully-structured message with attachments as documented in [the Slack API](https://api.slack.com/docs/attachments). The response handler will decorate the response with any missing required fields.
 
-`respond()` may also return a fully-structured message with attachments as documented in [the Slack API](https://api.slack.com/docs/attachments). The response handler will decorate the response with any missing required fields.
+You may also return a promise if you wish. The official promises library of opsbot is [bluebird](https://github.com/petkaantonov/bluebird). If you wish to use promises, please name this function `respondAsync()` instead of `respond()`. I realize that's hacky. 
 
 #### `help()`
 

@@ -23,7 +23,7 @@ Fastly.prototype.matches = function matches(msg)
     return /^fastly/.test(msg);
 };
 
-Fastly.prototype.respond = function respond(msg)
+Fastly.prototype.respondAsync = function respond(msg)
 {
     var matches = this.pattern.exec(msg);
     if (!matches) return P.resolve(this.help().usage);

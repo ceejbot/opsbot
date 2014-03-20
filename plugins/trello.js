@@ -46,14 +46,13 @@ TrelloPlugin.prototype.pattern  = /^trello\s+(\w+)\s?(.*)$/;
 TrelloPlugin.prototype.client   = null;
 TrelloPlugin.prototype.list     = null;
 TrelloPlugin.prototype.createIn = null;
-TrelloPlugin.prototype.promises = true;
 
 TrelloPlugin.prototype.matches = function matches(msg)
 {
     return /^trello\s+/.test(msg);
 };
 
-TrelloPlugin.prototype.respond = function respond(msg)
+TrelloPlugin.prototype.respondAsync = function respond(msg)
 {
     var matches = this.pattern.exec(msg);
     if (!matches) return P.resolve(this.help().usage);

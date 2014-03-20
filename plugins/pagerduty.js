@@ -35,7 +35,6 @@ var PagerDuty = module.exports = function PagerDuty(opts)
     };
 };
 
-PagerDuty.prototype.promises = true;
 PagerDuty.prototype.client = null;
 PagerDuty.prototype.pattern = /^pagerduty\s+(\w+)$/;
 
@@ -52,7 +51,7 @@ PagerDuty.prototype.help = function help(msg)
     };
 };
 
-PagerDuty.prototype.respond = function respond(msg)
+PagerDuty.prototype.respondAsync = function respond(msg)
 {
     var matches = this.pattern.exec(msg);
     if (!matches) return P.resolve(this.help().usage);
