@@ -5,11 +5,11 @@ var
     Trello = require('../plugins/trello')
     ;
 
-describe('Trello plugin', function()
+describe('Trello', function()
 {
     var fakeopts = { key: 'foo', token: 'bar', board: 'board', list: 'baz' };
 
-    describe('basics', function()
+    describe('plugin', function()
     {
         it('requires an options object', function()
         {
@@ -31,8 +31,8 @@ describe('Trello plugin', function()
             plugin.help.must.be.a.function();
             plugin.must.have.property('matches');
             plugin.matches.must.be.a.function();
-            plugin.must.have.property('respond');
-            plugin.respond.must.be.a.function();
+            plugin.must.have.property('respondAsync');
+            plugin.respondAsync.must.be.a.function();
         });
 
         it('implements help() correctly', function()
@@ -57,7 +57,9 @@ describe('Trello plugin', function()
         {
             var plugin = new Trello(fakeopts);
 
-            var reply = plugin.respond('trello asdf');
+            plugin.must.have.property('respondAsync');
+
+            var reply = plugin.respondAsync('trello asdf');
             reply.must.be.an.object();
             reply.must.have.property('then');
             reply.then.must.be.a.function();
