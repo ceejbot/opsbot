@@ -1,8 +1,9 @@
 /*global describe:true, it:true, before:true, after:true */
 
 var
-    demand    = require('must'),
-    PagerDuty = require('../plugins/pagerduty')
+    demand      = require('must'),
+    MockMessage = require('./mocks/message'),
+    PagerDuty   = require('../plugins/pagerduty')
     ;
 
 describe('PagerDuty', function()
@@ -31,8 +32,8 @@ describe('PagerDuty', function()
             plugin.help.must.be.a.function();
             plugin.must.have.property('matches');
             plugin.matches.must.be.a.function();
-            plugin.must.have.property('respondAsync');
-            plugin.respondAsync.must.be.a.function();
+            plugin.must.have.property('respond');
+            plugin.respond.must.be.a.function();
         });
 
         it('implements help() correctly', function()
@@ -56,19 +57,11 @@ describe('PagerDuty', function()
         it('implements respond() correctly', function(done)
         {
             var plugin = new PagerDuty(fakeopts);
+            plugin.must.have.property('respond');
 
-            plugin.must.have.property('respondAsync');
-
-            var reply = plugin.respondAsync('pagerduty asdf');
-            reply.must.be.an.object();
-            reply.must.have.property('then');
-            reply.then.must.be.a.function();
-
-            reply.then(function(r)
-            {
-                r.must.be.a.string();
-                done();
-            }).done();
+            var msg = new MockMessage({text: 'pagerduty asdf'});
+            msg.on('done', function() { done(); });
+            plugin.respond(msg);
         });
     });
 

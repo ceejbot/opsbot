@@ -9,7 +9,7 @@ var
 var Fastly = module.exports = function Fastly(opts)
 {
     this.apikey = opts.apikey;
-    this.client = restify.createClient(
+    this.client = restify.createJSONClient(
     {
         url: 'https://api.fastly.com',
         headers: { 'x-fastly-key': opts.apikey }
@@ -23,13 +23,15 @@ Fastly.prototype.matches = function matches(msg)
     return /^fastly/.test(msg);
 };
 
-Fastly.prototype.respondAsync = function respond(msg)
+Fastly.prototype.respond = function respond(message)
 {
+    var msg = message.text;
     var matches = this.pattern.exec(msg);
-    if (!matches) return P.resolve(this.help().usage);
+    if (!matches) return message.done(this.help().usage);
 
     var field = matches[1];
 
+    message.done('fastly support not yet implemented');
 };
 
 
@@ -46,14 +48,7 @@ Fastly.prototype.execute = function execute(uri)
     var deferred = P.defer(),
         self = this;
 
-    this.client.get(uri)
-    Request(
-    {
-        method:  'GET',
-        url:     'https://api.fastly.com' + uri,
-        headers: { 'x-fastly-key': this.apikey },
-        json:    true
-    }, function(err, response, body)
+    this.client.get(uri, function(err, req, response, body)
     {
         if (err) return deferred.reject(err);
         if (!response || (response.statusCode < 200) || (response.statusCode > 302))

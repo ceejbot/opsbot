@@ -15,7 +15,7 @@ Dynect.prototype.matches = function matches(msg)
     return false;
 };
 
-Dynect.prototype.respond = function respond(msg)
+Dynect.prototype.respond = function respond(message)
 {
 
 };

@@ -1,10 +1,11 @@
 /*global describe:true, it:true, before:true, after:true */
 
 var
-    bunyan     = require('bunyan'),
-    demand     = require('must'),
-    Bot        = require('../lib/bot'),
-    StatusCats = require('../plugins/statuscats')
+    Bot         = require('../lib/bot'),
+    bunyan      = require('bunyan'),
+    demand      = require('must'),
+    MockMessage = require('./mocks/message'),
+    StatusCats  = require('../plugins/statuscats')
     ;
 
 describe('Bot', function()
@@ -71,83 +72,74 @@ describe('Bot', function()
             bot = new Bot(opts);
         });
 
-        it('handleMessage() returns a promise', function()
+        it('handleMessage() calls done', function(done)
         {
-            var reply = bot.handleMessage({ text: 'foo'});
-            reply.must.be.an.object();
-            reply.must.have.property('then');
-            reply.then.must.be.a.function();
+            var msg = new MockMessage({ text: 'foo'});
+            msg.on('done', function()
+            {
+                done();
+            });
+
+            bot.handleMessage(msg);
         });
 
-        it('requires that either a plugin handle the message or that it begin with the name', function(done)
+        it('ignores messages that do not match a plugin', function(done)
         {
-            bot.handleMessage({ text: 'foo'})
-            .then(function(reply)
-            {
-                demand(reply).be.null();
-                return bot.handleMessage({ text: 'test: not-valid' });
-            })
-            .then(function(reply)
-            {
-                demand(reply).be.null();
-                return bot.handleMessage({ text: 'test: not-valid' });
-            }, function(err)
-            {
-                demand(err).not.exist();
-            }).done();
+            var msg = new MockMessage({ text: 'foo'});
 
-            done();
+            msg.on('send', function() { throw new Error('not supposed to reply!'); });
+            msg.on('done', function() { done(); });
+
+            bot.handleMessage(msg);
+        });
+
+        it('ignores messages that match its name but not a plugin', function(done)
+        {
+            var msg = new MockMessage({ text: 'test: not-valid' });
+
+            msg.on('send', function() { throw new Error('not supposed to reply!'); });
+            msg.on('done', function() { done(); });
+
+            bot.handleMessage(msg);
         });
 
         it('responds to help in several variations', function(done)
         {
-            bot.handleMessage({ text: 'test: help' })
-            .then(function(reply)
-            {
-                reply.must.be.an.object();
-                reply.must.have.property('text');
-                reply.text.must.match(/^HELP/);
-                return bot.handleMessage({ text: 'test: help    ' });
-            })
-            .then(function(reply)
+            var msg = new MockMessage({ text: 'test: help    ' });
+            msg.on('send', function(reply)
             {
                 reply.must.be.an.object();
                 reply.must.have.property('text');
                 reply.text.must.match(/^HELP/);
                 done();
-            }, function(err)
-            {
-                demand(err).not.exist();
-            }).done();
+            });
+            bot.handleMessage(msg);
         });
 
         it('passes messages to plugins for matching', function(done)
         {
-            bot.handleMessage({text: 'test: statuscat 503'})
-            .then(function(reply)
+            var msg = new MockMessage({text: 'test: statuscat 503'});
+            msg.on('send', function(reply)
             {
-                reply.must.be.an.object();
-                reply.must.have.property('text');
-                reply.text.must.match('httpcats.herokuapp.com\/503');
-                done();
-            }, function(err)
-            {
-                demand(err).not.exist();
-            }).done();
+                reply.must.be.a.string();
+                reply.must.match('httpcats.herokuapp.com\/503');
+            });
+            msg.on('done', function() { done(); });
+            bot.handleMessage(msg);
         });
 
         it('valid plugin commands work without the bot name prefix', function(done)
         {
-            bot.handleMessage({text: 'statuscat 503'})
-            .then(function(reply)
+            var msg = new MockMessage({text: 'test: statuscat 503'});
+
+            msg.on('send', function(reply)
             {
-                reply.must.be.an.object();
-                reply.text.must.match('httpcats.herokuapp.com\/503');
-                done();
-            }, function(err)
-            {
-                demand(err).not.exist();
-            }).done();
+                reply.must.be.a.string();
+                reply.must.match('httpcats.herokuapp.com\/503');
+            });
+
+            msg.on('done', function() { done(); });
+            bot.handleMessage(msg);
         });
     });
 });

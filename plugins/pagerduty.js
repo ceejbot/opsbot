@@ -52,29 +52,27 @@ PagerDuty.prototype.help = function help(msg)
     };
 };
 
-PagerDuty.prototype.respondAsync = function respond(msg)
+PagerDuty.prototype.respond = function respond(message)
 {
-    var matches = this.pattern.exec(msg);
-    if (!matches) return P.resolve(this.help().usage);
-
-    var command = matches[1];
+    var matches = this.pattern.exec(message.text);
+    var command = matches ? matches[1] : 'help';
 
     switch (command)
     {
     case 'oncall':
-        return this.oncall();
+        return this.oncall(message);
     case 'rotation':
-        return this.rotation();
+        return this.rotation(message);
+    default:
+        message.done(this.help().usage);
     }
-
-    return(P.resolve(this.help().usage));
 };
 
-PagerDuty.prototype.oncall = function oncall(msg)
+PagerDuty.prototype.oncall = function oncall(message)
 {
     var self = this;
 
-    return this.execute('/users/on_call')
+    this.execute('/users/on_call')
     .then(function(reply)
     {
         var users = reply.users;
@@ -86,16 +84,16 @@ PagerDuty.prototype.oncall = function oncall(msg)
             return u.name + ' <' + u.email + '>';
         });
 
-        return 'On call now: ' + result.join(', ');
+        message.done('On call now: ' + result.join(', '));
     });
 };
 
-PagerDuty.prototype.rotation = function rotation(msg)
+PagerDuty.prototype.rotation = function rotation(message)
 {
     var self = this,
         schedules;
 
-    return this.execute('/schedules')
+    this.execute('/schedules')
     .then(function(reply)
     {
         schedules = reply.schedules;
@@ -133,7 +131,7 @@ PagerDuty.prototype.rotation = function rotation(msg)
             return result;
         });
 
-        return rota.join('\n');
+        message.done(rota.join('\n'));
     });
 };
 

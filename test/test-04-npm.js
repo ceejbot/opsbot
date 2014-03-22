@@ -1,8 +1,9 @@
 /*global describe:true, it:true, before:true, after:true */
 
 var
-    demand     = require('must'),
-    NPM = require('../plugins/npm')
+    demand      = require('must'),
+    MockMessage = require('./mocks/message'),
+    NPM         = require('../plugins/npm')
     ;
 
 describe('npm plugin', function()
@@ -32,7 +33,7 @@ describe('npm plugin', function()
     {
         var plugin = new NPM();
         plugin.matches('NOT VALID').must.be.false();
-        plugin.matches('npm').must.be.true();
+        plugin.matches('npm adfasdfasdfasdf adsfa adsf').must.be.true();
         plugin.matches('npm request').must.be.true();
         plugin.matches('npm semver    ').must.be.true();
     });
@@ -40,46 +41,35 @@ describe('npm plugin', function()
     it('implements respond() correctly', function(done)
     {
         var plugin = new NPM();
-        plugin.respond('npm semver')
-        .then(function(response)
-        {
-            response.must.be.truthy();
-            done();
-        }, function(err)
-        {
-            demand(err).be.null();
-        }).done();
+        var msg = new MockMessage({text: 'npm semver'});
+        msg.on('done', function() { done(); });
+        plugin.respond(msg);
     });
 
     it('responds with the help message when no package is specified', function(done)
     {
         var plugin = new NPM();
-        plugin.respond('npm')
-        .then(function(response)
+        var msg = new MockMessage({text: 'npm'});
+        msg.on('done', function() { done(); });
+        msg.on('send', function(response)
         {
-            response.must.be.an.object();
-            response.must.have.property('npm');
-            done();
-        }, function(err)
-        {
-            demand(err).be.null();
-        }).done();
+            response.must.be.a.string();
+        });
+        plugin.respond(msg);
     });
 
     it('responds with a hash of package status data', function(done)
     {
         var plugin = new NPM();
-        plugin.respond('npm semver')
-        .then(function(response)
+        var msg = new MockMessage({text: 'npm semver'});
+        msg.on('done', function() { done(); });
+        msg.on('send', function(response)
         {
             response.must.be.an.object();
             response.must.have.property('text');
             response.must.have.property('attachments');
             response.attachments.must.be.an.array();
-            done();
-        }, function(err)
-        {
-            demand(err).be.null();
-        }).done();
+        });
+        plugin.respond(msg);
     });
 });

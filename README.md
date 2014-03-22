@@ -54,11 +54,11 @@ The constructor takes an options object. The required content of the options is 
 
 A synchronous function that takes a string. Returns true if this plugin wants to handle the message, false otherwise. By convention and in order to be kind to fellow plugin authors, make this match on the prefix of incoming message. For instance `npm koa` might return information about the `koa` package on npm.
 
-#### `respond(str, callback)`
+#### `respond(message)`
 
-A function that takes a string and a node errorback. The callback must respond with a text string containing the response. `respond()` may also return a fully-structured message with attachments as documented in [the Slack API](https://api.slack.com/docs/attachments). The response handler will decorate the response with any missing required fields.
+A function that takes a `Message` object. This function is expected to call `message.send()` with a string or with a fully-structured message with attachments as documented in [the Slack API](https://api.slack.com/docs/attachments). The response handler will decorate the response with any missing required fields.
 
-You may also return a promise if you wish. The official promises library of opsbot is [bluebird](https://github.com/petkaantonov/bluebird). If you wish to use promises, please name this function `respondAsync()` instead of `respond()`. I realize that's hacky. 
+When you are finished sending replies to the incoming message, call `message.done()`. As a convenience, if the message requires only a single reply, you can call `message.done(reply)` to send & clean up.
 
 #### `help()`
 
@@ -83,9 +83,9 @@ OwlPlugin.prototype.matches = function matches(msg)
     return msg.match(/ORLY\?/);
 };
 
-OwlPlugin.prototype.respond = function respond(msg, callback)
+OwlPlugin.prototype.respond = function respond(msg)
 {
-    callback(null, 'YA RLY');
+    msg.done('YA RLY');
 };
 
 OwlPlugin.prototype.help = function help()
@@ -102,7 +102,7 @@ Hermione the Opsbot is built on [node-restify](http://mcavage.me/node-restify/).
 
 ## TODO
 
-I'm running this against our Slack chat already, though it doesn't do much yet. The two existing plugins work perfectly well! There's some chance I might streamline the plugin API to use either only promises or only callbacks because I don't like its messiness right now.
+I'm running this against our Slack chat already. The existing existing plugins work perfectly well! 
 
 - make plugins loadable from installed modules as well as the plugins directory
 - clean up & finalize plugin API

@@ -1,8 +1,9 @@
 /*global describe:true, it:true, before:true, after:true */
 
 var
-    demand     = require('must'),
-    StatusCats = require('../plugins/statuscats')
+    demand      = require('must'),
+    MockMessage = require('./mocks/message'),
+    StatusCats  = require('../plugins/statuscats')
     ;
 
 describe('StatusCats', function()
@@ -40,39 +41,43 @@ describe('StatusCats', function()
     it('implements respond() correctly', function(done)
     {
         var plugin = new StatusCats();
-        plugin.respond('statuscat 404', function(err, response)
+
+        var msg = new MockMessage({text: 'statuscat 503'});
+        msg.on('send', function(response)
         {
-            demand(err).be.null();
-            response.must.be.truthy();
-            done();
+            response.must.be.a.string();
+            response.must.match('httpcats.herokuapp.com\/503');
         });
+        msg.on('done', function() { done(); });
+        plugin.respond(msg);
     });
 
     it('responds with the help message for malformed statuses', function(done)
     {
         var plugin = new StatusCats();
-        plugin.respond('statuscat asdf', function(err, response)
+        var msg = new MockMessage({text: 'statuscat asdf'});
+
+        msg.on('send', function(response)
         {
-            demand(err).be.null();
             response.must.be.an.object();
             response.must.have.property('statuscat');
             response.statuscat.must.be.a.string();
-            done();
         });
+        msg.on('done', function() { done(); });
+        plugin.respond(msg);
     });
 
     it('responds with a status cat url', function(done)
     {
         var plugin = new StatusCats();
-        plugin.respond('statuscat 404', function(err, response)
-        {
-            demand(err).be.null();
-            response.must.be.an.object();
-            response.must.have.property('text');
-            response.text.must.be.a.string();
-            response.text.must.match('httpcats.herokuapp.com\/404');
+        var msg = new MockMessage({text: 'statuscat 404'});
 
-            done();
+        msg.on('send', function(response)
+        {
+            response.must.be.an.string();
+            response.must.match('httpcats.herokuapp.com\/404');
         });
+        msg.on('done', function() { done(); });
+        plugin.respond(msg);
     });
 });

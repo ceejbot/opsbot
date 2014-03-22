@@ -3,7 +3,6 @@
 var
     _       = require('lodash'),
     moment  = require('moment'),
-    P       = require('bluebird'),
     restify = require('restify')
     ;
 
@@ -20,24 +19,33 @@ NPMPlugin.prototype.promises = true;
 
 NPMPlugin.prototype.matches = function matches(msg)
 {
-    return /^npm\s*/.test(msg);
+    return this.pattern.test(msg);
 };
 
-NPMPlugin.prototype.respond = function respond(msg)
+NPMPlugin.prototype.respond = function respond(message)
 {
     var tmp;
+    var msg = message.text || '';
     var matches = msg.trim().match(this.pattern);
-    if (!matches) return P.resolve(this.help());
+
+    if (!matches)
+    {
+        message.done(this.help().usage);
+        return;
+    }
 
     var package = matches[1];
-    if (!package) return P.resolve(this.help());
 
-    var deferred = P.defer(),
-        self = this;
+    var self = this;
 
     this.client.get('/' + package, function(err, request, res, obj)
     {
-        if (err) return deferred.reject(err);
+        if (err)
+        {
+            message.log(err.message);
+            message.done(err.message);
+            return;
+        }
 
         var latestrev = obj['dist-tags'].latest;
         var struct =
@@ -94,10 +102,9 @@ NPMPlugin.prototype.respond = function respond(msg)
             parse:        'full',
             unfurl_links: true
         };
-        deferred.resolve(reply);
-    });
 
-    return deferred.promise;
+        message.done(reply);
+    });
 };
 
 NPMPlugin.prototype.help = function help(msg)

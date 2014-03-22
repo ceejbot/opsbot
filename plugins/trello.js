@@ -49,27 +49,36 @@ TrelloPlugin.prototype.createIn = null;
 
 TrelloPlugin.prototype.matches = function matches(msg)
 {
-    return /^trello\s+/.test(msg);
+    return this.pattern.test(msg);
 };
 
-TrelloPlugin.prototype.respondAsync = function respond(msg)
+TrelloPlugin.prototype.respond = function respond(message)
 {
+    var msg = message.text;
     var matches = this.pattern.exec(msg);
-    if (!matches) return P.resolve(this.help().usage);
+    if (!matches) return message.done(this.help().usage);
 
+    var promise;
     var command = matches[1];
-
     switch (command)
     {
     case 'card':
-        return this.createCard(matches[2]);
+        promise = this.createCard(matches[2]);
+        break;
 
     case 'show':
-        return this.showCards(matches[2]);
+        promise = this.showCards(matches[2]);
+        break;
 
     default:
-        return P.resolve(this.help().usage);
+        promise = P.resolve(this.help().usage);
+        break;
     }
+
+    promise.then(function(reply)
+    {
+        message.done(reply);
+    })
 };
 
 TrelloPlugin.prototype.createCard = function createCard(title)

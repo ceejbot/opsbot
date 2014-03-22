@@ -12,22 +12,18 @@ StatusCats.prototype.matches = function matches(msg)
     return /^statuscat/.test(msg);
 };
 
-StatusCats.prototype.respond = function respond(msg, callback)
+StatusCats.prototype.respond = function respond(message)
 {
+    var msg = message.text;
     var matches = pattern.exec(msg);
+
+    var text;
     if (!matches)
-        return callback(null, this.help());
+        text = this.help();
+    else
+        text = 'http://httpcats.herokuapp.com/' + matches[1] + '.jpg';
 
-    var code = matches[1];
-
-    var reply =
-    {
-        text: 'http://httpcats.herokuapp.com/' + code + '.jpg',
-        parse: 'full',
-        unfurl_links: true
-    };
-
-    callback(null, reply);
+    message.done(text);
 };
 
 StatusCats.prototype.help = function help(msg)

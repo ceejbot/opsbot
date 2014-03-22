@@ -2,6 +2,7 @@ var
     _       = require('lodash'),
     Bot     = require('./lib/bot'),
     logging = require('./lib/logging'),
+    Message = require('./lib/message'),
     restify = require('restify'),
     config  = require('./config')
     ;
@@ -23,18 +24,18 @@ server.use(logEachRequest);
 server.use(restify.gzipResponse());
 server.use(restify.bodyParser({ mapParams: false }));
 
-server.get('/ping', ping);
-server.post('/message', message);
+server.get('/ping', handlePing);
+server.post('/message', handleMessage);
 server.listen(config.listen);
 server.log.info('listening on ' + config.listen);
 
-function ping(request, response, next)
+function handlePing(request, response, next)
 {
     response.send(200, 'pong');
     next();
 }
 
-function message(request, response, next)
+function handleMessage(request, response, next)
 {
     if (request.body.token !== config.token)
     {
@@ -58,45 +59,21 @@ function message(request, response, next)
     {
         command: request.body.text,
         sender:  request.body.user_name,
-        channel: request.body.channel_name,
+        channel: channel,
     });
 
-    bot.handleMessage(request.body)
-    .then(function(reply)
-    {
-        if (reply && _.isString(reply))
-        {
-            postToWebhook(
-            {
-                text:         reply,
-                channel:      channel,
-                username:     config.botname,
-                link_names:   1,
-                parse:        'full',
-                unfurl_links: true
-            }, reqlog);
-        }
-        else if (reply && _.isObject(reply))
-        {
-            var full =_.extend(
-            {
-                channel:      channel,
-                username:     config.botname,
-                link_names:   1,
-                parse:        'full',
-                unfurl_links: true
+    var opts = _.assign({}, request.body);
+    opts.channel = channel;
+    opts.username = config.botname;
 
-            }, reply);
-
-            postToWebhook(full, reqlog);
-        }
-        next();
-    }, function(err)
+    var message = new Message(opts);
+    message.on('reply', function(reply)
     {
-        reqlog.warn({ error: err }, 'error constructing reply');
-        postToWebhook({ text: err.message, channel: channel }, reqlog);
-        next();
-    }).done();
+        postToWebhook(reply, reqlog);
+    });
+
+    bot.handleMessage(message);
+    next();
 }
 
 function logEachRequest(request, response, next)
@@ -113,7 +90,7 @@ function postToWebhook(message, logger)
             logger.error({error: err, message: message}, 'error posting to webhook');
         else if (res.statusCode === 200)
         {
-            logger.info('response posted: ' + message.text);
+            logger.info('response posted to ' + message.channel);
         }
     });
 }

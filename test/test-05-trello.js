@@ -1,8 +1,9 @@
 /*global describe:true, it:true, before:true, after:true */
 
 var
-    demand     = require('must'),
-    Trello = require('../plugins/trello')
+    demand      = require('must'),
+    MockMessage = require('./mocks/message'),
+    Trello      = require('../plugins/trello')
     ;
 
 describe('Trello', function()
@@ -31,8 +32,8 @@ describe('Trello', function()
             plugin.help.must.be.a.function();
             plugin.must.have.property('matches');
             plugin.matches.must.be.a.function();
-            plugin.must.have.property('respondAsync');
-            plugin.respondAsync.must.be.a.function();
+            plugin.must.have.property('respond');
+            plugin.respond.must.be.a.function();
         });
 
         it('implements help() correctly', function()
@@ -56,19 +57,9 @@ describe('Trello', function()
         it('implements respond() correctly', function(done)
         {
             var plugin = new Trello(fakeopts);
-
-            plugin.must.have.property('respondAsync');
-
-            var reply = plugin.respondAsync('trello asdf');
-            reply.must.be.an.object();
-            reply.must.have.property('then');
-            reply.then.must.be.a.function();
-
-            reply.then(function(r)
-            {
-                r.must.be.a.string();
-                done();
-            }).done();
+            var msg = new MockMessage({text: 'trello asdf'});
+            msg.on('done', function() { done(); });
+            plugin.respond(msg);
         });
     });
 
@@ -81,6 +72,4 @@ describe('Trello', function()
     {
         it('has tests');
     });
-
-
 });
