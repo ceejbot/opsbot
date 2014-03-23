@@ -1,6 +1,6 @@
 # opsbot
 
-Hermione the npm operations [Slack](https://slack.com) chat battlestation is not yet fully operational. 
+Hermione the npm operations [Slack](https://slack.com) chat battlestation is not yet fully operational but it is capable of demonstrating its power on a target, a military target. Name the system!
 
 [![Build Status](https://secure.travis-ci.org/ceejbot/opsbot.png)](http://travis-ci.org/ceejbot/opsbot) [![Dependencies](https://david-dm.org/ceejbot/opsbot.png)](https://david-dm.org/ceejbot/opsbot)
 
@@ -105,7 +105,6 @@ Hermione the Opsbot is built on [node-restify](http://mcavage.me/node-restify/).
 I'm running this against our Slack chat already. The existing existing plugins work perfectly well! 
 
 - write more plugins
-- either make dynect plugin do something or move it out
 
 ## License
 
