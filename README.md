@@ -89,15 +89,21 @@ OwlPlugin.prototype.help = function help()
 };
 ```
 
-## Credits
+## Contributing
 
-Hermione the Opsbot is built on [node-restify](http://mcavage.me/node-restify/).
+Please follow the code style in existing files (4 spaces to indent, Allman bracing). If you write your own plugins, I don't much care what you do. Please try to be at least as responsible as I have been about writing tests.
+
+If you want to use promises, go ahead! [bluebird](https://github.com/petkaantonov/bluebird) is already in the package deps.
 
 ## TODO
 
 I'm running this against our Slack chat already. The existing existing plugins work perfectly well! 
 
 - write more plugins
+
+## Credits
+
+Hermione the Opsbot is built on [node-restify](http://mcavage.me/node-restify/).
 
 ## License
 
