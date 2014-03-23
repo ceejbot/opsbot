@@ -72,6 +72,7 @@ TrelloPlugin.prototype.respond = function respond(message)
         break;
 
     case 'show':
+
         promise = this.showCards(matches[2]);
         break;
 
@@ -111,15 +112,24 @@ TrelloPlugin.prototype.createCard = function createCard(title)
     });
 };
 
-TrelloPlugin.prototype.showCards = function showCards(title)
+TrelloPlugin.prototype.showCards = function showCards(member)
 {
+    if (member)
+    {
+        var user = this.members[member];
+        var id = user ? user.id : member;
+    }
+
     return this.client.getAsync('/1/lists/' + this.list, { cards: 'open' })
     .then(function(data)
     {
-        var result = 'Cards in ' + data.name + ':\n';
+        var result = 'Cards in ' + data.name;
+        if (id) result += ' for ' + (user ? user.fullName : member);
+        result += ':\n';
         _.each(data.cards, function(card)
         {
-            result += '- ' + card.name + '\n';
+            if (!id || (card.idMembers.indexOf(id) !== -1))
+                result += '- ' + card.name + '\n';
         });
         return result;
     }, function(err)
@@ -185,6 +195,7 @@ TrelloPlugin.prototype.help = function help(msg)
         usage: 'trello card <card title> - create a new card\n' +
             'trello join <card-id> <user-name> - add user to card\n' +
             'trello leave <card-id> <user-name> - remove user from card\n' +
-            'trello show - show all cards'
+            'trello show - show all open cards in the default list\n' +
+            'trello show <user-name> - show all open cards this user has joined'
     };
 };
