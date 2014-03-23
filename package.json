@@ -1,7 +1,7 @@
 {
   "name": "opsbot",
-  "version": "0.0.1",
-  "description": "npm operations chat bot",
+  "version": "0.0.0",
+  "description": "hermione the npm operations chat bot",
   "main": "index.js",
   "directories": {
     "test": "test"
@@ -35,7 +35,9 @@
     "operations",
     "chat",
     "bot",
-    "slack"
+    "chatbot",
+    "slack",
+    "hermione"
   ],
   "author": "C J Silverio <ceej@npmjs.com>",
   "license": "ISC",
