@@ -7,6 +7,8 @@ var StatusCats = module.exports = function StatusCats(opts)
     // no config
 };
 
+StatusCats.prototype.name = 'HTTP Status Cats';
+
 StatusCats.prototype.matches = function matches(msg)
 {
     return /^statuscat/.test(msg);
@@ -28,8 +30,6 @@ StatusCats.prototype.respond = function respond(message)
 
 StatusCats.prototype.help = function help(msg)
 {
-    return {
-        statuscat: 'get an http status cat image',
-        usage: 'statuscat *status-code*'
-    };
+    return 'get an http status cat image\n' +
+        'Usage: statuscat *status-code*';
 };

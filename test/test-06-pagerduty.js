@@ -40,9 +40,8 @@ describe('PagerDuty', function()
         {
             var plugin = new PagerDuty(fakeopts);
             var help = plugin.help();
-            help.must.be.an.object();
-            help.must.have.property('pagerduty');
-            help.pagerduty.must.be.a.string();
+            help.must.be.a.string();
+            help.length.must.be.above(0);
         });
 
         it('implements matches() correctly', function()

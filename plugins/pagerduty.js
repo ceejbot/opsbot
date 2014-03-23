@@ -36,6 +36,7 @@ var PagerDuty = module.exports = function PagerDuty(opts)
     };
 };
 
+PagerDuty.prototype.name = 'Pager Duty';
 PagerDuty.prototype.client = null;
 PagerDuty.prototype.pattern = /^pagerduty\s+(\w+)\s*$/;
 
@@ -46,10 +47,9 @@ PagerDuty.prototype.matches = function matches(msg)
 
 PagerDuty.prototype.help = function help(msg)
 {
-    return {
-        pagerduty: 'get on-call rotation from PagerDuty',
-        usage: '    pagerduty oncall - who\'s on call now\npagerduty rotation - the next 4 days of on call',
-    };
+    return 'get on-call rotation from PagerDuty\n' +
+        'pagerduty oncall - who\'s on call now\n' +
+        'pagerduty rotation - the next 4 days of on call';
 };
 
 PagerDuty.prototype.respond = function respond(message)
@@ -64,7 +64,7 @@ PagerDuty.prototype.respond = function respond(message)
     case 'rotation':
         return this.rotation(message);
     default:
-        message.done(this.help().usage);
+        message.done(this.help());
     }
 };
 

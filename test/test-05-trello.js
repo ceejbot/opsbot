@@ -40,9 +40,8 @@ describe('Trello', function()
         {
             var plugin = new Trello(fakeopts);
             var help = plugin.help();
-            help.must.be.an.object();
-            help.must.have.property('trello');
-            help.trello.must.be.a.string();
+            help.must.be.a.string();
+            help.length.must.be.above(0);
         });
 
         it('implements matches() correctly', function()

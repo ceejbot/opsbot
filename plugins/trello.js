@@ -45,6 +45,8 @@ var TrelloPlugin = module.exports = function TrelloPlugin(opts)
     this.fetchMembers();
 };
 
+TrelloPlugin.prototype.name = 'Trello';
+
 TrelloPlugin.prototype.members = null;
 
 TrelloPlugin.prototype.pattern  = /^trello\s+(\w+)\s?(.*)$/;
@@ -61,7 +63,7 @@ TrelloPlugin.prototype.respond = function respond(message)
 {
     var msg = message.text;
     var matches = this.pattern.exec(msg);
-    if (!matches) return message.done(this.help().usage);
+    if (!matches) return message.done(this.help());
 
     var promise, pieces;
     var command = matches[1];
@@ -87,7 +89,7 @@ TrelloPlugin.prototype.respond = function respond(message)
         break;
 
     default:
-        promise = P.resolve(this.help().usage);
+        promise = P.resolve(this.help());
         break;
     }
 
@@ -211,12 +213,11 @@ TrelloPlugin.prototype.leaveCard = function leaveCard(card, member)
 
 TrelloPlugin.prototype.help = function help(msg)
 {
-    return {
-        trello: 'add and read Trello cards',
-        usage: 'trello card <card title> - create a new card\n' +
+    return 'add and read Trello cards\n' +
+            'trello card <card title> - create a new card\n' +
             'trello join <card-id> <user-name> - add user to card\n' +
             'trello leave <card-id> <user-name> - remove user from card\n' +
             'trello show - show all open cards in the default list\n' +
             'trello show <user-name> - show all open cards this user has joined'
-    };
+            ;
 };

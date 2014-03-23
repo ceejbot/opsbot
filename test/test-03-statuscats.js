@@ -24,9 +24,8 @@ describe('StatusCats', function()
     {
         var plugin = new StatusCats();
         var help = plugin.help();
-        help.must.be.an.object();
-        help.must.have.property('statuscat');
-        help.statuscat.must.be.a.string();
+        help.must.be.a.string();
+        help.length.must.be.above(0);
     });
 
     it('implements matches() correctly', function()
@@ -57,11 +56,10 @@ describe('StatusCats', function()
         var plugin = new StatusCats();
         var msg = new MockMessage({text: 'statuscat asdf'});
 
-        msg.on('send', function(response)
+        msg.on('send', function(help)
         {
-            response.must.be.an.object();
-            response.must.have.property('statuscat');
-            response.statuscat.must.be.a.string();
+            help.must.be.a.string();
+            help.length.must.be.above(0);
         });
         msg.on('done', function() { done(); });
         plugin.respond(msg);

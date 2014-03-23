@@ -17,6 +17,7 @@ var Fastly = module.exports = function Fastly(opts)
     });
 };
 
+Fastly.prototype.name = 'fastly';
 Fastly.prototype.pattern = /^fastly\s+(.+)\s+(\w+)$/;
 
 Fastly.prototype.matches = function matches(msg)
@@ -28,7 +29,7 @@ Fastly.prototype.respond = function respond(message)
 {
     var msg = message.text;
     var matches = this.pattern.exec(msg);
-    if (!matches) return message.done(this.help().usage);
+    if (!matches) return message.done(this.help());
 
     var service = matches[1];
     var field = matches[2];
@@ -42,10 +43,8 @@ Fastly.prototype.respond = function respond(message)
 
 Fastly.prototype.help = function help(msg)
 {
-    return {
-        fastly: 'get current stats from fastly',
-        usage: 'fastly *service* *field* (eg, status_503, errors, requests',
-    };
+    return 'get current stats from fastly\n' +
+        'fastly *service* *field* (eg, status_503, errors, hits)';
 };
 
 Fastly.prototype.fetchField = function fetchField(service, field)

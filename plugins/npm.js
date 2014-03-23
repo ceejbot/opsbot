@@ -14,6 +14,7 @@ var NPMPlugin = module.exports = function NPMPlugin()
     });
 };
 
+NPMPlugin.prototype.name = 'npm';
 NPMPlugin.prototype.pattern = /^npm\s+(.*)$/;
 NPMPlugin.prototype.promises = true;
 
@@ -30,7 +31,7 @@ NPMPlugin.prototype.respond = function respond(message)
 
     if (!matches)
     {
-        message.done(this.help().usage);
+        message.done(this.help());
         return;
     }
 
@@ -109,8 +110,5 @@ NPMPlugin.prototype.respond = function respond(message)
 
 NPMPlugin.prototype.help = function help(msg)
 {
-    return {
-        npm: 'get information about packages',
-        usage: 'npm *packagename*'
-    };
+    return 'get information about packages\n' + 'npm *packagename*';
 };
