@@ -89,7 +89,17 @@ OwlPlugin.prototype.help = function help()
 };
 ```
 
+## Provided plugins
+
+__fastly:__ Fetches some current stats from the named fastly service.  
+__npm:__ Fetches package information from npm.  
+__pagerduty:__ Show who's on call now & who's up in the next few days.  
+__statuscats:__ Show an [http status cat](http://httpcats.herokuapp.com).  
+__trello:__ List open cards, create cards, join & leave cards.  
+
 ## Contributing
+
+Write more plugins, add features to the existing plugins, it's all good.
 
 Please follow the code style in existing files (4 spaces to indent, Allman bracing). If you write your own plugins, I don't much care what you do. Please try to be at least as responsible as I have been about writing tests.
 
