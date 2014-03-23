@@ -114,13 +114,20 @@ TrelloPlugin.prototype.createCard = function createCard(title)
 
 TrelloPlugin.prototype.showCards = function showCards(member)
 {
-    if (member)
-    {
-        var user = this.members[member];
-        var id = user ? user.id : member;
-    }
+    var self = this,
+        user, id;
 
-    return this.client.getAsync('/1/lists/' + this.list, { cards: 'open' })
+    return this.fetchMembers()
+    .then(function(members)
+    {
+        if (member)
+        {
+            user = members[member];
+            id = user ? user.id : member;
+        }
+
+        return self.client.getAsync('/1/lists/' + self.list, { cards: 'open' });
+    })
     .then(function(data)
     {
         var result = 'Cards in ' + data.name;
@@ -160,10 +167,17 @@ TrelloPlugin.prototype.fetchMembers = function fetchMembers()
 
 TrelloPlugin.prototype.joinToCard = function joinToCard(card, member)
 {
-    var user = this.members[member];
-    var id = user ? user.id : member;
+    var self = this,
+        user, id;
 
-    return this.client.postAsync('/1/cards/' + card + '/idMembers', { value: id })
+    return this.fetchMembers()
+    .then(function(members)
+    {
+        user = members[member];
+        id = user ? user.id : member;
+
+        return self.client.postAsync('/1/cards/' + card + '/idMembers', { value: id });
+    })
     .then(function(reply)
     {
         return (user ? user.fullName : member) + ' has joined card https://trello.com/c/' + card;
@@ -175,10 +189,17 @@ TrelloPlugin.prototype.joinToCard = function joinToCard(card, member)
 
 TrelloPlugin.prototype.leaveCard = function leaveCard(card, member)
 {
-    var user = this.members[member];
-    var id = user ? user.id : member;
+    var self = this,
+        user, id;
 
-    return this.client.delAsync('/1/cards/' + card + '/idMembers/' + id)
+    return this.fetchMembers()
+    .then(function(members)
+    {
+        user = members[member];
+        id = user ? user.id : member;
+
+        return self.client.delAsync('/1/cards/' + card + '/idMembers/' + id)
+    })
     .then(function(reply)
     {
         return (user ? user.fullName : member) + ' has left card https://trello.com/c/' + card;
