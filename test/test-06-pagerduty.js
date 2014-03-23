@@ -74,6 +74,4 @@ describe('PagerDuty', function()
     {
         it('has tests');
     });
-
-
 });

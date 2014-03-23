@@ -37,10 +37,15 @@ var TrelloPlugin = module.exports = function TrelloPlugin(opts)
     assert(opts.list && _.isString(opts.list), 'you must pass a list id in the `list` option');
 
     this.client = P.promisifyAll(new Trello(opts.key, opts.token));
+    this.board = opts.board;
     this.list = opts.list;
     this.createIn = opts.createIn || opts.list;
     this.log = opts.log;
+
+    this.fetchMembers();
 };
+
+TrelloPlugin.prototype.members = null;
 
 TrelloPlugin.prototype.pattern  = /^trello\s+(\w+)\s?(.*)$/;
 TrelloPlugin.prototype.client   = null;
@@ -58,7 +63,7 @@ TrelloPlugin.prototype.respond = function respond(message)
     var matches = this.pattern.exec(msg);
     if (!matches) return message.done(this.help().usage);
 
-    var promise;
+    var promise, pieces;
     var command = matches[1];
     switch (command)
     {
@@ -68,6 +73,16 @@ TrelloPlugin.prototype.respond = function respond(message)
 
     case 'show':
         promise = this.showCards(matches[2]);
+        break;
+
+    case 'join':
+        pieces = matches[2].split(/\s+/);
+        promise = this.joinToCard(pieces[0], pieces[1]);
+        break;
+
+    case 'leave':
+        pieces = matches[2].split(/\s+/);
+        promise = this.leaveCard(pieces[0], pieces[1]);
         break;
 
     default:
@@ -113,10 +128,63 @@ TrelloPlugin.prototype.showCards = function showCards(title)
     });
 };
 
+TrelloPlugin.prototype.fetchMembers = function fetchMembers()
+{
+    var self = this;
+
+    return this.client.getAsync('/1/boards/' + this.board + '/members')
+    .then(function(data)
+    {
+        self.members = {};
+        _.each(data, function(u)
+        {
+            self.members[u.username] = u;
+        });
+
+        return self.members;
+    }, function(err)
+    {
+        self.log.warn({error: err}, 'problem fetching trello board users');
+    });
+};
+
+TrelloPlugin.prototype.joinToCard = function joinToCard(card, member)
+{
+    var user = this.members[member];
+    var id = user ? user.id : member;
+
+    return this.client.postAsync('/1/cards/' + card + '/idMembers', { value: id })
+    .then(function(reply)
+    {
+        return (user ? user.fullName : member) + ' has joined card https://trello.com/c/' + card;
+    }, function(err)
+    {
+        return 'There was an error joining ' + member + ' to card <' + card + '>: ' + err.message;
+    });
+};
+
+TrelloPlugin.prototype.leaveCard = function leaveCard(card, member)
+{
+    var user = this.members[member];
+    var id = user ? user.id : member;
+
+    return this.client.delAsync('/1/cards/' + card + '/idMembers/' + id)
+    .then(function(reply)
+    {
+        return (user ? user.fullName : member) + ' has left card https://trello.com/c/' + card;
+    }, function(err)
+    {
+        return 'There was an error removing ' + member + ' from card <' + card + '>: ' + err.message;
+    });
+};
+
 TrelloPlugin.prototype.help = function help(msg)
 {
     return {
         trello: 'add and read Trello cards',
-        usage: 'trello card *card title* - create a new card\ntrello show - show all cards'
+        usage: 'trello card <card title> - create a new card\n' +
+            'trello join <card-id> <user-name> - add user to card\n' +
+            'trello leave <card-id> <user-name> - remove user from card\n' +
+            'trello show - show all cards'
     };
 };
