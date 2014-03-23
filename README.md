@@ -104,9 +104,8 @@ Hermione the Opsbot is built on [node-restify](http://mcavage.me/node-restify/).
 
 I'm running this against our Slack chat already. The existing existing plugins work perfectly well! 
 
-- make plugins loadable from installed modules as well as the plugins directory
-- clean up & finalize plugin API
 - write more plugins
+- either make dynect plugin do something or move it out
 
 ## License
 
