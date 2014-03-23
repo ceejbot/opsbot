@@ -1,6 +1,6 @@
 {
   "name": "opsbot",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "hermione the npm operations chat bot",
   "main": "index.js",
   "directories": {
