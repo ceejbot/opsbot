@@ -18,7 +18,7 @@ var Fastly = module.exports = function Fastly(opts)
 };
 
 Fastly.prototype.name = 'fastly';
-Fastly.prototype.pattern = /^fastly\s+(.+)\s?(\w+)?$/;
+Fastly.prototype.pattern = /(.+)\s+(\w+)?$/;
 
 Fastly.prototype.matches = function matches(msg)
 {
@@ -28,24 +28,17 @@ Fastly.prototype.matches = function matches(msg)
 Fastly.prototype.respond = function respond(message)
 {
     var msg = message.text;
+    msg = msg.replace(/^fastly\s?/, '');
+    if (msg === 'services') return this.listServices(message);
+
     var matches = this.pattern.exec(msg);
     if (!matches) return message.done(this.help());
 
     var service = matches[1];
     var field = matches[2];
 
-    // I don't like this.
-    var promise;
-    if (service === 'services' && !field)
-    {
-        promise = this.listServices();
-    }
-    else
-    {
-        promise = this.fetchField(service, field);
-    }
-
-    promise.then(function(reply)
+    this.fetchField(service, field)
+    .then(function(reply)
     {
         message.done(reply);
     }).done();
@@ -58,13 +51,14 @@ Fastly.prototype.help = function help(msg)
         'fastly <service> <field> (eg, status_503, errors, hits)';
 };
 
-Fastly.prototype.listServices = function listServices()
+Fastly.prototype.listServices = function listServices(message)
 {
-    return this.fetchServices()
+    this.fetchServices()
     .then(function(services)
     {
-        return 'Fastly services:\n' + _.map(services, function(v, k) { return k; }).join('\n');
-    }, function(err) { return err.message; });
+        message.done('Fastly services:\n' + _.map(services, function(v, k) { return k; }).join('\n'));
+    }, function(err) { message.done(err.message); })
+    .done();
 };
 
 Fastly.prototype.fetchField = function fetchField(service, field)
