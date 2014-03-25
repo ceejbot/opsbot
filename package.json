@@ -1,35 +1,30 @@
 {
   "name": "opsbot",
-  "version": "0.1.1",
   "description": "hermione the npm operations chat bot",
-  "main": "index.js",
-  "directories": {
-    "test": "test"
+  "version": "0.1.1",
+  "author": "C J Silverio <ceej@npmjs.com>",
+  "bugs": {
+    "url": "https://github.com/ceejbot/opsbot/issues"
   },
   "dependencies": {
-    "restify": "^2.6.3",
-    "bunyan-prettystream": "^0.1.3",
-    "bunyan": "^0.22.1",
     "bluebird": "^1.1.0",
+    "bunyan": "^0.22.1",
+    "bunyan-prettystream": "^0.1.3",
     "lodash": "^2.4.1",
     "moment": "^2.5.1",
     "node-trello": "^0.1.4",
-    "request": "^2.34.0"
+    "request": "^2.34.0",
+    "restify": "^2.6.3"
   },
   "devDependencies": {
     "mocha": "^1.18.0",
     "must": "^0.11.0",
     "sinon": "^1.9.0"
   },
-  "scripts": {
-    "start": "node server.js",
-    "dev": "NODE_ENV=dev node server.js",
-    "test": "mocha -R spec test/*.js"
+  "directories": {
+    "test": "test"
   },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/ceejbot/opsbot.git"
-  },
+  "homepage": "https://github.com/ceejbot/opsbot",
   "keywords": [
     "npm",
     "operations",
@@ -39,10 +34,15 @@
     "slack",
     "hermione"
   ],
-  "author": "C J Silverio <ceej@npmjs.com>",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/ceejbot/opsbot/issues"
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ceejbot/opsbot.git"
   },
-  "homepage": "https://github.com/ceejbot/opsbot"
+  "scripts": {
+    "start": "node server.js",
+    "dev": "NODE_ENV=dev node server.js",
+    "test": "mocha -R spec test/*.js"
+  }
 }
