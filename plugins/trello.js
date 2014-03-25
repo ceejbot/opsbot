@@ -125,22 +125,33 @@ TrelloPlugin.prototype.showCards = function showCards(member)
         if (member)
         {
             user = members[member];
-            id = user ? user.id : member;
+            if (user) id = user.id;
         }
 
         return self.client.getAsync('/1/lists/' + self.list, { cards: 'open' });
     })
     .then(function(data)
     {
-        var result = 'Cards in ' + data.name;
-        if (id) result += ' for ' + (user ? user.fullName : member);
-        result += ':\n';
+        if (member && !id)
+            return 'Trello doesn\'t know who ' + member + ' is.';
+
+        var result = '';
         _.each(data.cards, function(card)
         {
             if (!id || (card.idMembers.indexOf(id) !== -1))
                 result += '- ' + card.name + '\n';
         });
-        return result;
+
+        if (!result && !id)
+            return data.name + ' has no cards.';
+
+        if (!result)
+            return member + ' has nothing to do.';
+
+        if (id)
+            return 'Cards for ' + member + ' in ' + data.name + ':\n' + result;
+
+        return 'Cards in ' + data.name + ':\n' + result;
     }, function(err)
     {
         return 'There was an error fetching the default list: ' + err.message;
