@@ -18,7 +18,7 @@ var Fastly = module.exports = function Fastly(opts)
 };
 
 Fastly.prototype.name = 'fastly';
-Fastly.prototype.pattern = /^fastly\s+(.+)\s+(\w+)$/;
+Fastly.prototype.pattern = /^fastly\s+(.+)\s?(\w+)?$/;
 
 Fastly.prototype.matches = function matches(msg)
 {
@@ -34,8 +34,18 @@ Fastly.prototype.respond = function respond(message)
     var service = matches[1];
     var field = matches[2];
 
-    this.fetchField(service, field)
-    .then(function(reply)
+    // I don't like this.
+    var promise;
+    if (service === 'services' && !field)
+    {
+        promise = this.listServices();
+    }
+    else
+    {
+        promise = this.fetchField(service, field);
+    }
+
+    promise.then(function(reply)
     {
         message.done(reply);
     }).done();
@@ -44,7 +54,17 @@ Fastly.prototype.respond = function respond(message)
 Fastly.prototype.help = function help(msg)
 {
     return 'get current stats from fastly\n' +
-        'fastly *service* *field* (eg, status_503, errors, hits)';
+        'fastly services: list all known services\n' +
+        'fastly <service> <field> (eg, status_503, errors, hits)';
+};
+
+Fastly.prototype.listServices = function listServices()
+{
+    return this.fetchServices()
+    .then(function(services)
+    {
+        return 'Fastly services:\n' + _.map(services, function(v, k) { return k; }).join('\n');
+    }, function(err) { return err.message; });
 };
 
 Fastly.prototype.fetchField = function fetchField(service, field)
