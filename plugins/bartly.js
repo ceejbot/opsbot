@@ -10,6 +10,7 @@ var BARTPlugin = module.exports = function BARTPlugin(opts)
 {
     this.apikey = opts.apikey;
     this.defaultStation = opts.station.toLowerCase() || '12th';
+    this.tzOffset = opts.tzOffset;
     this.log = opts.log;
 
     this.client = bart.createClient({ apiKey: opts.apikey });
@@ -86,7 +87,6 @@ BARTPlugin.prototype.respond = function respond(message)
 
     case 2:
         return this.byStationDestination(message, commands[0].toLowerCase(), commands[1].toUpperCase());
-        break;
 
     default:
         message.done(this.help());
@@ -134,7 +134,7 @@ BARTPlugin.prototype.byStation = function byStation(message, station)
         estimates = _.sortBy(estimates, 'minutes');
         var result = _.map(estimates, function(e)
         {
-            var dep = moment().add('m', e.minutes);
+            var dep = moment().zone(self.tzOffset).add('m', e.minutes);
             return e.destination + ': ' + e.minutes + ' minutes @ ' + dep.format('h:mm a');
         });
 
@@ -161,7 +161,7 @@ BARTPlugin.prototype.byStationDestination = function byStationDestination(messag
         var result = _.map(filtered, function(e)
         {
             if (!fullDest) fullDest = e.destination;
-            var dep = moment().add('m', e.minutes);
+            var dep = moment().zone(self.tzOffset).add('m', e.minutes);
             return e.minutes + ' minutes @ ' + dep.format('h:mm a');
         });
 

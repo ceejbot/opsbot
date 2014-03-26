@@ -15,7 +15,8 @@ module.exports =
         bartly:
         {
             apikey: 'your-bart-api-key',
-            station: '12th'
+            station: '12th',
+            tzOffset: 420,
         },
         npm: {},
         fastly: { apikey: 'your-key-here' },
