@@ -159,17 +159,20 @@ BARTPlugin.prototype.byStationDestination = function byStationDestination(messag
     {
         estimates = _.sortBy(estimates, 'minutes');
         var filtered = _.filter(estimates, { abbreviation: dest });
-        var result = _.map(filtered, function(e)
-        {
-            if (!fullDest) fullDest = e.destination;
-            var dep = moment().zone(self.tzOffset).add('m', e.minutes);
-            return e.minutes + ' minutes @ ' + dep.format('h:mm a');
-        });
 
-        if (!result)
+        if (!filtered.length)
+        {
             message.done('No trains found. You must pick an end-of-line station as a destination.');
+        }
         else
+        {
+            var result = _.map(filtered, function(e)
+            {
+                var dep = moment().zone(self.tzOffset).add('m', e.minutes);
+                return e.minutes + ' minutes @ ' + dep.format('h:mm a');
+            });
             message.done('Trains leaving ' + self.stations[station] + ' for ' + fullDest + ':\n' + result.join('\n'));
+        }
 
         client.removeListener(station, respond);
     }
