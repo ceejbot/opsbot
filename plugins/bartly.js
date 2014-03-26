@@ -127,6 +127,7 @@ BARTPlugin.prototype.byStation = function byStation(message, station)
     }
 
     var self = this;
+    var client = bart.createClient({ apiKey: this.apikey });
 
     function respond(estimates)
     {
@@ -140,17 +141,18 @@ BARTPlugin.prototype.byStation = function byStation(message, station)
         if (result.length)
         {
             message.done('Trains leaving ' + self.stations[station] + ':\n' + result.join('\n'));
-            self.client.removeListener(station, respond);
+            client.removeListener(station, respond);
         }
     }
 
-    this.client.on(station, respond);
+    client.on(station, respond);
 };
 
 BARTPlugin.prototype.byStationDestination = function byStationDestination(message, station, dest)
 {
     var self = this;
-    var fullDest, fullStart;
+    var fullDest;
+    var client = bart.createClient({ apiKey: this.apikey });
 
     function respond(estimates)
     {
@@ -164,9 +166,9 @@ BARTPlugin.prototype.byStationDestination = function byStationDestination(messag
         });
 
       message.done('Trains leaving ' + self.stations[station] + ' for ' + fullDest + ':\n' + result.join('\n'));
-      self.client.removeListener(station, respond);
+      client.removeListener(station, respond);
     }
 
-    this.client.on(station, respond);
+    client.on(station, respond);
 };
 
