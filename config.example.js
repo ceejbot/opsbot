@@ -12,6 +12,11 @@ module.exports =
     },
     plugins:
     {
+        bartly:
+        {
+            apikey: 'your-bart-api-key',
+            station: '12th'
+        },
         npm: {},
         fastly: { apikey: 'your-key-here' },
         statuscats: {},

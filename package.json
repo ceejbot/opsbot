@@ -14,7 +14,8 @@
     "moment": "^2.5.1",
     "node-trello": "^0.1.4",
     "request": "^2.34.0",
-    "restify": "^2.6.3"
+    "restify": "^2.6.3",
+    "bart": "0.0.3"
   },
   "devDependencies": {
     "mocha": "^1.18.0",

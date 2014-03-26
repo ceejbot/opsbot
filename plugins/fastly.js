@@ -1,5 +1,4 @@
 // answer questions about Fastly status
-// NOT YET IMPLEMENTED
 
 var
     _       = require('lodash'),
