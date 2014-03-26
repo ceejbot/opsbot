@@ -65,7 +65,7 @@ describe('BART', function()
             var plugin = new BART(fakeopts);
             plugin.matches('NOT VALID').must.be.false();
             plugin.matches('bart next').must.be.true();
-            plugin.matches('bart 19th embr').must.be.true();
+            plugin.matches('bart 19th').must.be.true();
             plugin.matches('bart 12th embr').must.be.true();
         });
 
