@@ -17,7 +17,7 @@ var
     assert  = require('assert'),
     moment  = require('moment'),
     P       = require('bluebird'),
-    Request = require('request')
+    request = require('request')
     ;
 
 var PagerDuty = module.exports = function PagerDuty(opts)
@@ -125,7 +125,7 @@ PagerDuty.prototype.rotation = function rotation(message)
             _.each(rotation.entries, function(e)
             {
                 result += '    ' + moment(e.start).calendar() + ': ' + e.user.name + ' <' + e.user.email + '>\n';
-            })
+            });
 
             i++;
             return result;
@@ -146,11 +146,11 @@ PagerDuty.prototype.execute = function execute(opts)
         {
             uri: this.baseurl + opts,
             method: 'GET'
-        }
+        };
     }
     _.defaults(opts, this.reqopts);
 
-    Request(opts, function(err, res, body)
+    request(opts, function(err, res, body)
     {
         if (err) return deferred.reject(err);
         if (!res || res.statusCode !== 200)
@@ -160,4 +160,4 @@ PagerDuty.prototype.execute = function execute(opts)
     });
 
     return deferred.promise;
-}
+};

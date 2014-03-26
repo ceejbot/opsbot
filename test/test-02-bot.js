@@ -15,7 +15,7 @@ describe('Bot', function()
     before(function()
     {
         log = bunyan.createLogger({ name: 'test', streams: [] });
-    })
+    });
 
     describe('constructor', function()
     {
