@@ -99,7 +99,8 @@ BARTPlugin.prototype.help = function help(msg)
     return 'answer questions about BART trains\n' +
         'bart next: the next trains to arrive at the default station\n' +
         'bart <station>: next trains to arrive at the named station\n' +
-        'bart <station> <destination>: next trains to arrive at station going to dest\n';
+        'bart <station> <destination>: next trains to arrive at station going to dest\n' +
+        'Name all stations using BART\'s four-letter abbreviations: <http://api.bart.gov/docs/overview/abbrev.aspx>';
 };
 
 BARTPlugin.prototype.validStation = function validStation(station)
@@ -151,7 +152,7 @@ BARTPlugin.prototype.byStation = function byStation(message, station)
 BARTPlugin.prototype.byStationDestination = function byStationDestination(message, station, dest)
 {
     var self = this;
-    var fullDest;
+    var fullDest = this.stations[dest.toLowerCase()];
     var client = bart.createClient({ apiKey: this.apikey });
 
     function respond(estimates)
@@ -165,8 +166,12 @@ BARTPlugin.prototype.byStationDestination = function byStationDestination(messag
             return e.minutes + ' minutes @ ' + dep.format('h:mm a');
         });
 
-      message.done('Trains leaving ' + self.stations[station] + ' for ' + fullDest + ':\n' + result.join('\n'));
-      client.removeListener(station, respond);
+        if (!result)
+            message.done('No trains found. You must pick an end-of-line station as a destination.');
+        else
+            message.done('Trains leaving ' + self.stations[station] + ' for ' + fullDest + ':\n' + result.join('\n'));
+
+        client.removeListener(station, respond);
     }
 
     client.on(station, respond);
