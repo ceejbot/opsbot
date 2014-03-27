@@ -91,11 +91,13 @@ OwlPlugin.prototype.help = function help()
 
 ## Provided plugins
 
-__fastly:__ Fetches some current stats from the named fastly service.  
+__bartly:__ Real-time BART departure information by station.  
+__fastly:__ Fetches some current stats from the named Fastly service.  
+__flipit:__ Table flip!  
 __npm:__ Fetches package information from npm.  
 __pagerduty:__ Show who's on call now & who's up in the next few days.  
 __statuscats:__ Show an [http status cat](http://httpcats.herokuapp.com).  
-__trello:__ List open cards, create cards, join & leave cards.  
+__trello:__ List open cards, create cards, join & leave cards. (To be retired when Slack's integration improves.)  
 
 ## Contributing
 
