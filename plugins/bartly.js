@@ -2,14 +2,19 @@
 
 var
     _      = require('lodash'),
+    assert = require('assert'),
     bart   = require('bart'),
     moment = require('moment')
     ;
 
 var BARTPlugin = module.exports = function BARTPlugin(opts)
 {
+    assert(opts && _.isObject(opts), 'you must pass an options object');
+    assert(opts.apikey && _.isString(opts.apikey), 'you must pass an `apikey` option');
+    assert(opts.tzOffset && _.isNumber(opts.tzOffset), 'you must pass a `tzOffset` option');
+
     this.apikey = opts.apikey;
-    this.defaultStation = opts.station.toLowerCase() || '12th';
+    this.defaultStation = (opts.station || '12th').toLowerCase();
     this.tzOffset = opts.tzOffset;
     this.log = opts.log;
 
