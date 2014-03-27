@@ -9,7 +9,6 @@ var
     BART        = require('../plugins/bartly.js')
     ;
 
-
 describe('BART', function()
 {
     var fakeopts = { apikey: 'hamchunx', tzOffset: 420 };

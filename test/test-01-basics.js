@@ -2,8 +2,8 @@
 
 var
     lab      = require('lab'),
-    describe = lab.experiment,
-    it       = lab.test
+    describe = lab.describe,
+    it       = lab.it
     ;
 
 describe('server', function()
