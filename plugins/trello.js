@@ -96,7 +96,7 @@ TrelloPlugin.prototype.respond = function respond(message)
     promise.then(function(reply)
     {
         message.done(reply);
-    })
+    });
 };
 
 TrelloPlugin.prototype.createCard = function createCard(title)
@@ -211,7 +211,7 @@ TrelloPlugin.prototype.leaveCard = function leaveCard(card, member)
         user = members[member];
         id = user ? user.id : member;
 
-        return self.client.delAsync('/1/cards/' + card + '/idMembers/' + id)
+        return self.client.delAsync('/1/cards/' + card + '/idMembers/' + id);
     })
     .then(function(reply)
     {

@@ -128,4 +128,4 @@ Fastly.prototype.execute = function execute(uri)
     });
 
     return deferred.promise;
-}
+};
