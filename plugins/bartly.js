@@ -123,7 +123,8 @@ BARTPlugin.prototype.byStation = function byStation(message, station)
     if (!this.validStation(station))
     {
         message.send(station + ' is not a valid BART station abbreviation.');
-        message.done(this.emitStations());
+        message.send(this.emitStations());
+        message.done();
         return;
     }
 
