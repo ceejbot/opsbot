@@ -1,9 +1,13 @@
-/*global describe:true, it:true, before:true, after:true */
+'use strict';
 
 var
+    lab         = require('lab'),
+    describe    = lab.describe,
+    it          = lab.it,
+    before      = lab.before,
+    demand      = require('must'),
     Bot         = require('../lib/bot'),
     bunyan      = require('bunyan'),
-    demand      = require('must'),
     MockMessage = require('./mocks/message'),
     StatusCats  = require('../plugins/statuscats')
     ;
@@ -12,34 +16,38 @@ describe('Bot', function()
 {
     var log;
 
-    before(function()
+    before(function(done)
     {
         log = bunyan.createLogger({ name: 'test', streams: [] });
+        done();
     });
 
     describe('constructor', function()
     {
-        it('requires an options object', function()
+        it('requires an options object', function(done)
         {
             function shouldThrow() { return new Bot(); }
             shouldThrow.must.throw(/options object/);
+            done();
         });
 
-        it('requires a log option', function()
+        it('requires a log option', function(done)
         {
             function shouldThrow() { return new Bot({}); }
             shouldThrow.must.throw(/bunyan logger/);
+            done();
         });
 
-        it('can be constructed', function()
+        it('can be constructed', function(done)
         {
             var bot = new Bot({ log: log, botname: 'test' });
+            done();
         });
     });
 
     describe('plugins', function()
     {
-        it('are loaded on construction', function()
+        it('are loaded on construction', function(done)
         {
             var opts =
             {
@@ -53,6 +61,7 @@ describe('Bot', function()
             bot.plugins.must.have.length(1);
             var plugin = bot.plugins[0];
             plugin.must.be.instanceof(StatusCats);
+            done();
         });
 
     });
@@ -61,7 +70,7 @@ describe('Bot', function()
     {
         var bot;
 
-        before(function()
+        before(function(done)
         {
             var opts =
             {
@@ -70,6 +79,7 @@ describe('Bot', function()
                 plugins: { statuscats: {} }
             };
             bot = new Bot(opts);
+            done();
         });
 
         it('handleMessage() calls done', function(done)

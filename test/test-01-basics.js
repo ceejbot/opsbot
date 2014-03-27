@@ -1,10 +1,12 @@
-/*global describe:true, it:true, before:true, after:true */
+'use strict';
 
 var
-    demand = require('must')
-	;
+    lab      = require('lab'),
+    describe = lab.experiment,
+    it       = lab.test
+    ;
 
 describe('server', function()
 {
-	it('has tests');
+    it('has tests', function(done) { done(); });
 });

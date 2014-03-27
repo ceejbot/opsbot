@@ -1,6 +1,9 @@
-/*global describe:true, it:true, before:true, after:true */
+'use strict';
 
 var
+    lab         = require('lab'),
+    describe    = lab.describe,
+    it          = lab.it,
     demand      = require('must'),
     MockMessage = require('./mocks/message'),
     Trello      = require('../plugins/trello')
@@ -12,19 +15,21 @@ describe('Trello', function()
 
     describe('plugin', function()
     {
-        it('requires an options object', function()
+        it('requires an options object', function(done)
         {
             function shouldThrow() { return new Trello(); }
             shouldThrow.must.throw(/options object/);
+            done();
         });
 
-        it('requires a key option', function()
+        it('requires a key option', function(done)
         {
             function shouldThrow() { return new Trello({}); }
             shouldThrow.must.throw(/key/);
+            done();
         });
 
-        it('can be constructed', function()
+        it('can be constructed', function(done)
         {
             var plugin = new Trello(fakeopts);
             plugin.must.be.truthy();
@@ -34,23 +39,26 @@ describe('Trello', function()
             plugin.matches.must.be.a.function();
             plugin.must.have.property('respond');
             plugin.respond.must.be.a.function();
+            done();
         });
 
-        it('implements help() correctly', function()
+        it('implements help() correctly', function(done)
         {
             var plugin = new Trello(fakeopts);
             var help = plugin.help();
             help.must.be.a.string();
             help.length.must.be.above(0);
+            done();
         });
 
-        it('implements matches() correctly', function()
+        it('implements matches() correctly', function(done)
         {
             var plugin = new Trello(fakeopts);
             plugin.matches('NOT VALID').must.be.false();
             plugin.matches('trello help').must.be.true();
             plugin.matches('trello card').must.be.true();
             plugin.matches('trello show    ').must.be.true();
+            done();
         });
 
         it('implements respond() correctly', function(done)
@@ -64,11 +72,11 @@ describe('Trello', function()
 
     describe('trello show', function()
     {
-        it('has tests');
+        it('has tests', function(done) { done(); });
     });
 
     describe('trello card', function()
     {
-        it('has tests');
+        it('has tests', function(done) { done(); });
     });
 });
