@@ -31,7 +31,7 @@ var PagerDuty = module.exports = function PagerDuty(opts)
     this.baseurl = 'https://' + opts.urlprefix + '.pagerduty.com/api/v1/';
     this.reqopts =
     {
-        headers: { 'authorization': 'Token token=' + opts.apikey },
+        headers: { authorization: 'Token token=' + opts.apikey },
         json: true
     };
 };

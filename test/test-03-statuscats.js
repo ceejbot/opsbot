@@ -16,11 +16,11 @@ describe('StatusCats', function()
         var plugin = new StatusCats();
         plugin.must.be.truthy();
         plugin.must.have.property('help');
-		plugin.help.must.be.a.function();
+        plugin.help.must.be.a.function();
         plugin.must.have.property('matches');
-		plugin.matches.must.be.a.function();
+        plugin.matches.must.be.a.function();
         plugin.must.have.property('respond');
-		plugin.respond.must.be.a.function();
+        plugin.respond.must.be.a.function();
         done();
     });
 

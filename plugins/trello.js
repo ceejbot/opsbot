@@ -45,10 +45,8 @@ var TrelloPlugin = module.exports = function TrelloPlugin(opts)
     this.fetchMembers();
 };
 
-TrelloPlugin.prototype.name = 'Trello';
-
-TrelloPlugin.prototype.members = null;
-
+TrelloPlugin.prototype.name     = 'Trello';
+TrelloPlugin.prototype.members  = null;
 TrelloPlugin.prototype.pattern  = /^trello\s+(\w+)\s?(.*)$/;
 TrelloPlugin.prototype.client   = null;
 TrelloPlugin.prototype.list     = null;
@@ -225,10 +223,10 @@ TrelloPlugin.prototype.leaveCard = function leaveCard(card, member)
 TrelloPlugin.prototype.help = function help(msg)
 {
     return 'add and read Trello cards\n' +
-            'trello card <card title> - create a new card\n' +
-            'trello join <card-id> <user-name> - add user to card\n' +
-            'trello leave <card-id> <user-name> - remove user from card\n' +
-            'trello show - show all open cards in the default list\n' +
-            'trello show <user-name> - show all open cards this user has joined'
-            ;
+    'trello card <card title> - create a new card\n' +
+    'trello join <card-id> <user-name> - add user to card\n' +
+    'trello leave <card-id> <user-name> - remove user from card\n' +
+    'trello show - show all open cards in the default list\n' +
+    'trello show <user-name> - show all open cards this user has joined'
+    ;
 };
