@@ -54,9 +54,9 @@ Flipit.prototype.respond = function respond(message)
         toflip = message.sender || 'you';
 
     if (toflip === '')
-      flipped = '┻━┻';
+        flipped = '┻━┻';
     else
-      flipped = flip(toflip);
+        flipped = flip(toflip);
 
     message.done(guy + ' ' + flipped);
 };
@@ -67,11 +67,11 @@ Flipit.prototype.unflip = function unflip(matches, message)
     var toUnflip = (matches[2] || '').trim();
 
     if (toUnflip === 'me')
-      unflipped = message.sender || 'you';
+        unflipped = message.sender || 'you';
     else if (toUnflip === '')
-      unflipped = '┬──┬';
+        unflipped = '┬──┬';
     else
-      unflipped = toUnflip;
+        unflipped = toUnflip;
 
     message.done(unflipped + ' ノ( º _ ºノ)');
 };
