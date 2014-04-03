@@ -1,4 +1,6 @@
-// answer questions about Fastly status
+// answer questions about BART trains
+// You can get a BART api key at:
+// http://www.bart.gov/schedules/developers/api
 
 var
     _      = require('lodash'),
@@ -17,8 +19,6 @@ var BARTPlugin = module.exports = function BARTPlugin(opts)
     this.defaultStation = (opts.station || '12th').toLowerCase();
     this.tzOffset = opts.tzOffset;
     this.log = opts.log;
-
-    this.client = bart.createClient({ apiKey: opts.apikey });
 };
 
 BARTPlugin.prototype.name = 'BART';

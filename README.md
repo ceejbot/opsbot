@@ -40,7 +40,7 @@ module.exports =
 
 `botname: help`: return a help message
 
-`botname: status`: return status; not yet implemented and might not be needed!
+`botname: status`: return status; not yet implemented and might not be needed.
 
 ## writing plugins
 
@@ -112,6 +112,7 @@ If you want to use promises, go ahead! [bluebird](https://github.com/petkaantono
 I'm running this against our Slack chat already. The existing existing plugins work perfectly well! 
 
 - write more plugins
+- bot brain/memory as a levelup db with keys namespaced by plugin
 
 ## Credits
 
