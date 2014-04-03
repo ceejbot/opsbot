@@ -9,6 +9,7 @@ var
     Bot         = require('../lib/bot'),
     bunyan      = require('bunyan'),
     MockMessage = require('./mocks/message'),
+    MockPlugin  = require('./mocks/plugin'),
     StatusCats  = require('../plugins/statuscats')
     ;
 
@@ -76,9 +77,10 @@ describe('Bot', function()
             {
                 botname: 'test',
                 log: log,
-                plugins: { statuscats: {} }
+                plugins: { }
             };
             bot = new Bot(opts);
+            bot.plugins.push(new MockPlugin());
             done();
         });
 
@@ -128,11 +130,11 @@ describe('Bot', function()
 
         it('passes messages to plugins for matching', function(done)
         {
-            var msg = new MockMessage({text: 'test: statuscat 503'});
+            var msg = new MockMessage({text: 'test: mock one'});
             msg.on('send', function(reply)
             {
                 reply.must.be.a.string();
-                reply.must.match('httpcats.herokuapp.com\/503');
+                reply.must.match('test one');
             });
             msg.on('done', function() { done(); });
             bot.handleMessage(msg);
@@ -140,12 +142,12 @@ describe('Bot', function()
 
         it('valid plugin commands work without the bot name prefix', function(done)
         {
-            var msg = new MockMessage({text: 'test: statuscat 503'});
+            var msg = new MockMessage({text: 'mock one'});
 
             msg.on('send', function(reply)
             {
                 reply.must.be.a.string();
-                reply.must.match('httpcats.herokuapp.com\/503');
+                reply.must.match('test one');
             });
 
             msg.on('done', function() { done(); });

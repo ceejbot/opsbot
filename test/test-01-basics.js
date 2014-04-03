@@ -8,5 +8,5 @@ var
 
 describe('server', function()
 {
-    it('has tests', function(done) { done(); });
+    it('has tests');
 });
