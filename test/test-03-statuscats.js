@@ -1,6 +1,9 @@
-/*global describe:true, it:true, before:true, after:true */
+'use strict';
 
 var
+    lab         = require('lab'),
+    describe    = lab.describe,
+    it          = lab.it,
     demand      = require('must'),
     MockMessage = require('./mocks/message'),
     StatusCats  = require('../plugins/statuscats')
@@ -8,7 +11,7 @@ var
 
 describe('StatusCats', function()
 {
-    it('can be constructed', function()
+    it('can be constructed', function(done)
     {
         var plugin = new StatusCats();
         plugin.must.be.truthy();
@@ -18,23 +21,26 @@ describe('StatusCats', function()
 		plugin.matches.must.be.a.function();
         plugin.must.have.property('respond');
 		plugin.respond.must.be.a.function();
+        done();
     });
 
-    it('implements help() correctly', function()
+    it('implements help() correctly', function(done)
     {
         var plugin = new StatusCats();
         var help = plugin.help();
         help.must.be.a.string();
         help.length.must.be.above(0);
+        done();
     });
 
-    it('implements matches() correctly', function()
+    it('implements matches() correctly', function(done)
     {
         var plugin = new StatusCats();
         plugin.matches('NOT VALID').must.be.false();
         plugin.matches('statuscat').must.be.true();
         plugin.matches('statuscat 404').must.be.true();
         plugin.matches('statuscat 404    ').must.be.true();
+        done();
     });
 
     it('implements respond() correctly', function(done)
