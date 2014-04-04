@@ -3,8 +3,7 @@ Keep track of karma.
 
 <person>++  - adds a karma point
 <person>--  - removes a karma point
-karma: person - adds a karma point
-
+karma: person - report
 */
 
 var
@@ -34,7 +33,10 @@ Karma.prototype.respond = function respond(message)
     if (matches[1] === 'help') return message.done(this.help());
 
     var target = matches[1] || matches[3];
-    var action = matches[2] || matches[4] || '++';
+    var action = matches[2] || matches[4];
+
+    if (!action)
+        return this.report(target, message);
 
     if (action === '++')
         return this.give(target, message);
@@ -43,6 +45,12 @@ Karma.prototype.respond = function respond(message)
         return this.take(target, message);
 
     message.done(this.help());
+};
+
+Karma.prototype.report = function report(target, message)
+{
+    // TODO report karma score for target
+    message.done(target + 'has <UNKNOWN> karma because TBD');
 };
 
 Karma.prototype.give = function give(target, message)
@@ -62,5 +70,5 @@ Karma.prototype.help = function help()
     return 'Keep track of karma.\n' +
     '<person>++  - adds a karma point\n' +
     '<person>--  - removes a karma point\n' +
-    'karma: person - adds a karma point';
+    'karma: person - report current karma points';
 };
