@@ -6,10 +6,13 @@ var
     it          = lab.it,
     demand      = require('must'),
     path        = require('path'),
+    rimraf      = require('rimraf'),
     MockMessage = require('./mocks/message'),
     Brain       = require('../lib/brain'),
     Karma       = require('../plugins/karma.js')
     ;
+
+var dbpath = path.join(__dirname, 'db');
 
 describe('karma', function()
 {
@@ -17,7 +20,7 @@ describe('karma', function()
 
     lab.before(function(done)
     {
-        brain = new Brain({ dbpath: path.join(__dirname, 'db')});
+        brain = new Brain({ dbpath: dbpath });
         plugin = new Karma({ brain: brain.get('karma') }); // what is brain?
         done();
     });
@@ -97,9 +100,121 @@ describe('karma', function()
         done();
     });
 
+    it('responds to help', function(done)
+    {
+        var msg = new MockMessage({text: 'karma help'});
+        msg.on('send', function(text)
+        {
+            text.must.be.a.string();
+            text.length.must.be.above(0);
+        });
+        msg.on('done', function() { done(); });
+
+        plugin.respond(msg);
+    });
+
+    it('give() adds a karma point to the target', function(done)
+    {
+        var msg = new MockMessage({text: 'harry++'});
+        msg.on('send', function(msg)
+        {
+            msg.must.match(/harry/);
+            if (msg.match(/harry has/)) msg.must.match(/1 karma/);
+        });
+        msg.on('done', function() { done(); });
+
+        plugin.respond(msg);
+    });
+
+    it('give() adds a karma point to a target who already has points', function(done)
+    {
+        var msg = new MockMessage({text: 'harry++'});
+        msg.on('send', function(msg)
+        {
+            msg.must.match(/harry/);
+            if (msg.match(/harry has/)) msg.must.match(/2 karma/);
+        });
+        msg.on('done', function() { done(); });
+
+        plugin.respond(msg);
+    });
+
+    it('take() remove a karma point from the target', function(done)
+    {
+        var msg = new MockMessage({text: 'ron--'});
+        msg.on('send', function(msg)
+        {
+            msg.must.match(/ron/);
+            if (msg.match(/ron has/)) msg.must.match(/\-1 karma/);
+        });
+        msg.on('done', function() { done(); });
+
+        plugin.respond(msg);
+
+    });
+
+    it('take() removes a karma point from a target who already has points', function(done)
+    {
+        var msg = new MockMessage({text: 'karma harry--'});
+        msg.on('send', function(msg)
+        {
+            msg.must.match(/harry/);
+            if (msg.match(/harry has/)) msg.must.match(/1 karma/);
+        });
+        msg.on('done', function() { done(); });
+
+        plugin.respond(msg);
+    });
+
+    it('report() handles the case of a new target', function(done)
+    {
+        var msg = new MockMessage({text: 'karma lupin'});
+        msg.on('send', function(msg)
+        {
+            msg.must.match(/no karma/);
+        });
+        msg.on('done', function() { done(); });
+
+        plugin.respond(msg);
+    });
+
+    it('report() responds with a string including the current karma', function(done)
+    {
+        var msg = new MockMessage({text: 'karma harry'});
+        msg.on('send', function(msg)
+        {
+            msg.must.match(/harry/);
+            msg.must.match(/1 karma/);
+        });
+        msg.on('done', function() { done(); });
+
+        plugin.respond(msg);
+    });
+
+    it('reportAll() reports karma for all users', function(done)
+    {
+        var counter = 0;
+
+        var msg = new MockMessage({text: 'karma all'});
+        msg.on('send', function(msg)
+        {
+            counter++;
+        });
+        msg.on('done', function()
+        {
+            counter.must.equal(2);
+            done();
+        });
+
+        plugin.respond(msg);
+    });
+
     lab.after(function(done)
     {
-        brain.close(done);
+        brain.close(function()
+        {
+            rimraf(dbpath, done);
+        });
     });
 
 });

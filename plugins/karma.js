@@ -31,6 +31,7 @@ Karma.prototype.respond = function respond(message)
     var matches = message.text.match(this.pattern);
 
     if (matches[1] === 'help') return message.done(this.help());
+    if (matches[1] === 'all') return this.reportAll(message);
 
     var target = matches[1] || matches[3];
     var action = matches[2] || matches[4];
@@ -47,22 +48,82 @@ Karma.prototype.respond = function respond(message)
     message.done(this.help());
 };
 
+
+Karma.prototype.reportAll = function reportAll(message)
+{
+    this.brain.createReadStream()
+    .on('data', function(data)
+    {
+        message.send(reportMessage(data.key, data.value));
+    })
+    .on('error', function(err)
+    {
+        message.send('Error fetching karma: ' + err.message);
+    })
+    .on('end', function() { message.done(); } );
+};
+
+function reportMessage(target, karma)
+{
+    return target + ' has ' + karma.score + ' karma.';
+}
+
 Karma.prototype.report = function report(target, message)
 {
-    // TODO report karma score for target
-    message.done(target + 'has <UNKNOWN> karma because TBD');
+    var self = this;
+
+    this.brain.get(target, function(err, karma)
+    {
+        if (err && (err.name === 'NotFoundError'))
+            return message.done(target + ' has no karma at all.');
+
+        if (err) return message.done('There was an error fetching karma: ' + err.message);
+
+        message.done(reportMessage(target, karma));
+    });
 };
 
 Karma.prototype.give = function give(target, message)
 {
-    // TODO give karma to target
-    message.done('Gave a karma point to ' + target + '!');
+    var self = this;
+    this.brain.get(target, function(err, karma)
+    {
+        if (!karma) karma = {}; // we ignore not found errors
+        if (_.isUndefined(karma.score)) karma.score = 0;
+
+        karma.score++;
+
+        self.brain.put(target, karma, function(err)
+        {
+            if (err) return message.done('There was an error storing karma: ' + err.message);
+
+            message.send('Gave a karma point to ' + target + '!');
+            message.send(reportMessage(target, karma));
+            message.done();
+        });
+    });
 };
 
+// TODO refactor common code out
 Karma.prototype.take = function take(target, message)
 {
-    // TODO take karma from target
-    message.done('Took a karma point from ' + target + '.');
+    var self = this;
+    this.brain.get(target, function(err, karma)
+    {
+        if (!karma) karma = {}; // we ignore not found errors
+        if (_.isUndefined(karma.score)) karma.score = 0;
+
+        karma.score--;
+
+        self.brain.put(target, karma, function(err)
+        {
+            if (err) return message.done('There was an error storing karma: ' + err.message);
+
+            message.send('Took a karma point from ' + target + '.');
+            message.send(reportMessage(target, karma));
+            message.done();
+        });
+    });
 };
 
 Karma.prototype.help = function help()
@@ -70,5 +131,6 @@ Karma.prototype.help = function help()
     return 'Keep track of karma.\n' +
     '<person>++  - adds a karma point\n' +
     '<person>--  - removes a karma point\n' +
-    'karma: person - report current karma points';
+    'karma person - report current karma points' +
+    'karma all - report everybody\'s karma';
 };

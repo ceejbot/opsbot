@@ -54,7 +54,7 @@
   "scripts": {
     "start": "node server.js",
     "dev": "NODE_ENV=dev node server.js",
-    "test-suite": "lab -v -c -t 70 test/*.js",
+    "test-suite": "lab -v -t 70 -c test/*.js",
     "check-hint": "jshint *.js lib/*.js plugins/*.js test/*.js",
     "check-style": "jscs *.js lib/*.js plugins/*.js test/*.js",
     "test": "npm run test-suite && npm run check-hint && npm run check-style"
