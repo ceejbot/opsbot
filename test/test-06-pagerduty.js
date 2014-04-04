@@ -75,11 +75,11 @@ describe('PagerDuty', function()
 
     describe('pagerduty oncall', function()
     {
-        it('has tests', function(done) { done(); });
+        it('has tests');
     });
 
     describe('pagerduty rotation', function()
     {
-        it('has tests', function(done) { done(); });
+        it('has tests');
     });
 });

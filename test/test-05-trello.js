@@ -72,11 +72,11 @@ describe('Trello', function()
 
     describe('trello show', function()
     {
-        it('has tests', function(done) { done(); });
+        it('has tests');
     });
 
     describe('trello card', function()
     {
-        it('has tests', function(done) { done(); });
+        it('has tests');
     });
 });
