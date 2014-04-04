@@ -3,6 +3,7 @@
 var
     lab      = require('lab'),
     before   = lab.before,
+    after    = lab.after,
     describe = lab.describe,
     it       = lab.it,
     demand   = require('must'),
@@ -67,7 +68,7 @@ describe('Brain', function()
         done();
     });
 
-    lab.after(function(done)
+    after(function(done)
     {
         brain.close(function()
         {

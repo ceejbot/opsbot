@@ -20,5 +20,47 @@ var Karma = module.exports = function Karma(opts)
 };
 
 Karma.prototype.brain = null;
+Karma.prototype.pattern = /karma\s+(\w+)(\+\+|--)?|(\w+)(\+\+|--)/;
 
-// TODO
+Karma.prototype.matches = function matches(msg)
+{
+    return this.pattern.test(msg);
+};
+
+Karma.prototype.respond = function respond(message)
+{
+    var matches = message.text.match(this.pattern);
+
+    if (matches[1] === 'help') return message.done(this.help());
+
+    var target = matches[1] || matches[3];
+    var action = matches[2] || matches[4] || '++';
+
+    if (action === '++')
+        return this.give(target, message);
+
+    if (action === '--')
+        return this.take(target, message);
+
+    message.done(this.help());
+};
+
+Karma.prototype.give = function give(target, message)
+{
+    // TODO give karma to target
+    message.done('Gave a karma point to ' + target + '!');
+};
+
+Karma.prototype.take = function take(target, message)
+{
+    // TODO take karma from target
+    message.done('Took a karma point from ' + target + '.');
+};
+
+Karma.prototype.help = function help()
+{
+    return 'Keep track of karma.\n' +
+    '<person>++  - adds a karma point\n' +
+    '<person>--  - removes a karma point\n' +
+    'karma: person - adds a karma point';
+};
