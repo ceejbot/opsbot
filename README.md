@@ -12,7 +12,7 @@ Set up an outgoing webhook in Slack that points to `/messages` on your deploymen
 
 Set up an incoming webhook in Slack. Add its full URI (with token) to the 'hook' field in your config.
 
-List the plugins you want to load as fields in the `plugins` hash. The value should be an object with any required configuration for the plugin. 
+List the plugins you want to load as fields in the `plugins` hash. The value should be an object with any required configuration for the plugin.
 
 Example configuration:
 
@@ -22,8 +22,9 @@ module.exports =
     botname: 'hermione',
     token: 'slack-integration-token-here',
     hook: 'your-slack-incoming-webhook-uri-here',
+    brain: { dbpath: '/path/to/leveldb' },
     logging:
-    { 
+    {
         console: false,
         path: '/var/log'
     },
@@ -64,7 +65,7 @@ When you are finished sending replies to the incoming message, call `message.don
 
 Synchronously return a string with usage information.
 
-### Example 
+### Example
 
 Here's a simple plugin.
 
@@ -99,6 +100,10 @@ __pagerduty:__ Show who's on call now & who's up in the next few days.
 __statuscats:__ Show an [http status cat](http://httpcats.herokuapp.com).  
 __trello:__ List open cards, create cards, join & leave cards. (To be retired when Slack's integration improves.)  
 
+## Plugin storage
+
+[[ Feature in progress! ]]
+
 ## Contributing
 
 Write more plugins, add features to the existing plugins, it's all good.
@@ -109,7 +114,7 @@ If you want to use promises, go ahead! [bluebird](https://github.com/petkaantono
 
 ## TODO
 
-I'm running this against our Slack chat already. The existing existing plugins work perfectly well! 
+I'm running this against our Slack chat already. The existing existing plugins work perfectly well!
 
 - write more plugins
 - bot brain/memory as a levelup db with keys namespaced by plugin
