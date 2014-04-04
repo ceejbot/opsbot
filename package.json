@@ -57,6 +57,6 @@
     "test-suite": "lab -v -c -t 70 test/*.js",
     "check-hint": "jshint *.js lib/*.js plugins/*.js test/*.js",
     "check-style": "jscs *.js lib/*.js plugins/*.js test/*.js",
-    "test": "npm test && npm run check-hint && npm run check-style"
+    "test": "npm run test-suite && npm run check-hint && npm run check-style"
   }
 }
