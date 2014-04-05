@@ -73,12 +73,12 @@ describe('PagerDuty', function()
         });
     });
 
-    describe('pagerduty oncall', function()
+    describe('oncall', function()
     {
         it('has tests');
     });
 
-    describe('pagerduty rotation', function()
+    describe('rotation', function()
     {
         it('has tests');
     });

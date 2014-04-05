@@ -9,7 +9,7 @@ var
     NPM         = require('../plugins/npm')
     ;
 
-describe('npm plugin', function()
+describe('npm', function()
 {
     it('can be constructed', function(done)
     {
