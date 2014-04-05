@@ -49,7 +49,7 @@ Plugins must be objects with three required functions and a `name` field.
 
 #### `new Plugin(opts)`
 
-The constructor takes an options object. The required content of the options is up to the plugin itself. The options object will always be present and will always have a [bunyan](https://github.com/trentm/node-bunyan) logger object in the `log` field.
+The constructor takes an options object. The required content of the options is up to the plugin itself. The options object will always be present and will always have a [bunyan](https://github.com/trentm/node-bunyan) logger object in the `log` field. It will also have a leveldb instance in the `brain` field; see below.
 
 #### `matches(str)`
 
@@ -95,14 +95,14 @@ OwlPlugin.prototype.help = function help()
 __bartly:__ Real-time BART departure information by station.  
 __fastly:__ Fetches some current stats from the named Fastly service.  
 __flipit:__ Table flip!  
+__karma:__ Give points and take them away.  
 __npm:__ Fetches package information from npm.  
 __pagerduty:__ Show who's on call now & who's up in the next few days.  
 __statuscats:__ Show an [http status cat](http://httpcats.herokuapp.com).  
-__trello:__ List open cards, create cards, join & leave cards. (To be retired when Slack's integration improves.)  
 
 ## Plugin storage
 
-[[ Feature in progress! ]]
+Opsbot uses [levelup](https://github.com/rvagg/node-levelup) to provide a persistent key/value brain to plugins. Each plugin is, on construction, given an options object with a sublevel-namespaced db object in the `brain` field. This object might not be available if the opsbot configuration hasn't given it a path to store the db in, so your plugin should assert if it requires the brain but is not given one. See an example in the built-in `karma` plugin.
 
 ## Contributing
 
@@ -114,10 +114,9 @@ If you want to use promises, go ahead! [bluebird](https://github.com/petkaantono
 
 ## TODO
 
-I'm running this against our Slack chat already. The existing existing plugins work perfectly well!
+I'm running this against our Slack chat already. The existing plugins work perfectly well!
 
 - write more plugins
-- bot brain/memory as a levelup db with keys namespaced by plugin
 
 ## Credits
 

@@ -25,14 +25,6 @@ module.exports =
         npm: {},
         fastly: { apikey: 'your-key-here' },
         statuscats: {},
-        trello:
-        {
-            key:      'your-api-key',
-            token:    'your-token',
-            board:    'board-id',
-            list:     'list-id-to-show',
-            createIn: 'list-id-for-new-cards'
-        },
         pagerduty:
         {
             apikey:    'your-key-here',
