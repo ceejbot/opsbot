@@ -103,8 +103,8 @@ BARTPlugin.prototype.help = function help(msg)
 {
     return 'answer questions about BART trains\n' +
         'bart next: the next trains to arrive at the default station\n' +
-        'bart <station>: next trains to arrive at the named station\n' +
-        'bart <station> <destination>: next trains to arrive at station going to dest\n' +
+        'bart *station*: next trains to arrive at the named station\n' +
+        'bart *station* *destination*: next trains to arrive at station going to dest\n' +
         'Name all stations using BART\'s four-letter abbreviations: <http://api.bart.gov/docs/overview/abbrev.aspx>';
 };
 
@@ -185,4 +185,3 @@ BARTPlugin.prototype.byStationDestination = function byStationDestination(messag
 
     client.on(station, respond);
 };
-

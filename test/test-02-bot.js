@@ -123,8 +123,20 @@ describe('Bot', function()
                 reply.must.be.an.object();
                 reply.must.have.property('text');
                 reply.text.must.match(/^HELP/);
-                done();
             });
+            msg.on('done', function() { done(); });
+            bot.handleMessage(msg);
+        });
+
+        it('responsds to `status`', function(done)
+        {
+            var msg = new MockMessage({ text: 'test: status' });
+            msg.on('send', function(reply)
+            {
+                reply.must.be.a.string();
+                reply.must.match(/Uptime/);
+            });
+            msg.on('done', function() { done(); });
             bot.handleMessage(msg);
         });
 
