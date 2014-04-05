@@ -48,7 +48,6 @@ Karma.prototype.respond = function respond(message)
     message.done(this.help());
 };
 
-
 Karma.prototype.reportAll = function reportAll(message)
 {
     this.brain.createReadStream()
@@ -97,8 +96,7 @@ Karma.prototype.give = function give(target, message)
         {
             if (err) return message.done('There was an error storing karma: ' + err.message);
 
-            message.send('Gave a karma point to ' + target + '!');
-            message.send(reportMessage(target, karma));
+            message.send('Gave a karma point to ' + target + '!\n' + reportMessage(target, karma));
             message.done();
         });
     });
@@ -119,8 +117,7 @@ Karma.prototype.take = function take(target, message)
         {
             if (err) return message.done('There was an error storing karma: ' + err.message);
 
-            message.send('Took a karma point from ' + target + '.');
-            message.send(reportMessage(target, karma));
+            message.send('Took a karma point from ' + target + '.\n' + reportMessage(target, karma));
             message.done();
         });
     });
