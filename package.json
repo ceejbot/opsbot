@@ -1,7 +1,7 @@
 {
   "name": "opsbot",
   "description": "hermione the npm operations chat bot",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "author": "C J Silverio <ceejceej@gmail.com>",
   "bugs": {
     "url": "https://github.com/ceejbot/opsbot/issues"
