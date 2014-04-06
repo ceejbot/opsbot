@@ -53,7 +53,7 @@ describe('npm', function()
         done();
     });
 
-    it('implements respond() correctly', { timeout: 4000 }, function(done)
+    it('implements respond() correctly', { timeout: 6000 }, function(done)
     {
         var msg = new MockMessage({text: 'npm semver'});
         msg.on('done', function() { done(); });
@@ -86,7 +86,7 @@ describe('npm', function()
         plugin.respond(msg);
     });
 
-    it('can fetch download stats for the given time period', { timeout: 4000 }, function(done)
+    it('can fetch download stats for the given time period', { timeout: 6000 }, function(done)
     {
         var msg = new MockMessage({text: 'npm downloads last-month'});
         msg.on('done', function() { done(); });
@@ -111,7 +111,7 @@ describe('npm', function()
         plugin.respond(msg);
     });
 
-    it('responds with a hash of package status data', { timeout: 4000 }, function(done)
+    it('responds with a hash of package status data', { timeout: 6000 }, function(done)
     {
         var msg = new MockMessage({text: 'npm semver'});
         msg.on('done', function() { done(); });
