@@ -91,7 +91,7 @@ BARTPlugin.prototype.respond = function respond(message)
     if (!matches[3])
         return this.byStation(message, matches[2].toLowerCase());
 
-    this.byStationDestination(message, commands[0].toLowerCase(), commands[1].toUpperCase());
+    this.byStationDestination(message, matches[2].toLowerCase(), matches[3].toUpperCase());
 };
 
 BARTPlugin.prototype.help = function help(msg)

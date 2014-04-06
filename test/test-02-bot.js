@@ -59,9 +59,9 @@ describe('Bot', function()
 
             var bot = new Bot(opts);
             bot.must.have.property('plugins');
-            bot.plugins.must.have.length(1);
-            var plugin = bot.plugins[0];
-            plugin.must.be.instanceof(StatusCats);
+            bot.plugins.must.be.an.object();
+            bot.plugins.must.have.property('statuscats');
+            bot.plugins.statuscats.must.be.instanceof(StatusCats);
             done();
         });
 
@@ -80,7 +80,7 @@ describe('Bot', function()
                 plugins: { }
             };
             bot = new Bot(opts);
-            bot.plugins.push(new MockPlugin());
+            bot.plugins.mock = new MockPlugin();
             done();
         });
 
