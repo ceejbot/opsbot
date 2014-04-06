@@ -46,6 +46,10 @@ describe('npm', function()
         plugin.matches('npm adfasdfasdfasdf adsfa adsf').must.be.true();
         plugin.matches('npm request').must.be.true();
         plugin.matches('npm semver    ').must.be.true();
+        plugin.matches('npm downloads').must.be.true();
+        plugin.matches('npm downloads').must.be.true();
+        plugin.matches('npm downloads today').must.be.true();
+        plugin.matches('npm downloads last-week').must.be.true();
         done();
     });
 
@@ -58,7 +62,7 @@ describe('npm', function()
 
     it('can fetch package download stats', function(done)
     {
-        plugin.getDownloadsFor('semver', function(err, downloads)
+        plugin.downloadsFor('semver', function(err, downloads)
         {
             demand(err).be.falsy();
             downloads.must.be.an.object();
@@ -67,6 +71,33 @@ describe('npm', function()
             downloads.last_month.must.be.a.number();
             done();
         });
+    });
+
+    it('can fetch download stats', function(done)
+    {
+        var msg = new MockMessage({text: 'npm downloads'});
+        msg.on('done', function() { done(); });
+        msg.on('send', function(text)
+        {
+            text.must.match(/Total/);
+            var lines = text.split('\n');
+            lines.length.must.be.above(7);
+        });
+        plugin.respond(msg);
+    });
+
+    it('can fetch download stats for the given time period', { timeout: 4000 }, function(done)
+    {
+        var msg = new MockMessage({text: 'npm downloads last-month'});
+        msg.on('done', function() { done(); });
+        msg.on('send', function(text)
+        {
+            text.must.be.a.string();
+            text.must.match(/Total/);
+            var lines = text.split('\n');
+            lines.length.must.be.above(28);
+        });
+        plugin.respond(msg);
     });
 
     it('responds with the help message when no package is specified', function(done)
@@ -93,6 +124,4 @@ describe('npm', function()
         });
         plugin.respond(msg);
     });
-
-
 });

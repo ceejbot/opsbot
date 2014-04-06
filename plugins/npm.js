@@ -3,6 +3,7 @@
 var
     _       = require('lodash'),
     moment  = require('moment'),
+    numeral = require('numeral'),
     restify = require('restify')
     ;
 
@@ -14,8 +15,10 @@ var NPMPlugin = module.exports = function NPMPlugin(opts)
 };
 
 NPMPlugin.prototype.name = 'npm';
-NPMPlugin.prototype.pattern = /^npm\s+(.*)$/;
-NPMPlugin.prototype.promises = true;
+NPMPlugin.prototype.pattern = /^npm\s+(\S+)\s?(.*)?$/;
+NPMPlugin.prototype.log = null;
+NPMPlugin.prototype.registry = null;
+NPMPlugin.prototype.downloads = null;
 
 NPMPlugin.prototype.matches = function matches(msg)
 {
@@ -24,25 +27,57 @@ NPMPlugin.prototype.matches = function matches(msg)
 
 NPMPlugin.prototype.respond = function respond(message)
 {
-    var tmp;
     var msg = message.text || '';
     var matches = msg.trim().match(this.pattern);
 
     if (!matches)
+        return message.done(this.help());
+
+    if (matches[1] === 'downloads')
+        return this.downloadStats(message, matches[2]);
+
+    if (!matches[2])
+        return this.packageInfo(message, matches[1]);
+
+    message.done(this.help());
+};
+
+NPMPlugin.prototype.downloadStats = function downloadStats(message, period)
+{
+    period = period || 'last-week';
+    var self = this;
+
+    this.downloads.get('/downloads/range/' + period, function(err, req, res, obj)
     {
-        message.done(this.help());
-        return;
-    }
+        if (err)
+        {
+            self.log.error({ error: err, period: period }, 'fetching download stats');
+            message.done('Problem with download time period ' + period + ': ' + err.message);
+            return;
+        }
 
-    var package = matches[1];
+        var total = 0;
+        var reply = _.map(obj.downloads, function(v, k)
+        {
+            total += v.downloads;
+            return v.day + ': ' + numeral(v.downloads).format('0,0');
+        });
+        reply.unshift('*npm downloads by day:*');
+        reply.push('\n*Total:* ' + numeral(total).format('0,0'));
+        message.done(reply.join('\n'));
+    });
+};
 
+NPMPlugin.prototype.packageInfo = function packageInfo(message, package)
+{
+    var tmp;
     var self = this;
 
     this.registry.get('/' + package, function(err, request, res, obj)
     {
         if (err)
         {
-            message.log(err.message);
+            self.log.error({ error: err, package: package }, 'fetching from registry');
             message.done(err.message);
             return;
         }
@@ -56,7 +91,7 @@ NPMPlugin.prototype.respond = function respond(message)
             fields:  [],
         };
 
-        struct.fields.push({ title: 'More info', value: '<https://npmjs.org/package/' + package + '>' });
+        struct.fields.push({ title: 'more info', value: '<https://npmjs.org/package/' + package + '>' });
 
         if (obj.author)
         {
@@ -110,13 +145,13 @@ NPMPlugin.prototype.respond = function respond(message)
             unfurl_links: true
         };
 
-        self.getDownloadsFor(package, function(err, downloads)
+        self.downloadsFor(package, function(err, downloads)
         {
             if (downloads)
             {
                 var tmp = '';
-                if (downloads.last_week) tmp += 'Last week: ' + downloads.last_week;
-                if (downloads.last_month) tmp += 'Last month: ' + downloads.last_month;
+                if (downloads.last_week) tmp += 'Last week: ' + numeral(downloads.last_week).format('0,0');
+                if (downloads.last_month) tmp += '\nLast month: ' + numeral(downloads.last_month).format('0,0');
                 reply.attachments[0].fields.push({
                     title: 'downloads',
                     value: tmp,
@@ -125,11 +160,10 @@ NPMPlugin.prototype.respond = function respond(message)
             }
             message.done(reply);
         });
-
     });
 };
 
-NPMPlugin.prototype.getDownloadsFor = function getDownloadsFor(package, callback)
+NPMPlugin.prototype.downloadsFor = function downloadsFor(package, callback)
 {
     var self = this;
     var result = {};
@@ -158,5 +192,9 @@ NPMPlugin.prototype.getDownloadsFor = function getDownloadsFor(package, callback
 
 NPMPlugin.prototype.help = function help(msg)
 {
-    return 'get information about packages\n' + 'npm *packagename*';
+    return 'get information about packages\n' +
+    'npm _packagename_ - package info & download stats\n' +
+    'npm downloads - download numbers for the last week\n' +
+    'npm downloads _period_ - download numbers for any valid downloads API period'
+    ;
 };
