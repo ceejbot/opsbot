@@ -31,5 +31,5 @@ StatusCats.prototype.respond = function respond(message)
 StatusCats.prototype.help = function help(msg)
 {
     return 'get an http status cat image\n' +
-        'Usage: statuscat *status-code*';
+        'Usage: `statuscat [status-code]`';
 };

@@ -122,7 +122,7 @@ describe('Bot', function()
             {
                 reply.must.be.an.object();
                 reply.must.have.property('text');
-                reply.text.must.match(/^HELP/);
+                reply.text.must.match(/HELP/);
             });
             msg.on('done', function() { done(); });
             bot.handleMessage(msg);

@@ -193,8 +193,8 @@ NPMPlugin.prototype.downloadsFor = function downloadsFor(package, callback)
 NPMPlugin.prototype.help = function help(msg)
 {
     return 'get information about packages\n' +
-    'npm _packagename_ - package info & download stats\n' +
-    'npm downloads - download numbers for the last week\n' +
-    'npm downloads _period_ - download numbers for any valid downloads API period'
+    '`npm [package]` - package info & download stats\n' +
+    '`npm downloads` - download numbers for the last week\n' +
+    '`npm downloads [period]` - download numbers for any valid downloads API period'
     ;
 };

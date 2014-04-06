@@ -20,9 +20,10 @@ Flipit.prototype.matches = function matches(msg)
 
 Flipit.prototype.help = function help(msg)
 {
-    return 'flip <text> - express your anger\n' +
-        'rage flip <text> - express your anger with rage' +
-        'unflip <text> - calm down';
+    return '`flip` - table flip\n' +
+        '`flip [text]` - express your anger more specifically\n' +
+        '`rage flip [text]` - express your anger with rage\n' +
+        '`unflip [text]` - calm down';
 };
 
 Flipit.prototype.respond = function respond(message)

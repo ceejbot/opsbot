@@ -46,8 +46,8 @@ Fastly.prototype.respond = function respond(message)
 Fastly.prototype.help = function help(msg)
 {
     return 'get current stats from fastly\n' +
-        'fastly services: list all known services\n' +
-        'fastly <service> <field> (eg, status_503, errors, hits)';
+        '`fastly services` - list all known services\n' +
+        '`fastly [service] [field]` - get stats for the given field & service (eg, `status_503`, `errors`, `hits`)';
 };
 
 Fastly.prototype.listServices = function listServices(message)

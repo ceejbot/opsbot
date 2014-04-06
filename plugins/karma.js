@@ -18,6 +18,7 @@ var Karma = module.exports = function Karma(opts)
     this.brain = opts.brain;
 };
 
+Karma.prototype.name = 'karma';
 Karma.prototype.brain = null;
 Karma.prototype.pattern = /karma\s+(\w+)(\+\+|--)?|(\w+)(\+\+|--)/;
 
@@ -126,8 +127,8 @@ Karma.prototype.take = function take(target, message)
 Karma.prototype.help = function help()
 {
     return 'Keep track of karma.\n' +
-    '<person>++  - adds a karma point\n' +
-    '<person>--  - removes a karma point\n' +
-    'karma person - report current karma points' +
-    'karma all - report everybody\'s karma';
+    '`person++`  - adds a karma point\n' +
+    '`person--`  - removes a karma point\n' +
+    '`karma [person]` - report current karma points for _person_\n' +
+    '`karma all` - report everybody\'s karma';
 };

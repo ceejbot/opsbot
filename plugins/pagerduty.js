@@ -48,8 +48,8 @@ PagerDuty.prototype.matches = function matches(msg)
 PagerDuty.prototype.help = function help(msg)
 {
     return 'get on-call rotation from PagerDuty\n' +
-        'pagerduty oncall - who\'s on call now\n' +
-        'pagerduty rotation - the next 4 days of on call';
+        '`pagerduty oncall` - who\'s on call now\n' +
+        '`pagerduty rotation` - the next 4 days of on call';
 };
 
 PagerDuty.prototype.respond = function respond(message)
