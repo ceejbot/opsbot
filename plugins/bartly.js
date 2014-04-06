@@ -22,7 +22,7 @@ var BARTPlugin = module.exports = function BARTPlugin(opts)
 };
 
 BARTPlugin.prototype.name = 'BART';
-BARTPlugin.prototype.pattern = /(.+)\s+(\w+)?$/;
+BARTPlugin.prototype.pattern = /bart(ly)?\s+(\w+)\s?(\w+)?$/;
 
 BARTPlugin.prototype.stations =
 {
@@ -74,29 +74,24 @@ BARTPlugin.prototype.stations =
 
 BARTPlugin.prototype.matches = function matches(msg)
 {
-    return /^bart/.test(msg);
+    return this.pattern.test(msg);
 };
 
 BARTPlugin.prototype.respond = function respond(message)
 {
     var msg = message.text;
-    msg = msg.replace(/^bart\s?/, '').trim();
+    var matches = msg.match(this.pattern);
 
-    var commands = msg.split(/\s+/);
+    if (matches[2] === 'help')
+        return message.done(this.help());
 
-    switch (commands.length)
-    {
-    case 1:
-        if (commands[0] === 'next') return this.byStation(message, this.defaultStation);
-        return this.byStation(message, commands[0].toLowerCase());
+    if (matches[2] === 'next')
+        return this.byStation(message, this.defaultStation);
 
-    case 2:
-        return this.byStationDestination(message, commands[0].toLowerCase(), commands[1].toUpperCase());
+    if (!matches[3])
+        return this.byStation(message, matches[2].toLowerCase());
 
-    default:
-        message.done(this.help());
-        break;
-    }
+    this.byStationDestination(message, commands[0].toLowerCase(), commands[1].toUpperCase());
 };
 
 BARTPlugin.prototype.help = function help(msg)

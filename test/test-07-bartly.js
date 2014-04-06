@@ -82,4 +82,54 @@ describe('BART', function()
         msg.on('done', function() { done(); });
         plugin.respond(msg);
     });
+
+    it('matches `bartly help`', function(done)
+    {
+        var plugin = new BART(fakeopts);
+        plugin.matches('bartly help').must.be.true();
+        done();
+    });
+
+    it('matches `bart help`', function(done)
+    {
+        var plugin = new BART(fakeopts);
+        plugin.matches('bart help').must.be.true();
+        done();
+    });
+
+    it('matches `bart foo bar`', function(done)
+    {
+        var plugin = new BART(fakeopts);
+        plugin.matches('bart foo bar').must.be.true();
+        done();
+    });
+
+    it('matches `bartly foo bar`', function(done)
+    {
+        var plugin = new BART(fakeopts);
+        plugin.matches('bartly foo bar').must.be.true();
+        done();
+    });
+
+    it('pattern breaks command & target correctly', function(done)
+    {
+        var plugin = new BART(fakeopts);
+        var matches = 'bart 12th frmt'.match(plugin.pattern);
+        matches.must.be.truthy();
+        matches[2].must.equal('12th');
+        matches[3].must.equal('frmt');
+        done();
+    });
+
+    it('pattern breaks command & target correctly', function(done)
+    {
+        var plugin = new BART(fakeopts);
+        var matches = 'bartly milb pitt'.match(plugin.pattern);
+        matches.must.be.truthy();
+        matches[2].must.equal('milb');
+        matches[3].must.equal('pitt');
+        done();
+    });
+
+
 });
