@@ -6,12 +6,11 @@ var
     restify = require('restify')
     ;
 
-var NPMPlugin = module.exports = function NPMPlugin()
+var NPMPlugin = module.exports = function NPMPlugin(opts)
 {
-    this.client = restify.createJsonClient(
-    {
-        url: 'https://registry.npmjs.org',
-    });
+    this.log = opts.log;
+    this.registry = restify.createJsonClient({ url: 'https://registry.npmjs.org' });
+    this.downloads = restify.createJsonClient({ url: 'https://api.npmjs.org/' });
 };
 
 NPMPlugin.prototype.name = 'npm';
@@ -39,7 +38,7 @@ NPMPlugin.prototype.respond = function respond(message)
 
     var self = this;
 
-    this.client.get('/' + package, function(err, request, res, obj)
+    this.registry.get('/' + package, function(err, request, res, obj)
     {
         if (err)
         {
@@ -59,20 +58,27 @@ NPMPlugin.prototype.respond = function respond(message)
 
         struct.fields.push({ title: 'More info', value: '<https://npmjs.org/package/' + package + '>' });
 
-        if (obj.author) struct.fields.push({ title: 'author', value: obj.author.name + ' &lt;' + obj.author.email + '&gt;' });
+        if (obj.author)
+        {
+            struct.fields.push({
+                title: 'author',
+                value: obj.author.name + ' &lt;' + obj.author.email + '&gt;',
+                short: true
+            });
+        }
         if (obj.maintainers)
         {
             tmp = _.map(obj.maintainers, function(m)
             {
                 return m.name + ' &lt;' + m.email + '&gt;';
             }).join(', ');
-            struct.fields.push({ title: 'maintainers', value: tmp });
+            struct.fields.push({ title: 'maintainers', value: tmp, short: true });
         }
 
         if (obj.contributors)
         {
             tmp = _.pluck(obj.contributors, 'name').join(', ');
-            struct.fields.push({ title: 'contributors', value: tmp });
+            struct.fields.push({ title: 'contributors', value: tmp, short: true });
         }
 
         if (obj.homepage) struct.fields.push({ title: 'homepage', value: '<' + obj.homepage + '>', short: true });
@@ -104,7 +110,49 @@ NPMPlugin.prototype.respond = function respond(message)
             unfurl_links: true
         };
 
-        message.done(reply);
+        self.getDownloadsFor(package, function(err, downloads)
+        {
+            if (downloads)
+            {
+                var tmp = '';
+                if (downloads.last_week) tmp += 'Last week: ' + downloads.last_week;
+                if (downloads.last_month) tmp += 'Last month: ' + downloads.last_month;
+                reply.attachments[0].fields.push({
+                    title: 'downloads',
+                    value: tmp,
+                    short: true
+                });
+            }
+            message.done(reply);
+        });
+
+    });
+};
+
+NPMPlugin.prototype.getDownloadsFor = function getDownloadsFor(package, callback)
+{
+    var self = this;
+    var result = {};
+
+    this.downloads.get('/downloads/point/last-week/' + package, function(err, request, res, obj)
+    {
+        if (err)
+        {
+            self.log.error({error: err, package: package }, 'downloads api error');
+            return callback(err);
+        }
+
+        result.last_week = obj.downloads;
+        self.downloads.get('/downloads/point/last-month/' + package, function(err, request, res, obj)
+        {
+            if (err)
+            {
+                self.log.error({error: err, package: package }, 'downloads api error');
+                return callback(result);
+            }
+            result.last_month = obj.downloads;
+            callback(null, result);
+        });
     });
 };
 
