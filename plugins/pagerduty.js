@@ -27,6 +27,7 @@ var PagerDuty = module.exports = function PagerDuty(opts)
     assert(opts.urlprefix && _.isString(opts.urlprefix), 'you must pass a `urlprefix` option');
 
     this.opts = opts;
+    this.log = opts.log;
     this.reallybase = 'https://' + opts.urlprefix + '.pagerduty.com';
     this.baseurl = 'https://' + opts.urlprefix + '.pagerduty.com/api/v1/';
     this.reqopts =
@@ -38,7 +39,7 @@ var PagerDuty = module.exports = function PagerDuty(opts)
 
 PagerDuty.prototype.name = 'Pager Duty';
 PagerDuty.prototype.client = null;
-PagerDuty.prototype.pattern = /^pagerduty\s+(\w+)\s*$/;
+PagerDuty.prototype.pattern = /^pagerduty\s+(\w+)\s*(\w+)?$|(who's on call)/;
 
 PagerDuty.prototype.matches = function matches(msg)
 {
@@ -54,15 +55,24 @@ PagerDuty.prototype.help = function help(msg)
 
 PagerDuty.prototype.respond = function respond(message)
 {
-    var matches = this.pattern.exec(message.text);
-    var command = matches ? matches[1] : 'help';
+    var matches = this.pattern.exec(message.text.trim());
 
-    switch (command)
+    if (matches[3] === 'who\'s on call')
+        return this.oncall(message);
+
+    switch (matches[1].toLowerCase())
     {
     case 'oncall':
         return this.oncall(message);
     case 'rotation':
         return this.rotation(message);
+    case 'incidents':
+    case 'open':
+        return this.opened(message);
+    case 'ack':
+    case 'acknowledge':
+    case 'resolve':
+        return message.done('TBD');
     default:
         message.done(this.help());
     }
@@ -133,6 +143,40 @@ PagerDuty.prototype.rotation = function rotation(message)
 
         message.done(rota.join('\n'));
     });
+};
+
+// GET incidents/:id
+// PUT incidents/:id/acknowledge
+// PUT incidents/:id/resolve
+
+PagerDuty.prototype.opened = function opened(message)
+{
+    var self = this;
+
+    this.execute('/incidents?status=triggered,acknowledged')
+    .then(function(response)
+    {
+        var incidents = response.incidents;
+
+        if (incidents.length === 0)
+            return message.done('No incidents open! Yay!');
+
+        // id, html_url, trigger_summary_data
+
+        var result = _.map(incidents, function(incident)
+        {
+            // TODO horrible hack for the moment
+            return '*incident:* <' + incident.html_url + '|' + incident.id + '>\n' +
+                JSON.stringify(incident.trigger_summary_data);
+        });
+
+        message.done(result.join('\n'));
+    }, function(err)
+    {
+        self.log.error({ error: err }, 'problem using pagerduty api');
+        message.done('Problem fetching open incidents: ' + err.message);
+    });
+
 };
 
 PagerDuty.prototype.execute = function execute(opts)

@@ -73,6 +73,67 @@ describe('PagerDuty', function()
         });
     });
 
+    describe('pattern', function()
+    {
+        var plugin;
+
+        before(function(done)
+        {
+            plugin = new PagerDuty(fakeopts);
+            done();
+        });
+
+        it('matches `pagerduty help`', function(done)
+        {
+            plugin.matches('pagerduty help').must.be.true();
+            done();
+        });
+
+        it('matches `pagerduty oncall`', function(done)
+        {
+            plugin.matches('pagerduty oncall').must.be.true();
+            done();
+        });
+
+        it('matches `who\'s on call`', function(done)
+        {
+            plugin.matches("who's on call").must.be.true();
+            var matches = "who's on call".match(plugin.pattern);
+            console.log(matches);
+            done();
+        });
+
+        it('matches `pagerduty rotation`', function(done)
+        {
+            plugin.matches('pagerduty rotation').must.be.true();
+            done();
+        });
+
+        it('matches `pagerduty incidents`', function(done)
+        {
+            plugin.matches('pagerduty incidents').must.be.true();
+            done();
+        });
+
+        it('matches `pagerduty incident four`', function(done)
+        {
+            plugin.matches('pagerduty incident four').must.be.true();
+            done();
+        });
+
+        it('matches `pagerduty ack four`', function(done)
+        {
+            plugin.matches('pagerduty ack four').must.be.true();
+            done();
+        });
+
+        it('matches `pagerduty resolve four`', function(done)
+        {
+            plugin.matches('pagerduty resolve four').must.be.true();
+            done();
+        });
+    });
+
     describe('oncall', function()
     {
         it('has tests');
