@@ -2,7 +2,11 @@
 
 Hermione the npm operations [Slack](https://slack.com) chat battlestation is not yet fully operational but it is capable of demonstrating its power on a target, a military target. Name the system!
 
-[![Build Status](https://secure.travis-ci.org/ceejbot/opsbot.png)](http://travis-ci.org/ceejbot/opsbot)  [![Dependencies](https://david-dm.org/ceejbot/opsbot.png)](https://david-dm.org/ceejbot/opsbot)  [ ![Codeship Status for ceejbot/opsbot](https://www.codeship.io/projects/119680c0-a010-0131-65f3-7aa4d7a4ba13/status?branch=master)](https://www.codeship.io/projects/18162)
+[![Dependencies](https://david-dm.org/ceejbot/opsbot.png)](https://david-dm.org/ceejbot/opsbot)  
+[![Travis Status](https://secure.travis-ci.org/ceejbot/opsbot.png)](http://travis-ci.org/ceejbot/opsbot)  
+[![Codeship Status for ceejbot/opsbot](https://www.codeship.io/projects/119680c0-a010-0131-65f3-7aa4d7a4ba13/status?branch=master)](https://www.codeship.io/projects/18162)  
+[![wercker status](https://app.wercker.com/status/cdbf5a6a3470b50f8de8f03ae7f7a6e8/m/ "wercker status")](https://app.wercker.com/project/bykey/cdbf5a6a3470b50f8de8f03ae7f7a6e8)  
+[![Build Status](https://drone.io/github.com/ceejbot/opsbot/status.png)](https://drone.io/github.com/ceejbot/opsbot/latest)
 
 ## deploying
 
