@@ -6,14 +6,14 @@ var
     it          = lab.it,
     before      = lab.before,
     demand      = require('must'),
-    Bot         = require('../lib/bot'),
+    Responder         = require('../lib/responder'),
     bunyan      = require('bunyan'),
     MockMessage = require('./mocks/message'),
     MockPlugin  = require('./mocks/plugin'),
     StatusCats  = require('../plugins/statuscats')
     ;
 
-describe('Bot', function()
+describe('Responder', function()
 {
     var log;
 
@@ -27,21 +27,21 @@ describe('Bot', function()
     {
         it('requires an options object', function(done)
         {
-            function shouldThrow() { return new Bot(); }
+            function shouldThrow() { return new Responder(); }
             shouldThrow.must.throw(/options object/);
             done();
         });
 
         it('requires a log option', function(done)
         {
-            function shouldThrow() { return new Bot({}); }
+            function shouldThrow() { return new Responder({}); }
             shouldThrow.must.throw(/bunyan logger/);
             done();
         });
 
         it('can be constructed', function(done)
         {
-            var bot = new Bot({ log: log, botname: 'test' });
+            var bot = new Responder({ log: log, botname: 'test' });
             done();
         });
     });
@@ -57,7 +57,7 @@ describe('Bot', function()
                 plugins: { statuscats: {} }
             };
 
-            var bot = new Bot(opts);
+            var bot = new Responder(opts);
             bot.must.have.property('plugins');
             bot.plugins.must.be.an.object();
             bot.plugins.must.have.property('statuscats');
@@ -79,7 +79,7 @@ describe('Bot', function()
                 log: log,
                 plugins: { }
             };
-            bot = new Bot(opts);
+            bot = new Responder(opts);
             bot.plugins.mock = new MockPlugin();
             done();
         });

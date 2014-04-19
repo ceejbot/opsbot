@@ -3,6 +3,9 @@
   "description": "hermione the npm operations chat bot",
   "version": "0.2.3",
   "author": "C J Silverio <ceejceej@gmail.com>",
+  "bin": {
+    "opsbot": "bin/opsbot.js"
+  },
   "bugs": {
     "url": "https://github.com/ceejbot/opsbot/issues"
   },
@@ -54,8 +57,8 @@
     "url": "git://github.com/ceejbot/opsbot.git"
   },
   "scripts": {
-    "start": "node server.js",
-    "dev": "NODE_ENV=dev node server.js",
+    "start": "node bin/opsbot.js",
+    "dev": "NODE_ENV=dev bin/opsbot.js",
     "test-suite": "lab -v -t 70 -c test/*.js",
     "check-hint": "jshint *.js lib/*.js plugins/*.js test/*.js",
     "check-style": "jscs *.js lib/*.js plugins/*.js test/*.js",

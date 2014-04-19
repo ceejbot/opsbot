@@ -1,6 +1,6 @@
 var
     _       = require('lodash'),
-    Bot     = require('./lib/bot'),
+    Bot     = require('./lib/responder'),
     logging = require('./lib/logging'),
     Message = require('./lib/message'),
     restify = require('restify'),
