@@ -216,5 +216,4 @@ describe('karma', function()
             rimraf(dbpath, done);
         });
     });
-
 });

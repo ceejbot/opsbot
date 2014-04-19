@@ -25,9 +25,11 @@ var PagerDuty = module.exports = function PagerDuty(opts)
     assert(opts && _.isObject(opts), 'you must pass an options object');
     assert(opts.apikey && _.isString(opts.apikey), 'you must pass an `apikey` option');
     assert(opts.urlprefix && _.isString(opts.urlprefix), 'you must pass a `urlprefix` option');
+    assert(opts.brain, 'the pagerduty plugin requires a brain for storage');
 
     this.opts = opts;
     this.log = opts.log;
+    this.brain = opts.brain;
     this.reallybase = 'https://' + opts.urlprefix + '.pagerduty.com';
     this.baseurl = 'https://' + opts.urlprefix + '.pagerduty.com/api/v1/';
     this.reqopts =
@@ -38,8 +40,9 @@ var PagerDuty = module.exports = function PagerDuty(opts)
 };
 
 PagerDuty.prototype.name = 'Pager Duty';
+PagerDuty.prototype.brain = null;
 PagerDuty.prototype.client = null;
-PagerDuty.prototype.pattern = /^pagerduty\s+(\w+)\s*(\w+)?$|(who's on call)/;
+PagerDuty.prototype.pattern = /^pagerduty\s+(\w+)\s*(.+)?$|(who's on call)/;
 
 PagerDuty.prototype.matches = function matches(msg)
 {
@@ -50,7 +53,15 @@ PagerDuty.prototype.help = function help(msg)
 {
     return 'get on-call rotation from PagerDuty\n' +
         '`pagerduty oncall` - who\'s on call now\n' +
-        '`pagerduty rotation` - the next 4 days of on call';
+        '`pagerduty rotation` - the next 4 days of on call\n' +
+        '`pagerduty open` - open incidents\n' +
+        '`pagerduty incident #` - details on the incident by ID or number\n' +
+        '`pagerduty ack [id]` - ack an incident by ID\n' +
+        '`pagerduty resolve [id]` - resolve an incident by ID\n' +
+        '`pagerduty users` - list all users we have ids for\n' +
+        '`pagerduty userid [id]` - set your pagerduty id to *id*\n' +
+        '`pagerduty userid [slackuser] [id]` - set the pagerduty id for another slack user\n' +
+        '';
 };
 
 PagerDuty.prototype.respond = function respond(message)
@@ -69,14 +80,31 @@ PagerDuty.prototype.respond = function respond(message)
     case 'incidents':
     case 'open':
         return this.opened(message);
+    case 'details':
+    case 'incident':
+        return this.incident(message, matches[2]);
     case 'ack':
     case 'acknowledge':
+        return this.ack(message, matches[2]);
     case 'resolve':
-        return message.done('TBD');
+        return this.resolve(message, matches[2]);
+    case 'users':
+        return this.users(message);
+    case 'userid':
+        return this.userid(message, matches[2]);
     default:
         message.done(this.help());
     }
 };
+
+// utilities --------------------------
+
+PagerDuty.prototype.formatUser = function formatUser(u)
+{
+    return '<' + this.reallybase + u.user_url + '|' + u.name + '>';
+};
+
+// schedules --------------------------
 
 PagerDuty.prototype.oncall = function oncall(message)
 {
@@ -89,10 +117,7 @@ PagerDuty.prototype.oncall = function oncall(message)
         var result = _.filter(users, function(u)
         {
             return (u.on_call[0].level === 1);
-        }).map(function(u)
-        {
-            return u.name + ' <' + u.email + '>';
-        });
+        }).map(self.formatUser.bind(self));
 
         message.done('On call now: ' + result.join(', '));
     });
@@ -134,7 +159,7 @@ PagerDuty.prototype.rotation = function rotation(message)
 
             _.each(rotation.entries, function(e)
             {
-                result += '    ' + moment(e.start).calendar() + ': ' + e.user.name + ' <' + e.user.email + '>\n';
+                result += '    ' + moment(e.start).calendar() + ': ' + self.formatUser(e.user) + '\n';
             });
 
             i++;
@@ -145,15 +170,157 @@ PagerDuty.prototype.rotation = function rotation(message)
     });
 };
 
-// GET incidents/:id
-// PUT incidents/:id/acknowledge
-// PUT incidents/:id/resolve
+// users --------------------------
+
+PagerDuty.prototype.users = function users(message)
+{
+    this.brain.createReadStream()
+    .on('data', function(data)
+    {
+        var id = data.key.replace('user:', '');
+        message.send('PagerDuty: ' + id + ' => ' + data.value);
+    })
+    .on('error', function(err)
+    {
+        message.send('Error fetching pagerduty users: ' + err.message);
+    })
+    .on('end', function() { message.done(); } );
+};
+
+PagerDuty.prototype.userid = function userid(message, id)
+{
+    var self = this,
+        sender = message.user_name;
+
+    if (id.match(/\s+/))
+    {
+        var pieces = id.split(/\s+/);
+        sender = pieces[0];
+        id = pieces[1];
+    }
+
+    this.brain.put('user:' + sender, id, function(err)
+    {
+        if (err) message.done(err.message);
+        else message.done('pager duty id for ' + sender + ' set to ' + id);
+    });
+};
+
+PagerDuty.prototype.lookupUser = function lookupUser(message)
+{
+    var self = this,
+        deferred = P.defer(),
+        sender = message.user_name;
+
+    this.brain.get('user:' + sender, function(err, id)
+    {
+        if (err) return deferred.reject(err);
+        deferred.resolve(id);
+    });
+
+    return deferred.promise;
+};
+
+// incidents --------------------------
+
+PagerDuty.prototype.incident = function incident(message, id)
+{
+    var self = this;
+
+    this.execute('/incidents/' + id)
+    .then(function(incident)
+    {
+        var result = [];
+        result.push('*ID:* <' + incident.html_url + '|' + incident.id + '>');
+        result.push('*Number:* ' + incident.incident_number);
+        result.push('*Started:* ' + moment(incident.created_on).fromNow());
+        result.push('*Status:* ' + incident.status);
+        result.push('*Key:* ' + incident.incident_key);
+
+        message.done(result.join('\n'));
+    }, function(err)
+    {
+        self.log.error({ error: err }, '/incident/' + id);
+        message.done('Problem fetching incident: ' + err.message);
+    });
+};
+
+PagerDuty.prototype.ack = function ack(message, id)
+{
+    var self = this;
+
+    this.lookupUser(message)
+    .then(function(user)
+    {
+        var opts =
+        {
+            uri: self.baseurl + 'incidents/' + id + '/acknowledge?requester_id=' + user,
+            method: 'PUT',
+        };
+        return self.execute(opts);
+    })
+    .then(function(reply)
+    {
+        if (reply.error)
+        {
+            if (reply.error.code === 5001)
+                message.done('Incident ' + id + ' not found. Are you using the PagerDuty ID string?');
+            else if (reply.error.code === 1001)
+                message.done('Incident ' + id + ' already resolved, slowpoke.');
+            else
+                message.done('Could not ack: ' + reply.error.message);
+            return;
+        }
+
+        message.done('Incident ' + id + ' acked.');
+
+    }, function(err)
+    {
+        self.log.error({ error: err }, '/incident/' + id);
+        message.done('Problem fetching incident: ' + err.message);
+    });
+};
+
+PagerDuty.prototype.resolve = function resolve(message, id)
+{
+    var self = this;
+
+    this.lookupUser(message)
+    .then(function(user)
+    {
+        var opts =
+        {
+            uri: self.baseurl + 'incidents/' + id + '/resolve?requester_id=' + user,
+            method: 'PUT',
+        };
+        return self.execute(opts);
+    })
+    .then(function(reply)
+    {
+        if (reply.error)
+        {
+            if (reply.error.code === 5001)
+                message.done('Incident ' + id + ' not found. Are you using the PagerDuty ID string?');
+            else if (reply.error.code === 1001)
+                message.done('Incident ' + id + ' already resolved, slowpoke.');
+            else
+                message.done('Could not resolve: ' + reply.error.message);
+            return;
+        }
+        message.done('Incident ' + id + ' resolved.');
+
+    }, function(err)
+    {
+        self.log.error({ error: err }, '/incident/' + id);
+        message.done('Problem fetching incident: ' + err.message);
+    });
+};
 
 PagerDuty.prototype.opened = function opened(message)
 {
     var self = this;
 
-    this.execute('/incidents?status=triggered,acknowledged')
+    self.execute('/incidents?status=triggered,acknowledged')
     .then(function(response)
     {
         var incidents = response.incidents;
@@ -176,8 +343,9 @@ PagerDuty.prototype.opened = function opened(message)
         self.log.error({ error: err }, 'problem using pagerduty api');
         message.done('Problem fetching open incidents: ' + err.message);
     });
-
 };
+
+// API --------------------------
 
 PagerDuty.prototype.execute = function execute(opts)
 {
@@ -188,7 +356,7 @@ PagerDuty.prototype.execute = function execute(opts)
     {
         opts =
         {
-            uri: this.baseurl + opts,
+            uri: self.baseurl + opts,
             method: 'GET'
         };
     }
@@ -197,9 +365,6 @@ PagerDuty.prototype.execute = function execute(opts)
     request(opts, function(err, res, body)
     {
         if (err) return deferred.reject(err);
-        if (!res || res.statusCode !== 200)
-            return deferred.reject(new Error(res.statusCode));
-
         deferred.resolve(body);
     });
 

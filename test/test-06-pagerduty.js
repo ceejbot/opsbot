@@ -6,13 +6,18 @@ var
     it          = lab.it,
     before      = lab.before,
     demand      = require('must'),
+    path        = require('path'),
+    rimraf      = require('rimraf'),
+    Brain       = require('../lib/brain'),
     MockMessage = require('./mocks/message'),
     PagerDuty   = require('../plugins/pagerduty')
     ;
 
+var dbpath = path.join(__dirname, 'db');
+
 describe('PagerDuty', function()
 {
-    var fakeopts = { apikey: 'foo', urlprefix: 'bar' };
+    var plugin, brain, fakeopts;
 
     describe('plugin', function()
     {
@@ -30,9 +35,24 @@ describe('PagerDuty', function()
             done();
         });
 
+        it('requires a brain option', function(done)
+        {
+            function shouldThrow() { return new PagerDuty({ apikey: 'foo', urlprefix: 'bar' }); }
+            shouldThrow.must.throw(/brain/);
+            done();
+        });
+
         it('can be constructed', function(done)
         {
-            var plugin = new PagerDuty(fakeopts);
+            brain = new Brain({ dbpath: dbpath });
+            fakeopts =
+            {
+                apikey: 'foo',
+                urlprefix: 'bar',
+                brain: brain.get('karma')
+            };
+
+            plugin = new PagerDuty(fakeopts);
             plugin.must.be.truthy();
             plugin.must.have.property('help');
             plugin.help.must.be.a.function();
@@ -45,7 +65,6 @@ describe('PagerDuty', function()
 
         it('implements help() correctly', function(done)
         {
-            var plugin = new PagerDuty(fakeopts);
             var help = plugin.help();
             help.must.be.a.string();
             help.length.must.be.above(0);
@@ -54,7 +73,6 @@ describe('PagerDuty', function()
 
         it('implements matches() correctly', function(done)
         {
-            var plugin = new PagerDuty(fakeopts);
             plugin.matches('NOT VALID').must.be.false();
             plugin.matches('pagerduty help').must.be.true();
             plugin.matches('pagerduty oncall').must.be.true();
@@ -64,7 +82,6 @@ describe('PagerDuty', function()
 
         it('implements respond() correctly', function(done)
         {
-            var plugin = new PagerDuty(fakeopts);
             plugin.must.have.property('respond');
 
             var msg = new MockMessage({text: 'pagerduty asdf'});
@@ -99,7 +116,6 @@ describe('PagerDuty', function()
         {
             plugin.matches("who's on call").must.be.true();
             var matches = "who's on call".match(plugin.pattern);
-            console.log(matches);
             done();
         });
 
@@ -132,15 +148,36 @@ describe('PagerDuty', function()
             plugin.matches('pagerduty resolve four').must.be.true();
             done();
         });
+
+        it('matches `pagerduty userid BLAH`', function(done)
+        {
+            plugin.matches('pagerduty userid BLAH').must.be.true();
+            done();
+        });
+
+        it('matches `pagerduty userid NAME BLAH`', function(done)
+        {
+            plugin.matches('pagerduty userid NAME BLAH').must.be.true();
+            done();
+        });
     });
 
-    describe('oncall', function()
+    describe('commands', function()
     {
-        it('has tests');
+        it('oncall has tests');
+        it('rotation has tests');
+        it('open has tests');
+        it('details has tests');
+        it('ack has tests');
+        it('resolve has tests');
     });
 
-    describe('rotation', function()
+    lab.after(function(done)
     {
-        it('has tests');
+        brain.close(function()
+        {
+            rimraf(dbpath, done);
+        });
     });
+
 });
