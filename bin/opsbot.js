@@ -44,7 +44,8 @@ if (!Opsbot)
     process.exit(1);
 }
 
-var config = require(opts.config);
+var cf = path.resolve(process.cwd(), opts.config);
+var config = require(cf);
 config.log = logging(config);
 config.listen = process.env.PORT || config.listen || 3000;
 
