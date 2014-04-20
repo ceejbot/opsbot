@@ -10,7 +10,34 @@ Hermione the npm operations [Slack](https://slack.com) chat battlestation is not
 
 ## deploying
 
-Clone the repo somewhere. Copy `config.example.js` to `config.js`. Edit to your taste. You can have it log to console and/or log to a file depending on how you want to keep its logs. `npm start` runs the bot in prod mode. `npm run dev` will run it with pretty-printed console output.
+You'll want to create your own little node package for your installation. This package needs a `package.json`, a configuration file, and a shell script to run the bot.
+
+Here's a nice minimal package.json, requiring opsbot & a third-party plugin:
+
+```json
+{
+  "name": "deathstar",
+  "version": "0.0.0",
+  "description": "a bot of destruction",
+  "scripts": {
+    "start": "bash run.sh",
+    "dev": "NODE_ENV=dev bash run.sh"
+  },
+  "dependencies": {
+    "opsbot": "~0.3.0",
+    "orlyowl": "^0.0.1"
+  }
+}
+```
+
+Here's `run.sh`:
+
+```bash
+#!/bin/bash
+opsbot --config ./configuration.js
+```
+
+To create your configuration file, start by copying [config.example.js](https://github.com/ceejbot/opsbot/blob/master/config.example.js). Edit to your taste. You can have it log to console and/or log to a file depending on how you want to keep its logs. `npm start` runs the bot in prod mode. `npm run dev` will run it with pretty-printed console output.
 
 Set up an outgoing webhook in Slack that points to `/messages` on your deployment URI. Set up a trigger word for the integration that is the botname you've configured. You can alternatively have the bot sent all traffic from a single channel.
 
@@ -45,7 +72,7 @@ module.exports =
 
 `botname: help`: return a help message
 
-`botname: status`: return status; not yet implemented and might not be needed.
+`botname: status`: gives bot uptime, loaded plugins, and location of the bot's brain.
 
 ## writing plugins
 
