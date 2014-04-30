@@ -54,12 +54,10 @@ Deployer.prototype.execute = function execute(environment, message)
 
     ansible.stdout.on('data', function(data) {
         message.send(data.toString());
-        console.log('stdout: ' + data);
     });
 
     ansible.stderr.on('data', function(data) {
         message.send(data.toString());
-        console.log('stdout: ' + data);
     });
 
     ansible.on('close', function(code) {
