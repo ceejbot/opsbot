@@ -15,7 +15,7 @@ var Deployer = module.exports = function Deployer(opts) {
 };
 
 Deployer.prototype.name = 'deployer';
-Deployer.prototype.pattern = /deployer\s+(\w+)$/;
+Deployer.prototype.pattern = /deployer\s+(development|staging|production)$/;
 
 Deployer.prototype.matches = function matches(msg)
 {
