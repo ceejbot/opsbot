@@ -40,7 +40,7 @@ Deployer.prototype.respond = function respond(message)
 Deployer.prototype.help = function help(msg)
 {
     return 'Deploy www for a specific environment\n' +
-        '`deployer [environment]` - deploy to the enviornment given\n';
+        '`deployer [environment]` - deploy to the environment given\n';
 };
 
 Deployer.prototype.execute = function execute(environment, message)
