@@ -45,10 +45,9 @@ Deployer.prototype.help = function help(msg)
 
 Deployer.prototype.execute = function execute(environment, message)
 {
-    var spawn = require('child_process').spawn,
-        ansible = spawn('ansible-playbook', [this.playbook, '-i', environment], {
-            cwd: this.ansibleFolder
-        });
+    var ansible = this.spawn('ansible-playbook', [this.playbook, '-i', environment], {
+        cwd: this.ansibleFolder
+    });
 
     message.send("deploying www to" + environment);
 

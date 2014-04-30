@@ -50,10 +50,32 @@ describe('deployer', function()
         done();
     });
 
-    it('implements respond() correctly', { timeout: 6000 }, function(done)
+    it('calls done() if no environment is provided to respond()', { timeout: 6000 }, function(done)
     {
-        var msg = new MockMessage({text: 'npm semver'});
-        msg.on('done', function() {  });
+        var msg = new MockMessage({text: 'ansible'});
+        msg.on('done', function() { done(); });
         plugin.respond(msg);
+    });
+
+    it('calls done() if an environment is provided to respond()', { timeout: 6000 }, function(done)
+    {
+        var msg = new MockMessage({text: 'deployer development'});
+        msg.on('done', function() { done(); });
+        plugin.respond(msg);
+    });
+
+    it('calls done() if no environment is provided to respond()', { timeout: 6000 }, function(done)
+    {
+        var msg = new MockMessage({text: 'deployer'});
+        msg.on('done', function() { done(); });
+        plugin.respond(msg);
+    });
+
+    it('defaults spawn to child_process.spawn() if now spawn is provided', { timeout: 6000}, function(done) {
+        plugin = new Deployer({
+            log: new MockLogger()
+        });
+        plugin.spawn.must.be.a.function();
+        done();
     });
 });
