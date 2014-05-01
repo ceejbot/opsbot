@@ -43,7 +43,7 @@ Set up an outgoing webhook in Slack that points to `/messages` on your deploymen
 
 Set up an incoming webhook in Slack. Add its full URI (with token) to the 'hook' field in your config.
 
-List the plugins you want to load as fields in the `plugins` hash. The value should be an object with any required configuration for the plugin.
+List the plugins you want to load as fields in the `plugins` hash. The value should be an object with any required configuration for the plugin. Note that opsbot can load built-in plugins and plugins installed via npm.
 
 Example configuration:
 
@@ -144,15 +144,17 @@ Please follow the code style in existing files (4 spaces to indent, Allman braci
 
 If you want to use promises, go ahead! [bluebird](https://github.com/petkaantonov/bluebird) is already in the package deps.
 
+If you write a plugin for opsbot & publish it on npm, please let me know so I can link it here! It might also help to give it the keyword `opsbot` so other people can find it when they search.
+
 ## TODO
 
-I'm running this against our Slack chat already. The existing plugins work perfectly well!
-
-- write more plugins
+I'm running this against our Slack chat already. The existing plugins work perfectly well. I'm not calling it 1.0 yet because there is a small chance I might have to change the plugin API if I discover it isn't sufficient. The core features are in place, however.
 
 ## Credits
 
 Hermione the Opsbot is built on [node-restify](http://mcavage.me/node-restify/).
+
+My colleagues [bcoe](https://github.com/bcoe) and [othiym23](https://github.com/othiym23/) have been invaluable.
 
 ## License
 
