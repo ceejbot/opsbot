@@ -46,7 +46,7 @@ describe('deployer', function()
     it('implements matches() correctly', function(done)
     {
         plugin.matches('NOT MATCH').must.be.false();
-        plugin.matches('deployer production').must.be.true();
+        plugin.matches('deploy production').must.be.true();
         done();
     });
 
@@ -59,14 +59,14 @@ describe('deployer', function()
 
     it('calls done() if an environment is provided to respond()', { timeout: 6000 }, function(done)
     {
-        var msg = new MockMessage({text: 'deployer development'});
+        var msg = new MockMessage({text: 'deploy development'});
         msg.on('done', function() { done(); });
         plugin.respond(msg);
     });
 
     it('calls done() if no environment is provided to respond()', { timeout: 6000 }, function(done)
     {
-        var msg = new MockMessage({text: 'deployer'});
+        var msg = new MockMessage({text: 'deploy'});
         msg.on('done', function() { done(); });
         plugin.respond(msg);
     });

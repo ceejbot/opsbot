@@ -7,7 +7,7 @@ module.exports = function(command) {
         },
         stdout: {
             on: function(listener, cb) {
-                cb('stdout');
+                cb('stdout ********');
             }
         },
         stderr: {
