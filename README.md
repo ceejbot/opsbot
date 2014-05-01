@@ -43,7 +43,7 @@ Set up an outgoing webhook in Slack that points to `/messages` on your deploymen
 
 Set up an incoming webhook in Slack. Add its full URI (with token) to the 'hook' field in your config.
 
-List the plugins you want to load as fields in the `plugins` hash. The value should be an object with any required configuration for the plugin. Note that opsbot can load built-in plugins and plugins installed via npm.
+List the plugins you want to load as fields in the `plugins` hash. The value should be an object with any required configuration for the plugin. Note that opsbot can load both built-in plugins and plugins installed via npm.
 
 Example configuration:
 
@@ -124,12 +124,12 @@ OwlPlugin.prototype.help = function help()
 ## Provided plugins
 
 __bartly:__ Real-time BART departure information by station.  
-__deployer:__ invoke an ansible deployment playbook; probably needs customizaton!  
+__deployer:__ Invoke an ansible deployment playbook; probably needs customizaton!  
 __fastly:__ Fetches some current stats from the named Fastly service.  
 __flipit:__ Table flip!  
 __karma:__ Give points and take them away.  
 __npm:__ Fetches package information from npm.  
-__pagerduty:__ Show who's on call now & who's up in the next few days; list open incidents; ack & resolve incidents.
+__pagerduty:__ Show who's on call now & who's up in the next few days; list open incidents; ack & resolve incidents.  
 __statuscats:__ Show an [http status cat](http://httpcats.herokuapp.com).  
 
 ## Plugin storage
