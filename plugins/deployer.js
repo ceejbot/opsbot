@@ -51,9 +51,11 @@ Deployer.prototype.execute = function execute(environment, message)
     ansible.stdout.on('data', function(data) {
         var output = data.toString();
 
-        if (output.indexOf('***') > -1) {
-            message.send(output.replace(/\*/g, ''));
-        }
+        // Output either the top-level description of the play
+        // being executed, or indicate when a play failed.
+        ['***', 'ok=', 'fatal='].forEach(function(matcher) {
+          if (outpout.indexOf(matcher) > -1) message.send(output.replace(/\*/g, ''));
+        });
     });
 
     ansible.stderr.on('data', function(data) {
