@@ -1,7 +1,6 @@
 /*
 Perform deployments with Ansible, and robots!
 */
-
 var _ = require('lodash'),
     spawn = require('child_process').spawn;
 
@@ -49,7 +48,7 @@ Deployer.prototype.execute = function execute(environment, message)
         cwd: this.ansibleFolder
     });
 
-    message.send("deploying www to" + environment);
+    message.send("deploying www to " + environment);
 
     ansible.stdout.on('data', function(data) {
         message.send(data.toString());
