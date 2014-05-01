@@ -24,7 +24,7 @@ Here's a nice minimal package.json, requiring opsbot & a third-party plugin:
     "dev": "NODE_ENV=dev bash run.sh"
   },
   "dependencies": {
-    "opsbot": "~0.3.0",
+    "opsbot": "~0.4.1",
     "orlyowl": "^0.0.1"
   }
 }
@@ -61,7 +61,7 @@ module.exports =
     },
     plugins:
     {
-        fastly: { apikey: 'your-key-here' },
+        pagerduty: { apikey: 'your-key-here', urlprefix: 'your-prefix' },
         npm: {},
         statuscats: {},
     }
@@ -124,11 +124,12 @@ OwlPlugin.prototype.help = function help()
 ## Provided plugins
 
 __bartly:__ Real-time BART departure information by station.  
+__deployer:__ invoke an ansible deployment playbook; probably needs customizaton!  
 __fastly:__ Fetches some current stats from the named Fastly service.  
 __flipit:__ Table flip!  
 __karma:__ Give points and take them away.  
 __npm:__ Fetches package information from npm.  
-__pagerduty:__ Show who's on call now & who's up in the next few days.  
+__pagerduty:__ Show who's on call now & who's up in the next few days; list open incidents; ack & resolve incidents.
 __statuscats:__ Show an [http status cat](http://httpcats.herokuapp.com).  
 
 ## Plugin storage

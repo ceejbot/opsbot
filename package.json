@@ -11,7 +11,8 @@
   },
   "contributors": [
     "C J Silverio <ceejceej@gmail.com>",
-    "Forrest L Norvell <ogd@aoaioxxysz.net>"
+    "Forrest L Norvell <ogd@aoaioxxysz.net>",
+    "Benjamin Coe <ben@npmjs.com>"
   ],
   "dependencies": {
     "bart": "^0.0.3",
