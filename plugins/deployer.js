@@ -32,6 +32,7 @@ var PATTERNS =
 var Deployer = module.exports = function Deployer(opts)
 {
     _.extend(this, opts);
+    if (!this.spawn) this.spawn = spawn;
 };
 
 Deployer.prototype.name = 'deployer';
@@ -65,7 +66,7 @@ Deployer.prototype.execute = function execute(app, environment, message)
 {
     var playbook = this.playbooks[app];
 
-    var ansible = spawn('stdbuf',
+    var ansible = this.spawn('stdbuf',
             ['-o0', this.ansible, playbook, '-i', environment],
             { cwd: this.configdir });
 
