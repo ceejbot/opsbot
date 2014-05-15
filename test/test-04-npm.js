@@ -86,7 +86,7 @@ describe('npm', function()
         plugin.respond(msg);
     });
 
-    it('can fetch download stats for the given time period', { timeout: 6000 }, function(done)
+    it('can fetch download stats for the given time period', { timeout: 20000 }, function(done)
     {
         var msg = new MockMessage({text: 'npm downloads last-month'});
         msg.on('done', function() { done(); });

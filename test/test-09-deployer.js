@@ -18,7 +18,14 @@ describe('deployer', function()
     {
         plugin = new Deployer({
             log: new MockLogger(),
-            spawn: spawn
+            spawn: spawn,
+            ansible: '/path/to/ansible-playbook',
+            configdir: '/path/to/ansible/yml',
+            playbooks:
+            {
+                www: './playbooks/www.yml',
+                another:  './playbooks/deploy-another.yml'
+            }
         });
         done();
     });
@@ -72,7 +79,7 @@ describe('deployer', function()
         plugin.respond(msg);
     });
 
-    it('defaults spawn to child_process.spawn() if now spawn is provided', { timeout: 6000}, function(done) {
+    it('defaults spawn to child_process.spawn() if no spawn is provided', { timeout: 6000}, function(done) {
         plugin = new Deployer({
             log: new MockLogger()
         });
