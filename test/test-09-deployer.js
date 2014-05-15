@@ -54,6 +54,7 @@ describe('deployer', function()
     {
         plugin.matches('NOT MATCH').must.be.false();
         plugin.matches('deploy production').must.be.true();
+        plugin.matches('deploy production foo-bar').must.be.true();
         done();
     });
 

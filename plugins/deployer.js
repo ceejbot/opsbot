@@ -36,7 +36,7 @@ var Deployer = module.exports = function Deployer(opts)
 };
 
 Deployer.prototype.name = 'deployer';
-Deployer.prototype.pattern = /deploy\s+(\w+)$/;
+Deployer.prototype.pattern = /deploy\s+(\w+)\s?([\w-]+)?$/;
 
 Deployer.prototype.matches = function matches(msg)
 {
@@ -48,12 +48,13 @@ Deployer.prototype.respond = function respond(message)
     var msg = message.text,
         matches = this.pattern.exec(msg);
 
+
     if (!matches || ['staging', 'production', 'development'].indexOf(matches[1]) == -1) {
         message.done(this.help());
         return;
     }
 
-    this.execute('www', matches[1], message);
+    this.execute('www', matches[1], matches[2] || 'HEAD', message);
 };
 
 Deployer.prototype.help = function help(msg)
@@ -62,12 +63,12 @@ Deployer.prototype.help = function help(msg)
         '`deploy [environment]` - deploy to the environment given\n';
 };
 
-Deployer.prototype.execute = function execute(app, environment, message)
+Deployer.prototype.execute = function execute(app, environment, branch, message)
 {
     var playbook = this.playbooks[app];
 
     var ansible = this.spawn('stdbuf',
-            ['-o0', this.ansible, playbook, '-i', environment],
+            ['-o0', this.ansible, playbook, '-i', environment, '-e', 'npm_www_branch=' + branch],
             { cwd: this.configdir });
 
     var accumulator = [];
