@@ -68,7 +68,7 @@ Deployer.prototype.execute = function execute(app, environment, branch, message)
     var playbook = this.playbooks[app];
 
     var ansible = this.spawn('stdbuf',
-            ['-o0', this.ansible, playbook, '-i', environment, '-e', 'npm_www_branch=' + branch],
+            ['-o0', this.ansible, playbook, '-i', environment, '-e', 'npm_deploy_branch=' + branch],
             { cwd: this.configdir });
 
     var accumulator = [];
