@@ -36,7 +36,7 @@ var Deployer = module.exports = function Deployer(opts)
 };
 
 Deployer.prototype.name = 'deployer';
-Deployer.prototype.pattern = /deploy\s+(\w+)\s?([\w-]+)?$/;
+Deployer.prototype.pattern = /deploy\s+(\w+)\s?([\w-.]+)?$/;
 
 Deployer.prototype.matches = function matches(msg)
 {
