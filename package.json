@@ -17,9 +17,9 @@
   "dependencies": {
     "bart": "^0.0.3",
     "bluebird": "^1.1.0",
-    "bunyan": "^0.22.3",
-    "bunyan-prettystream": "^0.1.3",
-    "dashdash": "^1.5.0",
+    "bunyan": "~0.23.1",
+    "bunyan-prettystream": "~0.1.3",
+    "dashdash": "^1.6.0",
     "flip": "^0.1.1",
     "level": "^0.18.0",
     "level-sublevel": "^5.2.0",
@@ -27,7 +27,7 @@
     "moment": "^2.6.0",
     "node-trello": "^0.1.4",
     "numeral": "^1.5.3",
-    "request": "^2.34.0",
+    "request": "^2.39.0",
     "restify": "^2.6.3"
   },
   "devDependencies": {
@@ -36,7 +36,7 @@
     "lab": "^3.0.1",
     "must": "^0.12.0",
     "rimraf": "^2.2.6",
-    "sinon": "^1.9.0"
+    "sinon": "^1.10.3"
   },
   "directories": {
     "test": "test"
