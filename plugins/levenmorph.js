@@ -30,7 +30,7 @@ Levenmorph.prototype.respond = function respond(message)
         message.done(this.help());
         return;
     }
-    
+
     var trail = levenmorpher(matches[2], matches[3]);
     message.done(trail.join('\n'));
 };
