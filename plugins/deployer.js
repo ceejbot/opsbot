@@ -53,9 +53,8 @@ Deployer.prototype.matches = function matches(msg)
 
 Deployer.prototype.parse = function(text)
 {
-
     var words = text.split(/\s+/);
-    if (words.length < 2 || words[0] !== 'deploy')
+    if (words.length < 3 || words[0] !== 'deploy')
         return { action: 'help' };
 
     var result =
@@ -63,7 +62,7 @@ Deployer.prototype.parse = function(text)
         action:      'deploy',
         script:      '',
         environment: 'development',
-        branch:      'master'
+        branch:      'HEAD'
     };
 
     words.shift();
@@ -83,23 +82,30 @@ Deployer.prototype.parse = function(text)
 
 Deployer.prototype.respond = function respond(message)
 {
-    var matches = this.parse(message.text);
-
-    if (!matches || this.environments.indexOf(matches[1]) == -1) {
+    var parsed = this.parse(message.text);
+    if ((parsed.action === 'help') ||
+        (this.environments.indexOf(parsed.environment) === -1) ||
+        (this.playbooks.indexOf(parsed.script) === -1)
+    )
+    {
         message.done(this.help());
         return;
     }
 
-    this.execute('www', matches[1], matches[2] || 'HEAD', message);
+    this.execute(parsed.script, parsed.environment, parsed.branch || 'HEAD', message);
 };
 
 Deployer.prototype.help = function help(msg)
 {
     return 'Run an ansible playbook for a specific inventory\n' +
-        '`deploy [script] [inventory] [branch]` - run the named script; branch is optional\n' +
+        '`deploy [script] (to) [inventory] (from) [branch]` - run the named script; branch is optional\n' +
         '`deploy www to production` would deploy www to prod\n' +
         '`deploy add-ssh-keys to production` would run the ssh keys role on production\n' +
         'as would `deploy add-ssh-keys production`\n' +
+        'The `branch` argument, if present, is sent to the npm_deploy_branch ansible variable.' +
+        'Valid scripts:\n' +
+        Object.keys(this.playbooks).join('\n') +
+        'Valid inventories: ' + this.environments.join(', ') +
         '';
 };
 

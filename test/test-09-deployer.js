@@ -110,7 +110,7 @@ describe('deployer', function()
             parsed.action.must.equal('deploy');
             parsed.script.must.equal('www');
             parsed.environment.must.equal('production');
-            parsed.branch.must.equal('master');
+            parsed.branch.must.equal('HEAD');
 
             parsed = plugin.parse('deploy www production');
             parsed.script.must.equal('www');
@@ -169,7 +169,20 @@ describe('deployer', function()
             msg.on('done', function() { done(); });
             plugin.respond(msg);
         });
+
+        it('calls done() with help text if the command parses to `help`', function(done)
+        {
+            var msg = new MockMessage({text: 'deploy snozzles'});
+            msg.on('send', function(msg)
+            {
+                var lines = msg.split('\n');
+                lines.length.must.be.above(1);
+                lines[0].must.equal('Run an ansible playbook for a specific inventory');
+            });
+            msg.on('done', function() { done(); });
+
+            plugin.respond(msg);
+
+        });
     });
-
-
 });
