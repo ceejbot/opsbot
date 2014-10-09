@@ -2,14 +2,7 @@
 
 Hermione the npm operations [Slack](https://slack.com) chat battlestation is not yet fully operational but it is capable of demonstrating its power on a target, a military target. Name the system!
 
-I test opsbot with everything, just to see how everything works:
-
-[![Dependencies](https://david-dm.org/ceejbot/opsbot.png)](https://david-dm.org/ceejbot/opsbot)  
-[![Travis](https://secure.travis-ci.org/ceejbot/opsbot.png)](http://travis-ci.org/ceejbot/opsbot)  
-[![Codeship](https://www.codeship.io/projects/119680c0-a010-0131-65f3-7aa4d7a4ba13/status?branch=master)](https://www.codeship.io/projects/18162)  
-[![wercker](https://app.wercker.com/status/cdbf5a6a3470b50f8de8f03ae7f7a6e8/m/ "wercker status")](https://app.wercker.com/project/bykey/cdbf5a6a3470b50f8de8f03ae7f7a6e8)  
-[![Drone.io](https://drone.io/github.com/ceejbot/opsbot/status.png)](https://drone.io/github.com/ceejbot/opsbot/latest)
-[![Shippable](https://api.shippable.com/projects/536b73da2c0316950077c7ab/badge/master?nocache=2)](https://www.shippable.com/projects/536b73da2c0316950077c7ab)
+[![on npm](http://img.shields.io/npm/v/opsbot.svg?style=flat)](https://www.npmjs.org/package/opsbot)  [![Tests](http://img.shields.io/travis/ceejbot/opsbot.svg?style=flat)](http://travis-ci.org/ceejbot/opsbot)  ![Coverage](http://img.shields.io/badge/coverage-77%25-yellow.svg?style=flat)   [![Dependencies](http://img.shields.io/david/ceejbot/opsbot.svg?style=flat)](https://david-dm.org/ceejbot/opsbot)
 
 ## deploying
 
@@ -27,7 +20,7 @@ Here's a nice minimal package.json, requiring opsbot & a third-party plugin:
     "dev": "NODE_ENV=dev bash run.sh"
   },
   "dependencies": {
-    "opsbot": "~0.4.1",
+    "opsbot": "~1.0.0",
     "orlyowl": "^0.0.1"
   }
 }
@@ -127,13 +120,16 @@ OwlPlugin.prototype.help = function help()
 ## Provided plugins
 
 __bartly:__ Real-time BART departure information by station.  
-__deployer:__ Invoke an ansible deployment playbook; probably needs customizaton!  
+__deployer:__ Invoke an ansible deployment playbook; requires customization for your environment.
 __fastly:__ Fetches some current stats from the named Fastly service.  
 __flipit:__ Table flip!  
 __karma:__ Give points and take them away.  
 __npm:__ Fetches package information from npm.  
 __pagerduty:__ Show who's on call now & who's up in the next few days; list open incidents; ack & resolve incidents.  
 __statuscats:__ Show an [http status cat](http://httpcats.herokuapp.com).  
+__levenmorph:__ Morph one word into another using a nice short path.  
+
+Each plugin has more documentation at the top of its source file.
 
 ## Plugin storage
 
