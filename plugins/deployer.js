@@ -9,7 +9,8 @@
         {
             'app-name': './playbooks/app-name.yml',
             'another':  './playbooks/deploy-another.yml'
-        }
+        },
+        environments: ['production', 'staging', 'test', 'whatever']
     }
 
     For OS X testing, get stdbuf this way:
@@ -36,26 +37,55 @@ var Deployer = module.exports = function Deployer(opts)
     assert(opts.configdir && _.isString(opts.configdir), 'you must pass the path to your ansible data directory in `opts.configdir`');
     assert(opts.ansible && _.isString(opts.ansible), 'you must provide the path to the ansible-playbook executable in `opts.ansible`');
     assert(opts.playbooks && _.isObject(opts.playbooks), 'you must explicitly name accessible playbooks in `opts.playbooks`');
+    assert(opts.environments && _.isArray(opts.environments), 'you must list your inventory files in `opts.environments`');
 
     _.extend(this, opts);
     if (!this.spawn) this.spawn = spawn;
 };
 
 Deployer.prototype.name = 'deployer';
-Deployer.prototype.pattern = /deploy\s+(\w+)\s?([\w-.]+)?$/;
+Deployer.prototype.pattern = /^deploy\s*/;
 
 Deployer.prototype.matches = function matches(msg)
 {
     return this.pattern.test(msg);
 };
 
+Deployer.prototype.parse = function(text)
+{
+
+    var words = text.split(/\s+/);
+    if (words.length < 2 || words[0] !== 'deploy')
+        return { action: 'help' };
+
+    var result =
+    {
+        action:      'deploy',
+        script:      '',
+        environment: 'development',
+        branch:      'master'
+    };
+
+    words.shift();
+    result.script = words.shift();
+    var w = words.shift();
+    if (w === 'to') w = words.shift();
+    result.environment = w;
+
+    if (!words.length) return result;
+
+    w = words.shift();
+    if (w === 'from') w = words.shift();
+    result.branch = w;
+
+    return result;
+};
+
 Deployer.prototype.respond = function respond(message)
 {
-    var msg = message.text,
-        matches = this.pattern.exec(msg);
+    var matches = this.parse(message.text);
 
-
-    if (!matches || ['staging', 'production', 'development'].indexOf(matches[1]) == -1) {
+    if (!matches || this.environments.indexOf(matches[1]) == -1) {
         message.done(this.help());
         return;
     }
@@ -87,7 +117,7 @@ Deployer.prototype.execute = function execute(app, environment, branch, message)
     var interesting = /(TASK|GATHERING FACTS|PLAY \[)/;
 
     var tag = app + ' ➜ ' + environment;
-    message.send('Deploying ' + tag);
+    message.send('Deploying ' + tag + (branch ? ' from ' + branch : ''));
 
     ansible.stdout.on('data', function(data)
     {
