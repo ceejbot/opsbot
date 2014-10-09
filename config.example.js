@@ -38,7 +38,8 @@ module.exports =
             {
                 'app-name': './playbooks/app-name.yml',
                 another:  './playbooks/deploy-another.yml'
-            }
+            },
+            environments: ['production', 'staging', 'test', 'whatever']
         }
     }
 };
