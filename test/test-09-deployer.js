@@ -81,7 +81,14 @@ describe('deployer', function()
 
     it('defaults spawn to child_process.spawn() if no spawn is provided', { timeout: 6000}, function(done) {
         plugin = new Deployer({
-            log: new MockLogger()
+            log: new MockLogger(),
+            ansible: '/path/to/ansible-playbook',
+            configdir: '/path/to/ansible/yml',
+            playbooks:
+            {
+                www: './playbooks/www.yml',
+                another:  './playbooks/deploy-another.yml'
+            }
         });
         plugin.spawn.must.be.a.function();
         done();

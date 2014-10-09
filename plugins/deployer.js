@@ -18,9 +18,10 @@
 */
 
 var
-    _     = require('lodash'),
-    path  = require('path'),
-    spawn = require('child_process').spawn;
+    _      = require('lodash'),
+    assert = require('assert'),
+    path   = require('path'),
+    spawn  = require('child_process').spawn;
 
 var PATTERNS =
 {
@@ -31,6 +32,11 @@ var PATTERNS =
 
 var Deployer = module.exports = function Deployer(opts)
 {
+    assert(opts && _.isObject(opts), 'the deployer plugin requires an options object');
+    assert(opts.configdir && _.isString(opts.configdir), 'you must pass the path to your ansible data directory in `opts.configdir`');
+    assert(opts.ansible && _.isString(opts.ansible), 'you must provide the path to the ansible-playbook executable in `opts.ansible`');
+    assert(opts.playbooks && _.isObject(opts.playbooks), 'you must explicitly name accessible playbooks in `opts.playbooks`');
+
     _.extend(this, opts);
     if (!this.spawn) this.spawn = spawn;
 };
@@ -59,8 +65,12 @@ Deployer.prototype.respond = function respond(message)
 
 Deployer.prototype.help = function help(msg)
 {
-    return 'Deploy www for a specific environment\n' +
-        '`deploy [environment]` - deploy to the environment given\n';
+    return 'Run an ansible playbook for a specific inventory\n' +
+        '`deploy [script] [inventory] [branch]` - run the named script; branch is optional\n' +
+        '`deploy www to production` would deploy www to prod\n' +
+        '`deploy add-ssh-keys to production` would run the ssh keys role on production\n' +
+        'as would `deploy add-ssh-keys production`\n' +
+        '';
 };
 
 Deployer.prototype.execute = function execute(app, environment, branch, message)
