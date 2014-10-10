@@ -21,6 +21,7 @@
 var
     _      = require('lodash'),
     assert = require('assert'),
+    bole   = require('bole'),
     path   = require('path'),
     spawn  = require('child_process').spawn;
 
@@ -83,9 +84,11 @@ Deployer.prototype.parse = function(text)
 Deployer.prototype.respond = function respond(message)
 {
     var parsed = this.parse(message.text);
+    this.log.info(parsed, 'got ansible command');
+
     if ((parsed.action === 'help') ||
         (this.environments.indexOf(parsed.environment) === -1) ||
-        (this.playbooks.indexOf(parsed.script) === -1)
+        (Object.keys(this.playbooks).indexOf(parsed.script) === -1)
     )
     {
         message.done(this.help());
@@ -111,16 +114,19 @@ Deployer.prototype.help = function help(msg)
 
 Deployer.prototype.execute = function execute(app, environment, branch, message)
 {
+    var self = this;
     var playbook = this.playbooks[app];
 
     var ansible = this.spawn('stdbuf',
-            ['-o0', this.ansible, playbook, '-i', environment, '-e', 'npm_deploy_branch=' + branch],
+            ['-oL', this.ansible, playbook, '-i', environment, '-e', 'npm_deploy_branch=' + branch],
             { cwd: this.configdir });
+
+    this.log.info('running ansible command now');
 
     var accumulator = [];
     var error = false;
     var last;
-    var interesting = /(TASK|GATHERING FACTS|PLAY \[)/;
+    var interesting = /(TASK|GATHERING FACTS|PLAY \[)/i;
 
     var tag = app + ' ➜ ' + environment;
     message.send('Deploying ' + tag + (branch ? ' from ' + branch : ''));
@@ -129,13 +135,14 @@ Deployer.prototype.execute = function execute(app, environment, branch, message)
     {
         var output = data.toString();
         accumulator.push(output);
+        self.log.info(output);
 
         if (!interesting.test(output))
         {
             if (!last) return;
-            if (/ok: /.test(output))
+            if (/ok:/.test(output))
                 message.send(tag + ': ' + last);
-            if (/fatal: /.test(output))
+            if (/fatal:/.test(output))
             {
                 error = true;
                 message.send(tag + ' fatal error\nTask: ' + last + '\n' + output);
@@ -176,6 +183,7 @@ Deployer.prototype.execute = function execute(app, environment, branch, message)
 
     ansible.on('close', function(code)
     {
+        self.log.info('ansible run complete.');
         setTimeout(function()
         {
             if (error)
