@@ -46,7 +46,7 @@ if (!Opsbot)
 
 var cf = path.resolve(process.cwd(), opts.config);
 var config = require(cf);
-config.log = logging(config);
+logging(config);
 config.listen = process.env.PORT || config.listen || 3000;
 
 var opsbot = new Opsbot(config);

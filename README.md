@@ -76,7 +76,7 @@ Plugins must be objects with three required functions and a `name` field.
 
 #### `new Plugin(opts)`
 
-The constructor takes an options object. The required content of the options is up to the plugin itself. The options object will always be present and will always have a [bunyan](https://github.com/trentm/node-bunyan) logger object in the `log` field. It will also have a leveldb instance in the `brain` field; see below.
+The constructor takes an options object. The required content of the options is up to the plugin itself. The options object will always be present and will always have a [bole](https://github.com/rvagg/bole) logger object in the `log` field. It will also have a leveldb instance in the `brain` field; see below.
 
 #### `matches(str)`
 

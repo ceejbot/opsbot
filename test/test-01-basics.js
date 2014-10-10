@@ -37,13 +37,6 @@ describe('server', function()
             done();
         });
 
-        it('requires a log option', function(done)
-        {
-            function shouldThrow() { return new Opsbot({ listen: 3000 }); }
-            shouldThrow.must.throw(/log/);
-            done();
-        });
-
         it('can be constructed', function(done)
         {
             var bot = new Opsbot(mockopts);

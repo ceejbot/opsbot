@@ -6,8 +6,7 @@ var
     it          = lab.it,
     before      = lab.before,
     demand      = require('must'),
-    Responder         = require('../lib/responder'),
-    bunyan      = require('bunyan'),
+    Responder   = require('../lib/responder'),
     MockMessage = require('./mocks/message'),
     MockPlugin  = require('./mocks/plugin'),
     StatusCats  = require('../plugins/statuscats')
@@ -15,14 +14,6 @@ var
 
 describe('Responder', function()
 {
-    var log;
-
-    before(function(done)
-    {
-        log = bunyan.createLogger({ name: 'test', streams: [] });
-        done();
-    });
-
     describe('constructor', function()
     {
         it('requires an options object', function(done)
@@ -32,16 +23,9 @@ describe('Responder', function()
             done();
         });
 
-        it('requires a log option', function(done)
-        {
-            function shouldThrow() { return new Responder({}); }
-            shouldThrow.must.throw(/bunyan logger/);
-            done();
-        });
-
         it('can be constructed', function(done)
         {
-            var bot = new Responder({ log: log, botname: 'test' });
+            var bot = new Responder({ botname: 'test' });
             done();
         });
     });
@@ -53,7 +37,6 @@ describe('Responder', function()
             var opts =
             {
                 botname: 'test',
-                log: log,
                 plugins: { statuscats: {} }
             };
 
@@ -76,7 +59,6 @@ describe('Responder', function()
             var opts =
             {
                 botname: 'test',
-                log: log,
                 plugins: { }
             };
             bot = new Responder(opts);

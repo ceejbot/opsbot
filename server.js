@@ -1,18 +1,16 @@
 var
     _       = require('lodash'),
+    bole    = require('bole'),
     Bot     = require('./lib/responder'),
-    logging = require('./lib/logging'),
     Message = require('./lib/message'),
     restify = require('restify'),
     config  = require('./config')
     ;
 
-var log = logging(config);
-config.log = log;
-
+var logger = bole('server');
 config.listen = process.env.PORT || config.listen || 3000;
 
-var restifyOpts = { log: log };
+var restifyOpts = { name: config.botname };
 var server = restify.createServer(restifyOpts);
 var client = restify.createJSONClient({ url: config.hook });
 
@@ -27,7 +25,7 @@ server.use(restify.bodyParser({ mapParams: false }));
 server.get('/ping', handlePing);
 server.post('/message', handleMessage);
 server.listen(config.listen);
-server.log.info('listening on ' + config.listen);
+logger.info('listening on ' + config.listen);
 
 function handlePing(request, response, next)
 {
@@ -55,34 +53,31 @@ function handleMessage(request, response, next)
     var channel = request.body.channel_name;
     if (channel[0] !== '#') channel = '#' + channel;
 
-    var reqlog = request.log.child(
+    logger.info(
     {
         command: request.body.text,
         sender:  request.body.user_name,
         channel: channel,
-    });
+    }, 'incoming bot command');
 
     var opts = _.assign({}, request.body);
     opts.channel = channel;
     opts.username = config.botname;
 
     var message = new Message(opts);
-    message.on('reply', function(reply)
-    {
-        postToWebhook(reply, reqlog);
-    });
-
+    message.on('reply', function(reply) { postToWebhook(reply); });
     bot.handleMessage(message);
+
     next();
 }
 
 function logEachRequest(request, response, next)
 {
-    request.log.info(request.method, request.url);
+    logger.info(request.method, request.url);
     next();
 }
 
-function postToWebhook(message, logger)
+function postToWebhook(message)
 {
     client.post('', message, function(err, req, res, obj)
     {

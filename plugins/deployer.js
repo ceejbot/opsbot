@@ -102,10 +102,10 @@ Deployer.prototype.help = function help(msg)
         '`deploy www to production` would deploy www to prod\n' +
         '`deploy add-ssh-keys to production` would run the ssh keys role on production\n' +
         'as would `deploy add-ssh-keys production`\n' +
-        'The `branch` argument, if present, is sent to the npm_deploy_branch ansible variable.' +
+        'The `branch` argument, if present, is sent to the npm_deploy_branch ansible variable.\n' +
         'Valid scripts:\n' +
         Object.keys(this.playbooks).join('\n') +
-        'Valid inventories: ' + this.environments.join(', ') +
+        '\nValid inventories: ' + this.environments.join(', ') +
         '';
 };
 
