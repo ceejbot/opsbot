@@ -113,8 +113,7 @@ Fastly.prototype.fetchServices = function fetchServices()
 
 Fastly.prototype.execute = function execute(uri)
 {
-    var deferred = P.defer(),
-        self = this;
+    var deferred = P.defer();
 
     this.client.get(uri, function(err, req, response, body)
     {

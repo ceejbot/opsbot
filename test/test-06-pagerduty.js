@@ -1,3 +1,4 @@
+/*global describe:true, it:true, before:true, after:true, beforeEach: true */
 'use strict';
 
 var
@@ -111,7 +112,6 @@ describe('PagerDuty', function()
         it('matches `who\'s on call`', function(done)
         {
             plugin.matches("who's on call").must.be.true();
-            var matches = "who's on call".match(plugin.pattern);
             done();
         });
 

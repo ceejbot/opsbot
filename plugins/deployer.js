@@ -21,7 +21,6 @@
 var
     _      = require('lodash'),
     assert = require('assert'),
-    path   = require('path'),
     spawn  = require('child_process').spawn;
 
 var PATTERNS =

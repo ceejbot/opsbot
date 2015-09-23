@@ -60,7 +60,7 @@ Karma.prototype.reportAll = function reportAll(message)
     {
         message.send('Error fetching karma: ' + err.message);
     })
-    .on('end', function() { message.done(); } );
+    .on('end', function() { message.done(); });
 };
 
 function reportMessage(target, karma)
@@ -84,7 +84,7 @@ Karma.prototype.report = function report(target, message)
 Karma.prototype.give = function give(target, message)
 {
     var self = this;
-    this.brain.get(target, function(err, karma)
+    this.brain.get(target, function(ignored, karma)
     {
         if (!karma) karma = {}; // we ignore not found errors
         if (_.isUndefined(karma.score)) karma.score = 0;
@@ -105,7 +105,7 @@ Karma.prototype.give = function give(target, message)
 Karma.prototype.take = function take(target, message)
 {
     var self = this;
-    this.brain.get(target, function(err, karma)
+    this.brain.get(target, function(ignored, karma)
     {
         if (!karma) karma = {}; // we ignore not found errors
         if (_.isUndefined(karma.score)) karma.score = 0;

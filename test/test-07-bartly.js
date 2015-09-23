@@ -1,3 +1,4 @@
+/*global describe:true, it:true, before:true, after:true, beforeEach: true */
 'use strict';
 
 var
@@ -127,6 +128,4 @@ describe('BART', function()
         matches[3].must.equal('pitt');
         done();
     });
-
-
 });

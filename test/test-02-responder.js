@@ -1,3 +1,4 @@
+/*global describe:true, it:true, before:true, after:true, beforeEach: true */
 'use strict';
 
 var
@@ -22,6 +23,7 @@ describe('Responder', function()
         it('can be constructed', function(done)
         {
             var bot = new Responder({ botname: 'test' });
+            bot.must.be.an.object();
             done();
         });
     });
