@@ -49,7 +49,7 @@ describe('npm', function()
         plugin.matches('npm downloads last-week').must.be.true();
     });
 
-    it('implements respond() correctly', { timeout: 6000 }, function(done)
+    it('implements respond() correctly', function(done)
     {
         var msg = new MockMessage({text: 'npm semver'});
         msg.once('done', function() { done(); });
@@ -82,8 +82,9 @@ describe('npm', function()
         plugin.respond(msg);
     });
 
-    it('can fetch download stats for the given time period', { timeout: 20000 }, function(done)
+    it('can fetch download stats for the given time period', function(done)
     {
+        this.timeout(20000);
         var msg = new MockMessage({text: 'npm downloads last-month'});
         msg.on('done', function() { done(); });
         msg.on('send', function(text)
@@ -107,8 +108,9 @@ describe('npm', function()
         plugin.respond(msg);
     });
 
-    it('responds with a hash of package status data', { timeout: 6000 }, function(done)
+    it('responds with a hash of package status data', function(done)
     {
+        this.timeout(6000);
         var msg = new MockMessage({text: 'npm semver'});
         msg.on('done', function() { done(); });
         msg.on('send', function(response)
