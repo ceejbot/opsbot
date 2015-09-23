@@ -1,11 +1,6 @@
 'use strict';
 
 var
-    lab      = require('lab'),
-    before   = lab.before,
-    after    = lab.after,
-    describe = lab.describe,
-    it       = lab.it,
     demand   = require('must'),
     path     = require('path'),
     rimraf   = require('rimraf'),

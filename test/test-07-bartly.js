@@ -1,9 +1,6 @@
 'use strict';
 
 var
-    lab         = require('lab'),
-    describe    = lab.describe,
-    it          = lab.it,
     demand      = require('must'),
     MockMessage = require('./mocks/message'),
     BART        = require('../plugins/bartly.js')

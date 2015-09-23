@@ -1,10 +1,6 @@
 'use strict';
 
 var
-    lab         = require('lab'),
-    describe    = lab.describe,
-    it          = lab.it,
-    before      = lab.before,
     demand      = require('must'),
     Responder   = require('../lib/responder'),
     MockMessage = require('./mocks/message'),

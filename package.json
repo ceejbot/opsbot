@@ -16,15 +16,15 @@
   ],
   "dependencies": {
     "bart": "~0.0.3",
-    "bistre": "~1.0.0",
-    "bluebird": "^1.1.0",
-    "bole": "~1.0.0",
-    "dashdash": "~1.7.0",
+    "bistre": "~1.0.1",
+    "bluebird": "~2.10.1",
+    "bole": "~2.0.0",
+    "dashdash": "~1.10.1",
     "flip": "~0.1.1",
-    "level": "~0.18.0",
+    "level": "~1.3.0",
     "level-sublevel": "~5.2.3",
-    "levenmorpher": "~1.1.0",
-    "lodash": "~2.4.1",
+    "levenmorpher": "~1.2.2",
+    "lodash": "~3.10.1",
     "moment": "~2.6.0",
     "numeral": "~1.5.3",
     "request": "~2.45.0",
@@ -33,10 +33,10 @@
   "devDependencies": {
     "jscs": "~1.2.4",
     "jshint": "^2.5.0",
-    "lab": "^3.0.1",
+    "mocha": "~2.3.3",
     "must": "~0.12.0",
     "rimraf": "^2.2.6",
-    "sinon": "^1.10.3"
+    "sinon": "~1.17.0"
   },
   "directories": {
     "test": "test"
@@ -60,7 +60,7 @@
   "scripts": {
     "start": "node bin/opsbot.js",
     "dev": "NODE_ENV=dev bin/opsbot.js",
-    "test-suite": "lab -v -t 70 -c test/*.js",
+    "test-suite": "mocha -R spec test/*.js",
     "check-hint": "jshint *.js lib/*.js plugins/*.js test/*.js",
     "check-style": "jscs *.js lib/*.js plugins/*.js test/*.js",
     "test": "npm run test-suite && npm run check-hint && npm run check-style"

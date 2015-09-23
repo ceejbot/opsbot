@@ -1,9 +1,6 @@
 'use strict';
 
 var
-    lab         = require('lab'),
-    describe    = lab.describe,
-    it          = lab.it,
     demand      = require('must'),
     path        = require('path'),
     rimraf      = require('rimraf'),
@@ -18,7 +15,7 @@ describe('karma', function()
 {
     var plugin, brain;
 
-    lab.before(function(done)
+    before(function(done)
     {
         brain = new Brain({ dbpath: dbpath });
         plugin = new Karma({ brain: brain.get('karma') }); // what is brain?
@@ -209,7 +206,7 @@ describe('karma', function()
         plugin.respond(msg);
     });
 
-    lab.after(function(done)
+    after(function(done)
     {
         brain.close(function()
         {

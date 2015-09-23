@@ -1,9 +1,6 @@
 'use strict';
 
 var
-    lab         = require('lab'),
-    describe    = lab.describe,
-    it          = lab.it,
     demand      = require('must'),
     MockLogger  = require('./mocks/logger'),
     spawn       = require('./mocks/spawn'),
@@ -14,7 +11,7 @@ describe('deployer', function()
 {
     var plugin;
 
-    lab.beforeEach(function(done)
+    beforeEach(function(done)
     {
         plugin = new Deployer({
             log: new MockLogger(),

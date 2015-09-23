@@ -1,10 +1,6 @@
 'use strict';
 
 var
-    lab         = require('lab'),
-    describe    = lab.describe,
-    it          = lab.it,
-    before      = lab.before,
     demand      = require('must'),
     path        = require('path'),
     rimraf      = require('rimraf'),
@@ -172,7 +168,7 @@ describe('PagerDuty', function()
         it('resolve has tests');
     });
 
-    lab.after(function(done)
+    after(function(done)
     {
         brain.close(function()
         {

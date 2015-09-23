@@ -1,9 +1,6 @@
 'use strict';
 
 var
-    lab        = require('lab'),
-    describe   = lab.describe,
-    it         = lab.it,
     demand     = require('must'),
     MockLogger = require('./mocks/logger'),
     net        = require('net'),
@@ -62,7 +59,7 @@ describe('server', function()
     {
         var bot;
 
-        lab.before(function(done)
+        before(function(done)
         {
             bot = new Opsbot(mockopts);
             bot.listen(done);
@@ -123,7 +120,7 @@ describe('server', function()
             });
         });
 
-        lab.after(function(done)
+        after(function(done)
         {
             bot.close(done);
         });

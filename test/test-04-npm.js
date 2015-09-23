@@ -1,20 +1,17 @@
 'use strict';
 
 var
-    lab         = require('lab'),
-    describe    = lab.describe,
-    it          = lab.it,
     demand      = require('must'),
     MockLogger  = require('./mocks/logger'),
     MockMessage = require('./mocks/message'),
     NPM         = require('../plugins/npm')
-    ;
+;
 
 describe('npm', function()
 {
     var plugin;
 
-    lab.beforeEach(function(done)
+    beforeEach(function(done)
     {
         plugin = new NPM({ log: new MockLogger() });
         done();
