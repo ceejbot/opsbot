@@ -1,10 +1,7 @@
+/*global describe:true, it:true, before:true, after:true, beforeEach: true */
 'use strict';
 
 var
-    lab         = require('lab'),
-    describe    = lab.describe,
-    it          = lab.it,
-    before      = lab.before,
     demand      = require('must'),
     Responder   = require('../lib/responder'),
     MockMessage = require('./mocks/message'),
@@ -26,6 +23,7 @@ describe('Responder', function()
         it('can be constructed', function(done)
         {
             var bot = new Responder({ botname: 'test' });
+            bot.must.be.an.object();
             done();
         });
     });

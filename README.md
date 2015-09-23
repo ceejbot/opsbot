@@ -1,6 +1,6 @@
 # opsbot
 
-Hermione the npm operations [Slack](https://slack.com) chat battlestation is not yet fully operational but it is capable of demonstrating its power on a target, a military target. Name the system!
+Hermione the npm operations [Slack](https://slack.com) chat battlestation is fully operational and is capable of demonstrating its power on a target, a military target. Name the system!
 
 [![on npm](http://img.shields.io/npm/v/opsbot.svg?style=flat)](https://www.npmjs.org/package/opsbot)  [![Tests](http://img.shields.io/travis/ceejbot/opsbot.svg?style=flat)](http://travis-ci.org/ceejbot/opsbot)  ![Coverage](http://img.shields.io/badge/coverage-77%25-yellow.svg?style=flat)   [![Dependencies](http://img.shields.io/david/ceejbot/opsbot.svg?style=flat)](https://david-dm.org/ceejbot/opsbot)
 

@@ -1,11 +1,7 @@
+/*global describe:true, it:true, before:true, after:true, beforeEach: true */
 'use strict';
 
 var
-    lab      = require('lab'),
-    before   = lab.before,
-    after    = lab.after,
-    describe = lab.describe,
-    it       = lab.it,
     demand   = require('must'),
     path     = require('path'),
     rimraf   = require('rimraf'),

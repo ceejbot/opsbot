@@ -18,7 +18,7 @@ var
     moment  = require('moment'),
     P       = require('bluebird'),
     request = require('request')
-    ;
+;
 
 var PagerDuty = module.exports = function PagerDuty(opts)
 {
@@ -184,13 +184,12 @@ PagerDuty.prototype.users = function users(message)
     {
         message.send('Error fetching pagerduty users: ' + err.message);
     })
-    .on('end', function() { message.done(); } );
+    .on('end', function() { message.done(); });
 };
 
 PagerDuty.prototype.userid = function userid(message, id)
 {
-    var self = this,
-        sender = message.user_name;
+    var sender = message.user_name;
 
     if (id.match(/\s+/))
     {
@@ -208,8 +207,7 @@ PagerDuty.prototype.userid = function userid(message, id)
 
 PagerDuty.prototype.lookupUser = function lookupUser(message)
 {
-    var self = this,
-        deferred = P.defer(),
+    var deferred = P.defer(),
         sender = message.user_name;
 
     this.brain.get('user:' + sender, function(err, id)

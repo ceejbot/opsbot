@@ -1,23 +1,20 @@
+/*global describe:true, it:true, before:true, after:true, beforeEach: true */
 'use strict';
 
 var
-    lab         = require('lab'),
-    describe    = lab.describe,
-    it          = lab.it,
     demand      = require('must'),
     MockLogger  = require('./mocks/logger'),
     MockMessage = require('./mocks/message'),
     NPM         = require('../plugins/npm')
-    ;
+;
 
 describe('npm', function()
 {
     var plugin;
 
-    lab.beforeEach(function(done)
+    beforeEach(function()
     {
         plugin = new NPM({ log: new MockLogger() });
-        done();
     });
 
     it('can be constructed', function(done)
@@ -40,7 +37,7 @@ describe('npm', function()
         done();
     });
 
-    it('implements matches() correctly', function(done)
+    it('implements matches() correctly', function()
     {
         plugin.matches('NOT VALID').must.be.false();
         plugin.matches('npm adfasdfasdfasdf adsfa adsf').must.be.true();
@@ -50,13 +47,12 @@ describe('npm', function()
         plugin.matches('npm downloads').must.be.true();
         plugin.matches('npm downloads today').must.be.true();
         plugin.matches('npm downloads last-week').must.be.true();
-        done();
     });
 
-    it('implements respond() correctly', { timeout: 6000 }, function(done)
+    it('implements respond() correctly', function(done)
     {
         var msg = new MockMessage({text: 'npm semver'});
-        msg.on('done', function() { done(); });
+        msg.once('done', function() { done(); });
         plugin.respond(msg);
     });
 
@@ -86,8 +82,9 @@ describe('npm', function()
         plugin.respond(msg);
     });
 
-    it('can fetch download stats for the given time period', { timeout: 20000 }, function(done)
+    it('can fetch download stats for the given time period', function(done)
     {
+        this.timeout(20000);
         var msg = new MockMessage({text: 'npm downloads last-month'});
         msg.on('done', function() { done(); });
         msg.on('send', function(text)
@@ -111,8 +108,9 @@ describe('npm', function()
         plugin.respond(msg);
     });
 
-    it('responds with a hash of package status data', { timeout: 6000 }, function(done)
+    it('responds with a hash of package status data', function(done)
     {
+        this.timeout(6000);
         var msg = new MockMessage({text: 'npm semver'});
         msg.on('done', function() { done(); });
         msg.on('send', function(response)

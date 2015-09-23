@@ -1,9 +1,7 @@
+/*global describe:true, it:true, before:true, after:true, beforeEach: true */
 'use strict';
 
 var
-    lab         = require('lab'),
-    describe    = lab.describe,
-    it          = lab.it,
     demand      = require('must'),
     MockLogger  = require('./mocks/logger'),
     spawn       = require('./mocks/spawn'),
@@ -14,7 +12,7 @@ describe('deployer', function()
 {
     var plugin;
 
-    lab.beforeEach(function(done)
+    beforeEach(function(done)
     {
         plugin = new Deployer({
             log: new MockLogger(),
@@ -52,8 +50,11 @@ describe('deployer', function()
             done();
         });
 
-        it('defaults spawn to child_process.spawn() if no spawn is provided', { timeout: 6000}, function(done) {
-            plugin = new Deployer({
+        it('defaults spawn to child_process.spawn() if no spawn is provided', function(done)
+        {
+            this.timeout(6000);
+            plugin = new Deployer(
+            {
                 log: new MockLogger(),
                 ansible: '/path/to/ansible-playbook',
                 configdir: '/path/to/ansible/yml',
@@ -149,22 +150,25 @@ describe('deployer', function()
 
     describe('reponder', function()
     {
-        it('calls done() if no environment is provided to respond()', { timeout: 6000 }, function(done)
+        it('calls done() if no environment is provided to respond()', function(done)
         {
+            this.timeout(6000);
             var msg = new MockMessage({text: 'ansible'});
             msg.on('done', function() { done(); });
             plugin.respond(msg);
         });
 
-        it('calls done() if an environment is provided to respond()', { timeout: 6000 }, function(done)
+        it('calls done() if an environment is provided to respond()', function(done)
         {
+            this.timeout(6000);
             var msg = new MockMessage({text: 'deploy development'});
             msg.on('done', function() { done(); });
             plugin.respond(msg);
         });
 
-        it('calls done() if no environment is provided to respond()', { timeout: 6000 }, function(done)
+        it('calls done() if no environment is provided to respond()', function(done)
         {
+            this.timeout(6000);
             var msg = new MockMessage({text: 'deploy'});
             msg.on('done', function() { done(); });
             plugin.respond(msg);

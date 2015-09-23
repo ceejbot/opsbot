@@ -1,10 +1,7 @@
+/*global describe:true, it:true, before:true, after:true, beforeEach: true */
 'use strict';
 
 var
-    lab         = require('lab'),
-    describe    = lab.describe,
-    it          = lab.it,
-    before      = lab.before,
     demand      = require('must'),
     path        = require('path'),
     rimraf      = require('rimraf'),
@@ -115,7 +112,6 @@ describe('PagerDuty', function()
         it('matches `who\'s on call`', function(done)
         {
             plugin.matches("who's on call").must.be.true();
-            var matches = "who's on call".match(plugin.pattern);
             done();
         });
 
@@ -172,7 +168,7 @@ describe('PagerDuty', function()
         it('resolve has tests');
     });
 
-    lab.after(function(done)
+    after(function(done)
     {
         brain.close(function()
         {

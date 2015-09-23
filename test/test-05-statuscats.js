@@ -1,9 +1,7 @@
+/*global describe:true, it:true, before:true, after:true, beforeEach: true */
 'use strict';
 
 var
-    lab         = require('lab'),
-    describe    = lab.describe,
-    it          = lab.it,
     demand      = require('must'),
     MockMessage = require('./mocks/message'),
     StatusCats  = require('../plugins/statuscats')
