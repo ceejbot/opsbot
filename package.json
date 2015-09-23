@@ -31,6 +31,7 @@
     "restify": "~2.8.3"
   },
   "devDependencies": {
+    "eslint": "~1.5.1",
     "jscs": "~1.2.4",
     "jshint": "^2.5.0",
     "mocha": "~2.3.3",

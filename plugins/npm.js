@@ -5,7 +5,7 @@ var
     moment  = require('moment'),
     numeral = require('numeral'),
     restify = require('restify')
-    ;
+;
 
 var NPMPlugin = module.exports = function NPMPlugin(opts)
 {
@@ -145,7 +145,7 @@ NPMPlugin.prototype.packageInfo = function packageInfo(message, package)
             unfurl_links: true
         };
 
-        self.downloadsFor(package, function(err, downloads)
+        self.downloadsFor(package, function(ignored, downloads)
         {
             if (downloads)
             {

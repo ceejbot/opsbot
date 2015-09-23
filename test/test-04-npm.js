@@ -11,10 +11,10 @@ describe('npm', function()
 {
     var plugin;
 
-    beforeEach(function(done)
+    beforeEach(function(yo)
     {
         plugin = new NPM({ log: new MockLogger() });
-        done();
+        yo();
     });
 
     it('can be constructed', function(done)
@@ -37,7 +37,7 @@ describe('npm', function()
         done();
     });
 
-    it('implements matches() correctly', function(done)
+    it('implements matches() correctly', function()
     {
         plugin.matches('NOT VALID').must.be.false();
         plugin.matches('npm adfasdfasdfasdf adsfa adsf').must.be.true();
@@ -47,13 +47,12 @@ describe('npm', function()
         plugin.matches('npm downloads').must.be.true();
         plugin.matches('npm downloads today').must.be.true();
         plugin.matches('npm downloads last-week').must.be.true();
-        done();
     });
 
     it('implements respond() correctly', { timeout: 6000 }, function(done)
     {
         var msg = new MockMessage({text: 'npm semver'});
-        msg.on('done', function() { done(); });
+        msg.once('done', function() { done(); });
         plugin.respond(msg);
     });
 

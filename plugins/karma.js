@@ -70,8 +70,6 @@ function reportMessage(target, karma)
 
 Karma.prototype.report = function report(target, message)
 {
-    var self = this;
-
     this.brain.get(target, function(err, karma)
     {
         if (err && (err.name === 'NotFoundError'))
