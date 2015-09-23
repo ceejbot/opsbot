@@ -1,3 +1,4 @@
+/*global describe:true, it:true, before:true, after:true, beforeEach: true */
 'use strict';
 
 var
@@ -11,10 +12,9 @@ describe('npm', function()
 {
     var plugin;
 
-    beforeEach(function(yo)
+    beforeEach(function()
     {
         plugin = new NPM({ log: new MockLogger() });
-        yo();
     });
 
     it('can be constructed', function(done)
