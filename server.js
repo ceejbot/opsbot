@@ -53,8 +53,7 @@ function handleMessage(request, response, next)
     var channel = request.body.channel_name;
     if (channel[0] !== '#') channel = '#' + channel;
 
-    logger.info(
-    {
+    logger.info({
         command: request.body.text,
         sender:  request.body.user_name,
         channel: channel,

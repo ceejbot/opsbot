@@ -60,7 +60,10 @@ describe('Brain', function()
         var db = brain.get('test');
         db.must.be.truthy();
         db.must.be.an.object();
-        db.constructor.name.must.equal('SubDB');
+        db.must.have.property('sublevel');
+        db.sublevel.must.be.a.function();
+        db.must.have.property('createValueStream');
+        db.createValueStream.must.be.a.function();
         done();
     });
 

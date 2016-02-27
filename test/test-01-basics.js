@@ -11,8 +11,7 @@ var
 
 describe('server', function()
 {
-    var mockopts =
-    {
+    var mockopts = {
         listen  : 3000,
         log     : new MockLogger(),
         botname : 'test',
@@ -89,8 +88,7 @@ describe('server', function()
 
         it('requires a valid token for /message', function(done)
         {
-            var opts =
-            {
+            var opts = {
                 uri: 'http://localhost:3000/message',
                 method: 'POST',
                 json: { message: 'test', token: 'testtoken' }
@@ -106,8 +104,7 @@ describe('server', function()
 
         it('responds to POST /message', function(done)
         {
-            var opts =
-            {
+            var opts = {
                 uri: 'http://localhost:3000/message',
                 method: 'POST',
                 json: { message: 'test', token: 'testtoken' }

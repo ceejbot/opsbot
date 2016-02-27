@@ -18,7 +18,7 @@ var
     moment  = require('moment'),
     P       = require('bluebird'),
     request = require('request')
-;
+    ;
 
 var PagerDuty = module.exports = function PagerDuty(opts)
 {
@@ -32,8 +32,7 @@ var PagerDuty = module.exports = function PagerDuty(opts)
     this.brain = opts.brain;
     this.reallybase = 'https://' + opts.urlprefix + '.pagerduty.com';
     this.baseurl = 'https://' + opts.urlprefix + '.pagerduty.com/api/v1/';
-    this.reqopts =
-    {
+    this.reqopts = {
         headers: { authorization: 'Token token=' + opts.apikey },
         json: true
     };
@@ -140,8 +139,7 @@ PagerDuty.prototype.rotation = function rotation(message)
         var rotations = _.map(schedules, function(sched)
         {
             var uri = self.baseurl + '/schedules/' + sched.id + '/entries';
-            return self.execute(
-            {
+            return self.execute({
                 uri: uri + '?since=' + start + '&until=' + end,
                 method: 'GET',
             });
@@ -250,8 +248,7 @@ PagerDuty.prototype.ack = function ack(message, id)
     this.lookupUser(message)
     .then(function(user)
     {
-        var opts =
-        {
+        var opts = {
             uri: self.baseurl + 'incidents/' + id + '/acknowledge?requester_id=' + user,
             method: 'PUT',
         };
@@ -286,8 +283,7 @@ PagerDuty.prototype.resolve = function resolve(message, id)
     this.lookupUser(message)
     .then(function(user)
     {
-        var opts =
-        {
+        var opts = {
             uri: self.baseurl + 'incidents/' + id + '/resolve?requester_id=' + user,
             method: 'PUT',
         };
@@ -352,8 +348,7 @@ PagerDuty.prototype.execute = function execute(opts)
 
     if (_.isString(opts))
     {
-        opts =
-        {
+        opts = {
             uri: self.baseurl + opts,
             method: 'GET'
         };

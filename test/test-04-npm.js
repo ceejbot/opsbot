@@ -6,7 +6,7 @@ var
     MockLogger  = require('./mocks/logger'),
     MockMessage = require('./mocks/message'),
     NPM         = require('../plugins/npm')
-;
+    ;
 
 describe('npm', function()
 {

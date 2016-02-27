@@ -32,8 +32,7 @@ describe('Responder', function()
     {
         it('are loaded on construction', function(done)
         {
-            var opts =
-            {
+            var opts = {
                 botname: 'test',
                 plugins: { statuscats: {} }
             };
@@ -54,8 +53,7 @@ describe('Responder', function()
 
         before(function(done)
         {
-            var opts =
-            {
+            var opts = {
                 botname: 'test',
                 plugins: { }
             };

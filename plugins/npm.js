@@ -5,7 +5,7 @@ var
     moment  = require('moment'),
     numeral = require('numeral'),
     restify = require('restify')
-;
+    ;
 
 var NPMPlugin = module.exports = function NPMPlugin(opts)
 {
@@ -83,8 +83,7 @@ NPMPlugin.prototype.packageInfo = function packageInfo(message, package)
         }
 
         var latestrev = obj['dist-tags'].latest;
-        var struct =
-        {
+        var struct = {
             color:   'good',
             pretext: obj.name,
             text:    obj.description,
@@ -137,8 +136,7 @@ NPMPlugin.prototype.packageInfo = function packageInfo(message, package)
             '\nversion: ' + latestrev +
             '\nrepo: ' + obj.repository.url;
 
-        var reply =
-        {
+        var reply = {
             text:         '',
             attachments:  [struct],
             parse:        'full',
