@@ -60,7 +60,7 @@
     "dev": "NODE_ENV=dev bin/opsbot.js",
     "lint": "eslint *.js lib/*.js plugins/*.js test/*.js",
     "start": "node bin/opsbot.js",
-    "test": "mocha -R spec test/*.js",
+    "test": "mocha -R spec -t 5000 test/*.js",
     "travis": "npm test"
   }
 }
