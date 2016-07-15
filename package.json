@@ -31,7 +31,7 @@
     "restify": "~4.0.4"
   },
   "devDependencies": {
-    "eslint": "~2.7.0",
+    "eslint": "~2.12.0",
     "mocha": "~2.4.5",
     "must": "~0.13.1",
     "rimraf": "~2.5.2",
