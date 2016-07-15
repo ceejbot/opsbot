@@ -27,7 +27,7 @@
     "lodash": "~4.11.2",
     "moment": "~2.14.1",
     "numeral": "~1.5.3",
-    "request": "~2.70.0",
+    "request": "~2.71.0",
     "restify": "~4.0.4"
   },
   "devDependencies": {
