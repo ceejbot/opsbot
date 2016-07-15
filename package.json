@@ -17,7 +17,7 @@
   "dependencies": {
     "bart": "~0.0.3",
     "bistre": "~1.0.1",
-    "bluebird": "~3.3.3",
+    "bluebird": "~3.3.5",
     "bole": "~3.0.1",
     "dashdash": "~1.13.0",
     "flip": "~1.0.0",
