@@ -17,9 +17,9 @@
   "dependencies": {
     "bart": "~0.0.3",
     "bistre": "~1.0.1",
-    "bluebird": "~3.3.3",
+    "bluebird": "~3.4.1",
     "bole": "~3.0.1",
-    "dashdash": "~1.13.0",
+    "dashdash": "~1.14.0",
     "flip": "~1.0.0",
     "level": "~1.4.0",
     "level-sublevel": "~6.5.4",
@@ -27,15 +27,15 @@
     "lodash": "~4.13.1",
     "moment": "~2.14.1",
     "numeral": "~1.5.3",
-    "request": "~2.70.0",
+    "request": "~2.73.0",
     "restify": "~4.1.1"
   },
   "devDependencies": {
     "eslint": "~2.13.0",
     "mocha": "~2.5.3",
     "must": "~0.13.1",
-    "rimraf": "~2.5.2",
-    "sinon": "~1.17.3"
+    "rimraf": "~2.5.3",
+    "sinon": "~1.17.4"
   },
   "directories": {
     "test": "test"
