@@ -11,7 +11,7 @@ var Fastly = module.exports = function Fastly(opts)
     this.apikey = opts.apikey;
     this.client = restify.createJSONClient({
         url: 'https://api.fastly.com',
-        headers: { 'x-fastly-key': opts.apikey }
+        headers: { 'fastly-key': opts.apikey }
     });
 };
 
