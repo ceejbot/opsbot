@@ -145,10 +145,6 @@ If you want to use promises, go ahead! [bluebird](https://github.com/petkaantono
 
 If you write a plugin for opsbot & publish it on npm, please let me know so I can link it here! It might also help to give it the keyword `opsbot` so other people can find it when they search.
 
-## TODO
-
-I'm running this against our Slack chat already. The existing plugins work perfectly well. I'm not calling it 1.0 yet because there is a small chance I might have to change the plugin API if I discover it isn't sufficient. The core features are in place, however.
-
 ## Credits
 
 Hermione the Opsbot is built on [node-restify](http://mcavage.me/node-restify/).
