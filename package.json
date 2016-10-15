@@ -31,9 +31,11 @@
     "restify": "~4.1.1"
   },
   "devDependencies": {
+    "coveralls": "~2.11.14",
     "eslint": "~3.8.0",
     "mocha": "~3.1.2",
     "must": "~0.13.2",
+    "nyc": "~8.3.1",
     "rimraf": "~2.5.4",
     "sinon": "~1.17.6"
   },
@@ -57,10 +59,10 @@
     "url": "git://github.com/ceejbot/opsbot.git"
   },
   "scripts": {
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
     "dev": "NODE_ENV=dev bin/opsbot.js",
     "lint": "eslint *.js lib/*.js plugins/*.js test/*.js",
     "start": "node bin/opsbot.js",
-    "test": "mocha -R spec -t 5000 test/*.js",
-    "travis": "npm test"
+    "test": "nyc mocha -R spec -t 5000 test/*.js",
   }
 }
