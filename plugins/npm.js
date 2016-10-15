@@ -2,6 +2,7 @@
 
 var
 	_       = require('lodash'),
+	bole    = require('bole'),
 	moment  = require('moment'),
 	numeral = require('numeral'),
 	Request = require('request')
@@ -9,7 +10,7 @@ var
 
 var NPMPlugin = module.exports = function NPMPlugin(opts)
 {
-	this.log = opts.log;
+	this.log = bole(this.name);
 };
 
 NPMPlugin.prototype.name = 'npm';
@@ -147,7 +148,7 @@ NPMPlugin.prototype.packageInfo = function packageInfo(message, pkgName)
 			'\nrepo: ' + obj.repository.url;
 
 		var reply = {
-			text:         '',
+			text:         pkgName,
 			attachments:  [struct],
 			parse:        'full',
 			unfurl_links: true

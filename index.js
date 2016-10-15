@@ -1,5 +1,6 @@
 require('dotenv').config();
 var
+	assert       = require('assert'),
 	bole         = require('bole'),
 	Message      = require('./lib/message'),
 	Responder    = require('./lib/responder'),
@@ -10,13 +11,13 @@ var
 
 var Opsbot = module.exports = function Opsbot(config)
 {
-
+	assert(process.env.SLACK_TOKEN, 'you must put a slack bot api key in the SLACK_TOKEN env var');
 	config = config || {};
 	this.adminChannel = config.admin_channel;
 	this.logger = bole('shell');
 	this.responder = new Responder(config);
 	this.botname = config.botname || 'opsbot';
-	this.pattern = new RegExp('^' + this.botname + '(:\\s+)');
+	this.pattern = new RegExp('^' + this.botname + ':?\\s+');
 
 	this.slack = new Slack.RtmClient(process.env.SLACK_TOKEN, { logLevel: 'warn' });
 	this.slack.on(RTM_EVENTS.MESSAGE, this.handleMessage.bind(this));

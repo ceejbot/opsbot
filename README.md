@@ -28,10 +28,6 @@ Here's a nice minimal package.json, requiring opsbot & a third-party plugin:
 
 To create your configuration file, start by copying [config.example.js](https://github.com/ceejbot/opsbot/blob/master/config.example.js). Edit to your taste. You can have it log to console and/or log to a file depending on how you want to keep its logs. `npm start` runs the bot in prod mode. `npm run dev` will run it with pretty-printed console output.
 
-Set up an outgoing webhook in Slack that points to `/messages` on your deployment URI. Set up a trigger word for the integration that is the botname you've configured. You can alternatively have the bot sent all traffic from a single channel.
-
-Set up an incoming webhook in Slack. Add its full URI (with token) to the 'hook' field in your config.
-
 List the plugins you want to load as fields in the `plugins` hash. The value should be an object with any required configuration for the plugin. Note that opsbot can load both built-in plugins and plugins installed via npm.
 
 Example configuration:
@@ -40,8 +36,7 @@ Example configuration:
 module.exports =
 {
     botname: 'hermione',
-    token: 'slack-integration-token-here',
-    hook: 'your-slack-incoming-webhook-uri-here',
+    admin_channel: 'id-of-channel-to-say-hi-in',
     brain: { dbpath: '/path/to/leveldb' },
     plugins:
     {
@@ -51,6 +46,9 @@ module.exports =
     }
 };
 ```
+
+Create a Slack bot and copy its API key. You must provide that key in the environment variable `SLACK_TOKEN`. One way to do that is to create a `.env` file containing the text `SLACK_TOKEN=your-token-here`. Opsbot will read that file if it's present.
+
 
 ## built-in commands
 
@@ -64,7 +62,7 @@ Plugins must be objects with three required functions and a `name` field.
 
 #### `new Plugin(opts)`
 
-The constructor takes an options object. The required content of the options is up to the plugin itself. The options object will always be present and will always have a [bole](https://github.com/rvagg/bole) logger object in the `log` field. It will also have a leveldb instance in the `brain` field; see below.
+The constructor takes an options object. The required content of the options is up to the plugin itself. The options object will have a leveldb instance in the `brain` field; see below.
 
 #### `matches(str)`
 

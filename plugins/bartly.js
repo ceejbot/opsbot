@@ -5,6 +5,7 @@
 var
 	_      = require('lodash'),
 	assert = require('assert'),
+	bole   = require('bole'),
 	bart   = require('bart'),
 	moment = require('moment')
 	;
@@ -18,11 +19,11 @@ var BARTPlugin = module.exports = function BARTPlugin(opts)
 	this.apikey = opts.apikey;
 	this.defaultStation = (opts.station || '12th').toLowerCase();
 	this.tzOffset = opts.tzOffset;
-	this.log = opts.log;
+	this.log = bole(this.name);
 };
 
 BARTPlugin.prototype.name = 'BART';
-BARTPlugin.prototype.pattern = /bart(ly)?\s+(\w+)\s?(\w+)?$/;
+BARTPlugin.prototype.pattern = /bart(ly)?\s+(\w+)\s?(\w+)?$/i;
 
 BARTPlugin.prototype.stations =
 {
