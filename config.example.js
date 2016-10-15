@@ -9,11 +9,6 @@ module.exports =
 	{
 		dbpath: './db'
 	},
-	logging:
-	{
-		console: true,
-		path: '/var/log'
-	},
 	plugins:
 	{
 		bartly:

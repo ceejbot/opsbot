@@ -2,7 +2,7 @@
 
 Hermione the npm operations [Slack](https://slack.com) chat battlestation is fully operational and is capable of demonstrating its power on a target, a military target. Name the system!
 
-[![on npm](http://img.shields.io/npm/v/opsbot.svg?style=flat)](https://www.npmjs.org/package/opsbot)  [![Tests](http://img.shields.io/travis/ceejbot/opsbot.svg?style=flat)](http://travis-ci.org/ceejbot/opsbot)  ![Coverage](http://img.shields.io/badge/coverage-77%25-yellow.svg?style=flat)   [![Dependencies](http://img.shields.io/david/ceejbot/opsbot.svg?style=flat)](https://david-dm.org/ceejbot/opsbot)
+[![on npm](http://img.shields.io/npm/v/opsbot.svg?style=flat)](https://www.npmjs.org/package/opsbot)  [![Tests](http://img.shields.io/travis/ceejbot/opsbot.svg?style=flat)](http://travis-ci.org/ceejbot/opsbot) [![Coverage Status](https://coveralls.io/repos/github/ceejbot/opsbot/badge.svg?branch=master)](https://coveralls.io/github/ceejbot/opsbot?branch=master)  [![Dependencies](http://img.shields.io/david/ceejbot/opsbot.svg?style=flat)](https://david-dm.org/ceejbot/opsbot)
 
 ## deploying
 
@@ -30,7 +30,7 @@ Here's `run.sh`:
 
 ```bash
 #!/bin/bash
-opsbot --config ./configuration.js
+opsbot configuration.js
 ```
 
 To create your configuration file, start by copying [config.example.js](https://github.com/ceejbot/opsbot/blob/master/config.example.js). Edit to your taste. You can have it log to console and/or log to a file depending on how you want to keep its logs. `npm start` runs the bot in prod mode. `npm run dev` will run it with pretty-printed console output.
@@ -50,11 +50,6 @@ module.exports =
     token: 'slack-integration-token-here',
     hook: 'your-slack-incoming-webhook-uri-here',
     brain: { dbpath: '/path/to/leveldb' },
-    logging:
-    {
-        console: false,
-        path: '/var/log'
-    },
     plugins:
     {
         pagerduty: { apikey: 'your-key-here', urlprefix: 'your-prefix' },

@@ -19,7 +19,6 @@
     "bistre": "~1.0.1",
     "bluebird": "~3.4.6",
     "bole": "~3.0.1",
-    "dashdash": "~1.14.0",
     "flip": "~1.0.0",
     "level": "~1.4.0",
     "level-sublevel": "~6.5.4",
@@ -28,7 +27,8 @@
     "moment": "~2.15.1",
     "numeral": "~1.5.3",
     "request": "~2.75.0",
-    "restify": "~4.1.1"
+    "restify": "~4.1.1",
+    "yargs": "~6.1.1"
   },
   "devDependencies": {
     "coveralls": "~2.11.14",
@@ -61,7 +61,7 @@
   },
   "scripts": {
     "coverage": "nyc report --reporter=text-lcov | coveralls",
-    "dev": "NODE_ENV=dev bin/opsbot.js",
+    "dev": "NODE_ENV=dev bin/opsbot.js config.example.js",
     "lint": "xo",
     "start": "node bin/opsbot.js",
     "test": "nyc mocha -R spec -t 5000 test/*.js"
