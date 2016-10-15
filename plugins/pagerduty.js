@@ -59,8 +59,7 @@ PagerDuty.prototype.help = function help(msg)
 		'`pagerduty resolve [id]` - resolve an incident by ID\n' +
 		'`pagerduty users` - list all users we have ids for\n' +
 		'`pagerduty userid [id]` - set your pagerduty id to *id*\n' +
-		'`pagerduty userid [slackuser] [id]` - set the pagerduty id for another slack user\n' +
-		'';
+		'`pagerduty userid [slackuser] [id]` - set the pagerduty id for another slack user\n';
 };
 
 PagerDuty.prototype.respond = function respond(message)

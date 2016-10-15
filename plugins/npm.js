@@ -68,16 +68,16 @@ NPMPlugin.prototype.downloadStats = function downloadStats(message, period)
 	});
 };
 
-NPMPlugin.prototype.packageInfo = function packageInfo(message, package)
+NPMPlugin.prototype.packageInfo = function packageInfo(message, pkgName)
 {
 	var tmp;
 	var self = this;
 
-	this.registry.get('/' + package, function(err, request, res, obj)
+	this.registry.get('/' + pkgName, function(err, request, res, obj)
 	{
 		if (err)
 		{
-			self.log.error({ error: err, package: package }, 'fetching from registry');
+			self.log.error({ error: err, package: pkgName }, 'fetching from registry');
 			message.done(err.message);
 			return;
 		}
@@ -90,7 +90,7 @@ NPMPlugin.prototype.packageInfo = function packageInfo(message, package)
 			fields:  [],
 		};
 
-		struct.fields.push({ title: 'more info', value: '<https://npmjs.org/package/' + package + '>' });
+		struct.fields.push({ title: 'more info', value: '<https://npmjs.org/package/' + pkgName + '>' });
 
 		if (obj.author)
 		{
@@ -143,7 +143,7 @@ NPMPlugin.prototype.packageInfo = function packageInfo(message, package)
 			unfurl_links: true
 		};
 
-		self.downloadsFor(package, function(ignored, downloads)
+		self.downloadsFor(pkgName, function(ignored, downloads)
 		{
 			if (downloads)
 			{
@@ -161,25 +161,25 @@ NPMPlugin.prototype.packageInfo = function packageInfo(message, package)
 	});
 };
 
-NPMPlugin.prototype.downloadsFor = function downloadsFor(package, callback)
+NPMPlugin.prototype.downloadsFor = function downloadsFor(pkgName, callback)
 {
 	var self = this;
 	var result = {};
 
-	this.downloads.get('/downloads/point/last-week/' + package, function(err, request, res, obj)
+	this.downloads.get('/downloads/point/last-week/' + pkgName, function(err, request, res, obj)
 	{
 		if (err)
 		{
-			self.log.error({error: err, package: package }, 'downloads api error');
+			self.log.error({error: err, package: pkgName }, 'downloads api error');
 			return callback(err);
 		}
 
 		result.last_week = obj.downloads;
-		self.downloads.get('/downloads/point/last-month/' + package, function(err, request, res, obj)
+		self.downloads.get('/downloads/point/last-month/' + pkgName, function(err, request, res, obj)
 		{
 			if (err)
 			{
-				self.log.error({error: err, package: package }, 'downloads api error');
+				self.log.error({error: err, package: pkgName }, 'downloads api error');
 				return callback(result);
 			}
 			result.last_month = obj.downloads;

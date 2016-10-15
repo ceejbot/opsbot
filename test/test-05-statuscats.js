@@ -49,7 +49,7 @@ describe('StatusCats', function()
 		msg.on('send', function(response)
 		{
 			response.must.be.a.string();
-			response.must.match('httpcats.herokuapp.com\/503');
+			response.must.match('httpcats.herokuapp.com/503');
 		});
 		msg.on('done', function() { done(); });
 		plugin.respond(msg);
@@ -77,7 +77,7 @@ describe('StatusCats', function()
 		msg.on('send', function(response)
 		{
 			response.must.be.an.string();
-			response.must.match('httpcats.herokuapp.com\/404');
+			response.must.match('httpcats.herokuapp.com/404');
 		});
 		msg.on('done', function() { done(); });
 		plugin.respond(msg);

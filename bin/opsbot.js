@@ -6,8 +6,7 @@ var
 	path     = require('path')
 	;
 
-var options =
-[
+var options = [
 	{ names: ['help', 'h'], type: 'bool', help: 'Print this help and exit.' },
 	{
 		names   : ['config', 'f'],
@@ -17,26 +16,30 @@ var options =
 		default :  path.resolve(__dirname, '..', 'config.js')
 	}
 ];
-var parser = dashdash.createParser({options: options});
-try { var opts = parser.parse(process.argv); } catch (e)
+var parser = dashdash.createParser({ options: options });
+try
 {
-	console.error('opsbot: error: %s', e.message);
+	var opts = parser.parse(process.argv);
+}
+catch (err)
+{
+	console.error('opsbot: error: %s', err.message);
 	process.exit(1);
 }
 
 if (opts.help)
 {
 	var help = parser.help({includeEnv: true}).trimRight();
-	console.log('usage: opsbot [OPTIONS]\n' + 'options:\n' + help);
+	console.log('usage: opsbot [OPTIONS]\noptions:\n' + help);
 	process.exit(0);
 }
 
 var Opsbot;
-try { Opsbot = require('../index'); } catch(err) {}
-if (!Opsbot)
+try
 {
-	try { Opsbot = require('opsbot'); } catch(err) {}
+	Opsbot = require('../index');
 }
+catch (err) {}
 
 if (!Opsbot)
 {
