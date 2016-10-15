@@ -3,16 +3,16 @@
 var
 	_       = require('lodash'),
 	P       = require('bluebird'),
-	restify = require('restify')
+	Request = require('request')
 	;
 
 var Fastly = module.exports = function Fastly(opts)
 {
 	this.apikey = opts.apikey;
-	this.client = restify.createJSONClient({
+	this.defaults = {
 		url: 'https://api.fastly.com',
 		headers: { 'fastly-key': opts.apikey }
-	});
+	};
 };
 
 Fastly.prototype.name = 'fastly';
@@ -114,7 +114,10 @@ Fastly.prototype.execute = function execute(uri)
 {
 	var deferred = P.defer();
 
-	this.client.get(uri, function(err, req, response, body)
+	var opts = Object.assign({}, this.defaults);
+	opts.uri += uri;
+
+	Request.get(opts, function(err, response, body)
 	{
 		if (err) return deferred.reject(err);
 		if (!response || (response.statusCode < 200) || (response.statusCode > 302))

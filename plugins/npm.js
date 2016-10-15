@@ -4,14 +4,12 @@ var
 	_       = require('lodash'),
 	moment  = require('moment'),
 	numeral = require('numeral'),
-	restify = require('restify')
+	Request = require('request')
 	;
 
 var NPMPlugin = module.exports = function NPMPlugin(opts)
 {
 	this.log = opts.log;
-	this.registry = restify.createJsonClient({ url: 'https://registry.npmjs.org' });
-	this.downloads = restify.createJsonClient({ url: 'https://api.npmjs.org/' });
 };
 
 NPMPlugin.prototype.name = 'npm';
@@ -47,7 +45,13 @@ NPMPlugin.prototype.downloadStats = function downloadStats(message, period)
 	period = period || 'last-week';
 	var self = this;
 
-	this.downloads.get('/downloads/range/' + period, function(err, req, res, obj)
+	var opts = {
+		uri: 'https://api.npmjs.org/downloads/range/' + period,
+		json: true,
+		method: 'GET',
+	};
+
+	Request(opts, function(err, res, obj)
 	{
 		if (err)
 		{
@@ -73,7 +77,13 @@ NPMPlugin.prototype.packageInfo = function packageInfo(message, pkgName)
 	var tmp;
 	var self = this;
 
-	this.registry.get('/' + pkgName, function(err, request, res, obj)
+	var opts = {
+		uri: 'https://registry.npmjs.org/' + pkgName,
+		json: true,
+		method: 'GET',
+	};
+
+	Request(opts, function(err, res, obj)
 	{
 		if (err)
 		{
@@ -166,7 +176,13 @@ NPMPlugin.prototype.downloadsFor = function downloadsFor(pkgName, callback)
 	var self = this;
 	var result = {};
 
-	this.downloads.get('/downloads/point/last-week/' + pkgName, function(err, request, res, obj)
+	var opts = {
+		uri: 'https://api.npmjs.org/downloads/point/last-week/' + pkgName,
+		json: true,
+		method: 'GET',
+	};
+
+	Request(opts, function(err, res, obj)
 	{
 		if (err)
 		{
@@ -175,7 +191,9 @@ NPMPlugin.prototype.downloadsFor = function downloadsFor(pkgName, callback)
 		}
 
 		result.last_week = obj.downloads;
-		self.downloads.get('/downloads/point/last-month/' + pkgName, function(err, request, res, obj)
+
+		opts.uri = 'https://api.npmjs.org/downloads/point/last-month/' + pkgName;
+		Request(opts, function(err, res, obj)
 		{
 			if (err)
 			{

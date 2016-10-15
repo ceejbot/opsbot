@@ -17,20 +17,13 @@ Here's a nice minimal package.json, requiring opsbot & a third-party plugin:
   "description": "a bot of destruction",
   "scripts": {
     "start": "bash run.sh",
-    "dev": "NODE_ENV=dev bash run.sh"
+    "dev": "NODE_ENV=dev bash opsbot config.js"
   },
   "dependencies": {
-    "opsbot": "~1.0.0",
+    "opsbot": "~2.0.0",
     "orlyowl": "^0.0.1"
   }
 }
-```
-
-Here's `run.sh`:
-
-```bash
-#!/bin/bash
-opsbot configuration.js
 ```
 
 To create your configuration file, start by copying [config.example.js](https://github.com/ceejbot/opsbot/blob/master/config.example.js). Edit to your taste. You can have it log to console and/or log to a file depending on how you want to keep its logs. `npm start` runs the bot in prod mode. `npm run dev` will run it with pretty-printed console output.
@@ -139,16 +132,6 @@ Please follow the code style in existing files (4 spaces to indent, Allman braci
 If you want to use promises, go ahead! [bluebird](https://github.com/petkaantonov/bluebird) is already in the package deps.
 
 If you write a plugin for opsbot & publish it on npm, please let me know so I can link it here! It might also help to give it the keyword `opsbot` so other people can find it when they search.
-
-## TODO
-
-I'm running this against our Slack chat already. The existing plugins work perfectly well. I'm not calling it 1.0 yet because there is a small chance I might have to change the plugin API if I discover it isn't sufficient. The core features are in place, however.
-
-## Credits
-
-Hermione the Opsbot is built on [node-restify](http://mcavage.me/node-restify/).
-
-My colleagues [bcoe](https://github.com/bcoe) and [othiym23](https://github.com/othiym23/) have been invaluable.
 
 ## License
 
