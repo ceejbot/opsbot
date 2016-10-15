@@ -33,11 +33,13 @@
   "devDependencies": {
     "coveralls": "~2.11.14",
     "eslint": "~3.8.0",
+    "eslint-config-ceejbot": "~1.0.2",
     "mocha": "~3.1.2",
     "must": "~0.13.2",
     "nyc": "~8.3.1",
     "rimraf": "~2.5.4",
-    "sinon": "~1.17.6"
+    "sinon": "~1.17.6",
+    "xo": "~0.17.0"
   },
   "directories": {
     "test": "test"
@@ -61,8 +63,11 @@
   "scripts": {
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "dev": "NODE_ENV=dev bin/opsbot.js",
-    "lint": "eslint *.js lib/*.js plugins/*.js test/*.js",
+    "lint": "xo",
     "start": "node bin/opsbot.js",
-    "test": "nyc mocha -R spec -t 5000 test/*.js",
+    "test": "nyc mocha -R spec -t 5000 test/*.js"
+  },
+  "xo": {
+    "extends": "eslint-config-ceejbot"
   }
 }
