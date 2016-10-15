@@ -1,56 +1,36 @@
 #!/usr/bin/env node
 
 var
-	dashdash = require('dashdash'),
-	logging  = require('../lib/logging'),
-	path     = require('path')
+	bole   = require('bole'),
+	Opsbot = require('../index'),
+	path   = require('path'),
+	yargs  = require('yargs')
 	;
 
-var options = [
-	{ names: ['help', 'h'], type: 'bool', help: 'Print this help and exit.' },
-	{
-		names   : ['config', 'f'],
-		type    : 'string',
-		help    : 'path to config file',
-		helpArg : 'filename',
-		default :  path.resolve(__dirname, '..', 'config.js')
-	}
-];
-var parser = dashdash.createParser({ options: options });
-try
-{
-	var opts = parser.parse(process.argv);
-}
-catch (err)
-{
-	console.error('opsbot: error: %s', err.message);
-	process.exit(1);
-}
+var parser = yargs
+	.usage('opsbot path/to/config/file.js')
+	.demand(1)
+	.help('help', 'show this help')
+	.epilog('put your plugins into the configuration file!')
+	;
 
-if (opts.help)
-{
-	var help = parser.help({includeEnv: true}).trimRight();
-	console.log('usage: opsbot [OPTIONS]\noptions:\n' + help);
-	process.exit(0);
-}
+var argv = yargs.argv;
 
-var Opsbot;
-try
-{
-	Opsbot = require('../index');
-}
-catch (err) {}
-
-if (!Opsbot)
-{
-	console.error('Cannot find the opsbot module to load.');
-	process.exit(1);
-}
-
-var cf = path.resolve(process.cwd(), opts.config);
+var cf = path.resolve(process.cwd(), argv._[0]);
 var config = require(cf);
-logging(config);
 config.listen = process.env.PORT || config.listen || 3000;
+
+var outputs = [];
+if (process.env.NODE_ENV === 'dev')
+{
+	var prettystream = require('bistre')({ time: true }); // pretty
+	prettystream.pipe(process.stdout);
+	outputs.push({ level: 'debug', stream: prettystream });
+}
+else
+	outputs.push({level: 'info', stream: process.stdout });
+
+bole.output(outputs);
 
 var opsbot = new Opsbot(config);
 opsbot.listen();
