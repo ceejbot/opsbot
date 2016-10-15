@@ -1,11 +1,11 @@
 var
-    _       = require('lodash'),
-    bole    = require('bole'),
-    Bot     = require('./lib/responder'),
-    Message = require('./lib/message'),
-    restify = require('restify'),
-    config  = require('./config')
-    ;
+	_       = require('lodash'),
+	bole    = require('bole'),
+	Bot     = require('./lib/responder'),
+	Message = require('./lib/message'),
+	restify = require('restify'),
+	config  = require('./config')
+	;
 
 var logger = bole('server');
 config.listen = process.env.PORT || config.listen || 3000;
@@ -29,62 +29,62 @@ logger.info('listening on ' + config.listen);
 
 function handlePing(request, response, next)
 {
-    response.send(200, 'pong');
-    next();
+	response.send(200, 'pong');
+	next();
 }
 
 function handleMessage(request, response, next)
 {
-    if (request.body.token !== config.token)
-    {
-        return next(new restify.ForbiddenError('Go away.'));
-    }
+	if (request.body.token !== config.token)
+	{
+		return next(new restify.ForbiddenError('Go away.'));
+	}
 
-    // We send a 200 immediately. Any response the bot makes will
-    // go into a post to the incoming webhook at our leisure.
-    response.send(200);
+	// We send a 200 immediately. Any response the bot makes will
+	// go into a post to the incoming webhook at our leisure.
+	response.send(200);
 
-    // We do not respond to our own messages.
-    if (request.body.user_name === 'slackbot')
-    {
-        return next();
-    }
+	// We do not respond to our own messages.
+	if (request.body.user_name === 'slackbot')
+	{
+		return next();
+	}
 
-    var channel = request.body.channel_name;
-    if (channel[0] !== '#') channel = '#' + channel;
+	var channel = request.body.channel_name;
+	if (channel[0] !== '#') channel = '#' + channel;
 
-    logger.info({
-        command: request.body.text,
-        sender:  request.body.user_name,
-        channel: channel,
-    }, 'incoming bot command');
+	logger.info({
+		command: request.body.text,
+		sender:  request.body.user_name,
+		channel: channel,
+	}, 'incoming bot command');
 
-    var opts = _.assign({}, request.body);
-    opts.channel = channel;
-    opts.username = config.botname;
+	var opts = _.assign({}, request.body);
+	opts.channel = channel;
+	opts.username = config.botname;
 
-    var message = new Message(opts);
-    message.on('reply', function(reply) { postToWebhook(reply); });
-    bot.handleMessage(message);
+	var message = new Message(opts);
+	message.on('reply', function(reply) { postToWebhook(reply); });
+	bot.handleMessage(message);
 
-    next();
+	next();
 }
 
 function logEachRequest(request, response, next)
 {
-    logger.info(request.method, request.url);
-    next();
+	logger.info(request.method, request.url);
+	next();
 }
 
 function postToWebhook(message)
 {
-    client.post('', message, function(err, req, res, obj)
-    {
-        if (err)
-            logger.error({error: err, message: message}, 'error posting to webhook');
-        else if (res.statusCode === 200)
-        {
-            logger.info('response posted to ' + message.channel);
-        }
-    });
+	client.post('', message, function(err, req, res, obj)
+	{
+		if (err)
+			logger.error({error: err, message: message}, 'error posting to webhook');
+		else if (res.statusCode === 200)
+		{
+			logger.info('response posted to ' + message.channel);
+		}
+	});
 }
