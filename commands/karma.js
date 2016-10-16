@@ -1,67 +1,34 @@
-/*
-Keep track of karma.
-
-<person>++  - adds a karma point
-<person>--  - removes a karma point
-karma: person - report
-*/
-
-/*
 var
 	_      = require('lodash'),
-	assert = require('assert')
+	Brain = require('../lib/brain')
 	;
 
-var Karma = module.exports = function Karma(opts)
+var gKarma = null;
+
+function Karma(brain)
 {
-	assert(opts.brain, 'the karma plugin requires a brain for storage');
-
-	this.brain = opts.brain;
-};
-
-Karma.prototype.name = 'karma';
-Karma.prototype.brain = null;
-Karma.prototype.pattern = /karma\s+(\w+)(\+\+|--)?|(\w+)(\+\+|--)/;
-
-Karma.prototype.matches = function matches(msg)
-{
-	return this.pattern.test(msg);
-};
-
-Karma.prototype.respond = function respond(message)
-{
-	var matches = message.text.match(this.pattern);
-
-	if (matches[1] === 'help') return message.done(this.help());
-	if (matches[1] === 'all') return this.reportAll(message);
-
-	var target = matches[1] || matches[3];
-	var action = matches[2] || matches[4];
-
-	if (!action)
-		return this.report(target, message);
-
-	if (action === '++')
-		return this.give(target, message);
-
-	if (action === '--')
-		return this.take(target, message);
-
-	message.done(this.help());
-};
+	this.brain = Brain.getGlobal().get('karma');
+}
 
 Karma.prototype.reportAll = function reportAll(message)
 {
+	if (!this.brain) return;
+
+	console.log('well we are trying')
+
 	this.brain.createReadStream()
 	.on('data', function(data)
 	{
-		message.send(reportMessage(data.key, data.value));
+		message.reply(reportMessage(data.key, data.value));
 	})
 	.on('error', function(err)
 	{
-		message.send('Error fetching karma: ' + err.message);
+		message.reply('Error fetching karma: ' + err.message);
 	})
-	.on('end', function() { message.done(); });
+	.on('end', function(err)
+	{
+		message.reply('Done!');
+	});
 };
 
 function reportMessage(target, karma)
@@ -96,8 +63,7 @@ Karma.prototype.give = function give(target, message)
 		{
 			if (err) return message.done('There was an error storing karma: ' + err.message);
 
-			message.send('Gave a karma point to ' + target + '!\n' + reportMessage(target, karma));
-			message.done();
+			message.reply('Gave a karma point to ' + target + '!\n' + reportMessage(target, karma));
 		});
 	});
 };
@@ -117,33 +83,51 @@ Karma.prototype.take = function take(target, message)
 		{
 			if (err) return message.done('There was an error storing karma: ' + err.message);
 
-			message.send('Took a karma point from ' + target + '.\n' + reportMessage(target, karma));
-			message.done();
+			message.reply('Took a karma point from ' + target + '.\n' + reportMessage(target, karma));
 		});
 	});
 };
 
-Karma.prototype.help = function help()
+function builder(yargs)
 {
-	return 'Keep track of karma.\n' +
-	'`person++`  - adds a karma point\n' +
-	'`person--`  - removes a karma point\n' +
-	'`karma [person]` - report current karma points for _person_\n' +
-	'`karma all` - report everybody\'s karma';
-};
+	yargs
+		.example('karma give harry', 'give karma to harry')
+		.example('karma take voldemort', 'take karma from He Who Must Not Be Named')
+		.example('karma show hermione', 'show how much karma hermione has (protip: a lot)')
+		.example('karma all', 'show everybody\'s karma');
 
-*/
-
-function builder(yargs) {}
+	return yargs;
+}
 
 function handler(argv)
 {
-	argv.reply('(╯°□°）╯︵ ');
+	if (!gKarma) gKarma = new Karma();
+	switch (argv.command)
+	{
+	case 'give':
+		gKarma.give(argv.person, argv);
+		break;
+
+	case 'take':
+		gKarma.take(argv.person, argv);
+		break;
+
+	case 'show':
+		gKarma.report(argv.person, argv);
+		break;
+
+	case 'all':
+		gKarma.reportAll(argv);
+		break;
+
+	default:
+		// return help for command
+	}
 }
 
 module.exports = {
-	command: 'karma give <person>',
-	describe: 'not yet implemented',
+	command: 'karma <command> [person]',
+	describe: 'keep track of karma',
 	builder: builder,
 	handler: handler
 };

@@ -6,7 +6,7 @@ function handler(argv)
 {
 	var trail = levenmorpher(argv.word1, argv.word2);
 	if (trail) argv.reply(trail.join('\n'));
-	else argv.reply(`cannot morph ${word1} to ${word2}`);
+	else argv.reply(`cannot morph ${argv.word1} to ${argv.word2}`);
 }
 
 module.exports = {

@@ -2,7 +2,6 @@ function builder(yargs) {}
 
 function handler(argv)
 {
-	console.log(argv);
 	argv.reply(`http://http.cat/${argv.code}.jpg`);
 }
 

@@ -2,6 +2,7 @@ require('dotenv').config();
 var
 	assert       = require('assert'),
 	bole         = require('bole'),
+	Brain        = require('./lib/brain'),
 	Slack        = require('@slack/client'),
 	SLACK_EVENTS = Slack.CLIENT_EVENTS.RTM,
 	RTM_EVENTS   = Slack.RTM_EVENTS
@@ -15,6 +16,12 @@ var Opsbot = module.exports = function Opsbot(config)
 	this.logger = bole('shell');
 	this.botname = config.botname || 'opsbot';
 	this.pattern = new RegExp('^' + this.botname + ':?\\s+');
+
+	if (config.brain)
+	{
+		this.brain = new Brain(config.brain);
+		Brain.setGlobal(this.brain);
+	}
 
 	this.createParser();
 
@@ -58,6 +65,7 @@ Opsbot.prototype.handleMessage = function handleMessage(message)
 		var context = Object.assign({
 			logger: this.logger,
 			config: this.config,
+			brain: this.brain,
 		},  message);
 		context.reply = makeReplier(context, self.slack);
 		var text = message.text.replace(this.pattern, '');
