@@ -5,6 +5,7 @@ var
 	bole         = require('bole'),
 	Brain        = require('./lib/brain'),
 	fs           = require('fs'),
+	path         = require('path'),
 	Slack        = require('@slack/client'),
 	tryrequire   = require('try-require'),
 	SLACK_EVENTS = Slack.CLIENT_EVENTS.RTM,
@@ -34,9 +35,12 @@ var Opsbot = module.exports = function Opsbot(config)
 
 Opsbot.prototype.createParser = function createParser()
 {
+	var self = this;
+	var commanddir = path.join(__dirname, 'commands');
+
 	const parser = require('yargs')
 		.usage(this.botname + ' [command]')
-		.commandDir('commands')
+		.commandDir(commanddir)
 		.demand(1)
 		.help()
 		.epilog('everything is exciting.');
@@ -45,17 +49,20 @@ Opsbot.prototype.createParser = function createParser()
 	var requested = Object.keys(this.config.plugins || {});
 
 	// built-ins
-	var files = fs.readdirSync('./commands');
+	var files = fs.readdirSync(commanddir);
 	var builtin = _.map(files, function(f)
 	{
 		if (f.endsWith('.js')) return f.replace(/.js$/, '');
 	});
 	var external = _.difference(requested, builtin);
 
+	var hackpath = process.cwd() + '/node_modules/';
 	_.each(external, function loadCommand(c)
 	{
 		var module = tryrequire(c);
+		if (!module) module = tryrequire(hackpath + c);
 		if (module) parser.command(module);
+		else self.logger.info(`could not load plugin ${c}`);
 	});
 
 	this.parser = parser;
@@ -113,7 +120,7 @@ function makeReplier(context, slack)
 				context.logger.info(msg);
 				if (typeof payload === 'object' && payload.attachments)
 				{
-					msg.opts = { attachments: payload.attachments };
+					msg.opts = Object.assign({}, payload);
 					slack.updateMessage(msg, function(err, msg2)
 					{
 						if (err) context.logger.error(err);
