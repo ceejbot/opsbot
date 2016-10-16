@@ -27,10 +27,9 @@ Opsbot.prototype.createParser = function createParser()
 	const parser = require('yargs')
 		.usage(this.botname + ' [command]')
 		.commandDir('commands')
+		.demand(1)
 		.help()
 		.epilog('everything is exciting.');
-
-	parser.showHelp();
 
 	this.parser = parser;
 };
@@ -57,28 +56,27 @@ Opsbot.prototype.handleMessage = function handleMessage(message)
 		self.logger.info('responding', message);
 
 		var context = Object.assign({
-			slack: this.slack,
 			logger: this.logger,
 			config: this.config,
 		},  message);
-		context.reply = makeReplier(context);
+		context.reply = makeReplier(context, self.slack);
 
 		self.parser.parse(message.text, context, function handled(err, argv, output)
 		{
-			console.log(argv);
-			console.log(output);
-			if (err) self.logger.error(err.message);
-			else self.logger.info('I think it went okay?');
+			if (err)
+				self.logger.error(err.message);
+			else if (output)
+				self.slack.sendMessage(output, message.channel);
 		});
 	}
 };
 
-function makeReplier(context)
+function makeReplier(context, slack)
 {
 	return function replier(payload)
 	{
 		var textbit = typeof payload === 'string' ? payload : payload.text;
-		context.slack.sendMessage(textbit, context.channel, function(err, msg)
+		slack.sendMessage(textbit, context.channel, function(err, msg)
 		{
 			if (err) context.logger.error(err);
 			else
@@ -87,7 +85,7 @@ function makeReplier(context)
 				if (typeof payload === 'object' && payload.attachments)
 				{
 					msg.opts = { attachments: payload.attachments };
-					context.slack.updateMessage(msg, function(err, msg2)
+					slack.updateMessage(msg, function(err, msg2)
 					{
 						if (err) context.logger.error(err);
 					});

@@ -2,7 +2,8 @@ function builder(yargs) {}
 
 function handler(argv)
 {
-	argv.reply(`http://httpcats.herokuapp.com/${argv.code}.jpg`);
+	console.log(argv);
+	argv.reply(`http://http.cat/${argv.code}.jpg`);
 }
 
 module.exports = {
