@@ -106,12 +106,13 @@ OwlPlugin.prototype.help = function help()
 ## Provided plugins
 
 __bartly:__ Real-time BART departure information by station.  
-__deployer:__ Invoke an ansible deployment playbook; requires customization for your environment.
-__flipit:__ Table flip!  
+__flip:__ Table flip!  
+__rageflip:__ Really table flip!  
 __karma:__ Give points and take them away.  
 __npm:__ Fetches package information from npm.  
-__statuscats:__ Show an [http status cat](http://httpcats.herokuapp.com).  
-__levenmorph:__ Morph one word into another using a nice short path.  
+__statuscats:__ Show an [http status cat](http://http.cat).  
+__statuscats:__ Show an [http status dog](http://httpstatusdogs.com).  
+__morph:__ Morph one word into another using a nice short path.  
 
 Each plugin has more documentation at the top of its source file.
 
