@@ -28,6 +28,7 @@
     "moment": "~2.15.1",
     "numeral": "~1.5.3",
     "request": "~2.75.0",
+    "try-require": "~1.2.1",
     "working-bart": "0.0.1",
     "yargs": "~6.1.1"
   },
@@ -64,7 +65,7 @@
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "dev": "NODE_ENV=dev bin/opsbot.js config.example.js",
     "lint": "xo",
-    "start": "node bin/opsbot.js",
+    "start": "node bin/opsbot.js config.js",
     "test": "nyc mocha -R spec -t 5000 test/*.js"
   },
   "xo": {

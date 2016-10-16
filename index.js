@@ -1,9 +1,12 @@
 require('dotenv').config();
 var
+	_            = require('lodash'),
 	assert       = require('assert'),
 	bole         = require('bole'),
 	Brain        = require('./lib/brain'),
+	fs           = require('fs'),
 	Slack        = require('@slack/client'),
+	tryrequire   = require('try-require'),
 	SLACK_EVENTS = Slack.CLIENT_EVENTS.RTM,
 	RTM_EVENTS   = Slack.RTM_EVENTS
 	;
@@ -37,6 +40,23 @@ Opsbot.prototype.createParser = function createParser()
 		.demand(1)
 		.help()
 		.epilog('everything is exciting.');
+
+	// now load additional commands
+	var requested = Object.keys(this.config.plugins);
+
+	// built-ins
+	var files = fs.readdirSync('./commands');
+	var builtin = _.map(files, function(f)
+	{
+		if (f.endsWith('.js')) return f.replace(/.js$/, '');
+	});
+	var external = _.difference(requested, builtin);
+
+	_.each(external, function loadCommand(c)
+	{
+		var module = tryrequire(c);
+		if (module) parser.command(module);
+	});
 
 	this.parser = parser;
 };

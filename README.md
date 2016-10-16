@@ -16,12 +16,12 @@ Here's a nice minimal package.json, requiring opsbot & a third-party plugin:
   "version": "0.0.0",
   "description": "a bot of destruction",
   "scripts": {
-    "start": "bash run.sh",
-    "dev": "NODE_ENV=dev bash opsbot config.js"
+    "start": "opsbot config.js",
+    "dev": "NODE_ENV=dev opsbot testconfig.js"
   },
   "dependencies": {
-    "opsbot": "~2.0.0",
-    "orlyowl": "^0.0.1"
+    "opsbot": "~3.0.0",
+    "opsbot-owl": "^0.0.1"
   }
 }
 ```
@@ -32,19 +32,21 @@ List the plugins you want to load as fields in the `plugins` hash. The value sho
 
 Example configuration:
 
-```javascript
-module.exports =
+```json
 {
-    botname: 'hermione',
-    admin_channel: 'id-of-channel-to-say-hi-in',
-    brain: { dbpath: '/path/to/leveldb' },
-    plugins:
-    {
-        pagerduty: { apikey: 'your-key-here', urlprefix: 'your-prefix' },
-        npm: {},
-        statuscats: {},
-    }
-};
+	botname: "hermione",
+	admin_channel: "your-admin-channel-id",
+	brain: { dbpath: "./db" },
+	plugins:
+	{
+		bartly:
+		{
+			apikey: "your-bart-api-key",
+			station: "powl",
+			tzOffset: 420,
+		},
+	}
+}
 ```
 
 Create a Slack bot and copy its API key. You must provide that key in the environment variable `SLACK_TOKEN`. One way to do that is to create a `.env` file containing the text `SLACK_TOKEN=your-token-here`. Opsbot will read that file if it's present.
@@ -58,58 +60,50 @@ Create a Slack bot and copy its API key. You must provide that key in the enviro
 
 ## writing plugins
 
-Plugins must be objects with three required functions and a `name` field.
+Plugs in are [yargs command modules](http://yargs.js.org/docs/#methods-commandmodule). To write a plugin, write a yargs command and then load it into opsbot via config. The handler for the yargs command has an object with all the usual yargs parsed items in it, plus a `reply()` function that can be called as many times as you wish to post messages to the Slack channel the original command came from.
 
-#### `new Plugin(opts)`
+`reply('string of text')` posts the given string of text.
 
-The constructor takes an options object. The required content of the options is up to the plugin itself. The options object will have a leveldb instance in the `brain` field; see below.
+`reply(messsageObj)` posts a message as formatted according to the [Slack message API](https://api.slack.com/methods/chat.postMessage).
 
-#### `matches(str)`
-
-A synchronous function that takes a string. Returns true if this plugin wants to handle the message, false otherwise. By convention and in order to be kind to fellow plugin authors, make this match on the prefix of incoming message. For instance `npm koa` might return information about the `koa` package on npm.
-
-#### `respond(message)`
-
-A function that takes a `Message` object. This function is expected to call `message.send()` with a string or with a fully-structured message with attachments as documented in [the Slack API](https://api.slack.com/docs/attachments). The response handler will decorate the response with any missing required fields.
-
-When you are finished sending replies to the incoming message, call `message.done()`. As a convenience, if the message requires only a single reply, you can call `message.done(reply)` to send & clean up.
-
-#### `help()`
-
-Synchronously return a string with usage information.
-
-### Example
-
-Here's a simple plugin.
+Here's very boring plugin.
 
 ```javascript
-module.exports = function OwlPlugin() { };
+function builder(yargs) {}
 
-OwlPlugin.prototype.name = 'ORLYOWL';
-
-OwlPlugin.prototype.matches = function matches(msg)
+function handler(argv)
 {
-    return msg.match(/ORLY\?/);
-};
+	argv.reply('https://cldup.com/5B3kURG8aE.jpg');
+}
 
-OwlPlugin.prototype.respond = function respond(msg)
-{
-    msg.done('YA RLY');
+module.exports = {
+	command: 'ORLY <text...>',
+	describe: 'If you say ORLY?, you get the obvious response.',
+	builder: builder,
+	handler: handler
 };
+```
 
-OwlPlugin.prototype.help = function help()
+Let's suppose we've published this on npm as `opsbot-owl`. To load this epic chatbot feature, you'd add the module as a dependency of your bot package and then mention it in the config like this:
+
+```json
 {
-    return 'If you say ORLY?, you get the obvious response.';
-};
+	botname: "wol",
+	admin_channel: "your-admin-channel-id",
+	plugins:
+	{
+		"opsbot-owl": true
+	}
+}
 ```
 
 ## Provided plugins
 
-__bartly:__ Real-time BART departure information by station.  
+__bartly:__ Real-time BART departure information by station. Requires an API key and, of all things, a timezone offset.
 __flip:__ Table flip!  
 __rageflip:__ Really table flip!  
-__karma:__ Give points and take them away.  
-__npm:__ Fetches package information from npm.  
+__karma:__ Give points and take them away. Requires a database.
+__npm:__ Fetch package information from npm.  
 __statuscats:__ Show an [http status cat](http://http.cat).  
 __statuscats:__ Show an [http status dog](http://httpstatusdogs.com).  
 __morph:__ Morph one word into another using a nice short path.  
@@ -124,7 +118,7 @@ Opsbot uses [levelup](https://github.com/rvagg/node-levelup) to provide a persis
 
 Write more plugins, add features to the existing plugins, it's all good.
 
-Please follow the code style in existing files (4 spaces to indent, Allman bracing). If you write your own plugins, I don't much care what you do. Please try to be at least as responsible as I have been about writing tests.
+Please follow the code style in existing files. `npm run lint` catches style problems as well as bugs. `xo --fix` might or might not actually fix them. If you write your own plugins, I don't much care what you do. Please try to be at least as responsible as I have been about writing tests.
 
 If you want to use promises, go ahead! [bluebird](https://github.com/petkaantonov/bluebird) is already in the package deps.
 
