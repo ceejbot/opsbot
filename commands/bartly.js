@@ -14,15 +14,13 @@ var gBart;
 
 function builder(yargs)
 {
-	yargs
+	return yargs
 		.example('bart next', 'the next trains to arrive at the default station')
 		.example('bart show 19th', 'next trains to arrive at 19th street')
 		.example('bart from 19th mlbr', 'next train to arrive at 19th going to Millbrae')
 		.example('bart stations', 'list all bart station abbreviations')
 		.usage('Name all stations using BART\'s four-letter abbreviations: <http://api.bart.gov/docs/overview/abbrev.aspx>')
 	;
-
-	return yargs;
 }
 
 function handler(argv)
@@ -40,11 +38,11 @@ function handler(argv)
 		break;
 
 	case 'show':
-		gBart.byStation(argv, argv.station.toLowerCase());;
+		gBart.byStation(argv, argv.station.toLowerCase());
 		break;
 
 	case 'from':
-		gBart.byStationDestination(message, argv.station.toLowerCase(), argv.destination.toLowerCase());
+		gBart.byStationDestination(argv, argv.station.toLowerCase(), argv.destination.toLowerCase());
 		break;
 
 	case 'stations':
@@ -78,7 +76,7 @@ function BARTPlugin(opts)
 	this.defaultStation = (opts.station || '19th').toLowerCase();
 	this.tzOffset = opts.tzOffset;
 	this.log = bole('BART');
-};
+}
 
 BARTPlugin.prototype.stations =
 {

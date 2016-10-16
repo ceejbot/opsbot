@@ -25,7 +25,7 @@ Karma.prototype.reportAll = function reportAll(message)
 	{
 		message.reply('Error fetching karma: ' + err.message);
 	})
-	.on('end', function(err)
+	.on('end', function()
 	{
 		message.reply('That is everybody I know about.');
 	});
