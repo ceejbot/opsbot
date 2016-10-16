@@ -10,7 +10,7 @@ function handler(argv)
 }
 
 module.exports = {
-	command: 'rageflip <text...>',
+	command: 'rageflip [text...]',
 	describe: '(ノಠ益ಠ)ノ彡 ┻━┻',
 	builder: builder,
 	handler: handler
