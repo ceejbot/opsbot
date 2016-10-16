@@ -17,27 +17,16 @@ Here's a nice minimal package.json, requiring opsbot & a third-party plugin:
   "description": "a bot of destruction",
   "scripts": {
     "start": "bash run.sh",
-    "dev": "NODE_ENV=dev bash run.sh"
+    "dev": "NODE_ENV=dev bash opsbot config.js"
   },
   "dependencies": {
-    "opsbot": "~1.0.0",
+    "opsbot": "~2.0.0",
     "orlyowl": "^0.0.1"
   }
 }
 ```
 
-Here's `run.sh`:
-
-```bash
-#!/bin/bash
-opsbot configuration.js
-```
-
 To create your configuration file, start by copying [config.example.js](https://github.com/ceejbot/opsbot/blob/master/config.example.js). Edit to your taste. You can have it log to console and/or log to a file depending on how you want to keep its logs. `npm start` runs the bot in prod mode. `npm run dev` will run it with pretty-printed console output.
-
-Set up an outgoing webhook in Slack that points to `/messages` on your deployment URI. Set up a trigger word for the integration that is the botname you've configured. You can alternatively have the bot sent all traffic from a single channel.
-
-Set up an incoming webhook in Slack. Add its full URI (with token) to the 'hook' field in your config.
 
 List the plugins you want to load as fields in the `plugins` hash. The value should be an object with any required configuration for the plugin. Note that opsbot can load both built-in plugins and plugins installed via npm.
 
@@ -47,8 +36,7 @@ Example configuration:
 module.exports =
 {
     botname: 'hermione',
-    token: 'slack-integration-token-here',
-    hook: 'your-slack-incoming-webhook-uri-here',
+    admin_channel: 'id-of-channel-to-say-hi-in',
     brain: { dbpath: '/path/to/leveldb' },
     plugins:
     {
@@ -58,6 +46,9 @@ module.exports =
     }
 };
 ```
+
+Create a Slack bot and copy its API key. You must provide that key in the environment variable `SLACK_TOKEN`. One way to do that is to create a `.env` file containing the text `SLACK_TOKEN=your-token-here`. Opsbot will read that file if it's present.
+
 
 ## built-in commands
 
@@ -71,7 +62,7 @@ Plugins must be objects with three required functions and a `name` field.
 
 #### `new Plugin(opts)`
 
-The constructor takes an options object. The required content of the options is up to the plugin itself. The options object will always be present and will always have a [bole](https://github.com/rvagg/bole) logger object in the `log` field. It will also have a leveldb instance in the `brain` field; see below.
+The constructor takes an options object. The required content of the options is up to the plugin itself. The options object will have a leveldb instance in the `brain` field; see below.
 
 #### `matches(str)`
 
@@ -139,16 +130,6 @@ Please follow the code style in existing files (4 spaces to indent, Allman braci
 If you want to use promises, go ahead! [bluebird](https://github.com/petkaantonov/bluebird) is already in the package deps.
 
 If you write a plugin for opsbot & publish it on npm, please let me know so I can link it here! It might also help to give it the keyword `opsbot` so other people can find it when they search.
-
-## TODO
-
-I'm running this against our Slack chat already. The existing plugins work perfectly well. I'm not calling it 1.0 yet because there is a small chance I might have to change the plugin API if I discover it isn't sufficient. The core features are in place, however.
-
-## Credits
-
-Hermione the Opsbot is built on [node-restify](http://mcavage.me/node-restify/).
-
-My colleagues [bcoe](https://github.com/bcoe) and [othiym23](https://github.com/othiym23/) have been invaluable.
 
 ## License
 

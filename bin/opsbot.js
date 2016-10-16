@@ -14,7 +14,7 @@ var parser = yargs
 	.epilog('put your plugins into the configuration file!')
 	;
 
-var argv = yargs.argv;
+var argv = parser.argv;
 
 var cf = path.resolve(process.cwd(), argv._[0]);
 var config = require(cf);
@@ -33,4 +33,4 @@ else
 bole.output(outputs);
 
 var opsbot = new Opsbot(config);
-opsbot.listen();
+opsbot.start();

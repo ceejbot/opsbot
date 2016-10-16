@@ -32,5 +32,6 @@ Levenmorph.prototype.respond = function respond(message)
 	}
 
 	var trail = levenmorpher(matches[2], matches[3]);
-	message.done(trail.join('\n'));
+	if (trail) message.done(trail.join('\n'));
+	else message.done(`cannot morph ${matches[2]} to ${matches[3]}`);
 };

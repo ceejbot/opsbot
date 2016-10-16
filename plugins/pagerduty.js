@@ -15,6 +15,7 @@
 var
 	_       = require('lodash'),
 	assert  = require('assert'),
+	bole    = require('bole'),
 	moment  = require('moment'),
 	P       = require('bluebird'),
 	request = require('request')
@@ -28,7 +29,7 @@ var PagerDuty = module.exports = function PagerDuty(opts)
 	assert(opts.brain, 'the pagerduty plugin requires a brain for storage');
 
 	this.opts = opts;
-	this.log = opts.log;
+	this.log = bole(this.name);
 	this.brain = opts.brain;
 	this.reallybase = 'https://' + opts.urlprefix + '.pagerduty.com';
 	this.baseurl = 'https://' + opts.urlprefix + '.pagerduty.com/api/v1/';
