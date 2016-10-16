@@ -16,19 +16,20 @@
   ],
   "dependencies": {
     "@slack/client": "~3.6.0",
-    "bart": "~0.0.3",
     "bistre": "~1.0.1",
     "bluebird": "~3.4.6",
     "bole": "~3.0.1",
     "dotenv": "~2.0.0",
     "flip": "~1.0.0",
     "level": "~1.4.0",
-    "level-sublevel": "~6.5.4",
+    "level-sublevel": "~6.6.1",
     "levenmorpher": "~1.2.2",
     "lodash": "~4.16.4",
     "moment": "~2.15.1",
     "numeral": "~1.5.3",
     "request": "~2.75.0",
+    "try-require": "~1.2.1",
+    "working-bart": "0.0.1",
     "yargs": "~6.1.1"
   },
   "devDependencies": {
@@ -64,7 +65,7 @@
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "dev": "NODE_ENV=dev bin/opsbot.js config.example.js",
     "lint": "xo",
-    "start": "node bin/opsbot.js",
+    "start": "node bin/opsbot.js config.js",
     "test": "nyc mocha -R spec -t 5000 test/*.js"
   },
   "xo": {
