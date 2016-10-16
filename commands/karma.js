@@ -7,14 +7,14 @@ var gKarma = null;
 
 function Karma(brain)
 {
-	this.brain = Brain.getGlobal().get('karma');
+	var db = Brain.getGlobal();
+	if (!db) return;
+	this.brain = db.get('karma');
 }
 
 Karma.prototype.reportAll = function reportAll(message)
 {
 	if (!this.brain) return;
-
-	console.log('well we are trying')
 
 	this.brain.createReadStream()
 	.on('data', function(data)
@@ -27,7 +27,7 @@ Karma.prototype.reportAll = function reportAll(message)
 	})
 	.on('end', function(err)
 	{
-		message.reply('Done!');
+		message.reply('That is everybody I know about.');
 	});
 };
 
@@ -121,6 +121,7 @@ function handler(argv)
 		break;
 
 	default:
+		argv.reply('Did you understand that last announcement?');
 		// return help for command
 	}
 }

@@ -6,24 +6,79 @@ var
 	_      = require('lodash'),
 	assert = require('assert'),
 	bole   = require('bole'),
-	bart   = require('bart'),
+	bart   = require('working-bart'),
 	moment = require('moment')
 	;
 
-var BARTPlugin = module.exports = function BARTPlugin(opts)
+var gBart;
+
+function builder(yargs)
 {
+	yargs
+		.example('bart next', 'the next trains to arrive at the default station')
+		.example('bart show 19th', 'next trains to arrive at 19th street')
+		.example('bart from 19th mlbr', 'next train to arrive at 19th going to Millbrae')
+		.example('bart stations', 'list all bart station abbreviations')
+		.usage('Name all stations using BART\'s four-letter abbreviations: <http://api.bart.gov/docs/overview/abbrev.aspx>')
+	;
+
+	return yargs;
+}
+
+function handler(argv)
+{
+	if (!gBart)
+		gBart = new BARTPlugin(argv.config.plugins.bartly);
+
+	console.log(Object.keys(argv));
+	console.log(argv.command);
+
+	switch (argv.command)
+	{
+	case 'next':
+		gBart.byStation(argv, gBart.defaultStation);
+		break;
+
+	case 'show':
+		gBart.byStation(argv, argv.station.toLowerCase());;
+		break;
+
+	case 'from':
+		gBart.byStationDestination(message, argv.station.toLowerCase(), argv.destination.toLowerCase());
+		break;
+
+	case 'stations':
+		argv.reply(gBart.emitStations());
+		break;
+
+	default:
+		argv.reply('Did you understand that last announcement?');
+		break;
+	}
+}
+
+module.exports = {
+	command: 'bart <command> [station] [destination]',
+	aliases: ['BART', 'Bart'],
+	describe: 'answer questions about BART trains',
+	builder: builder,
+	handler: handler
+};
+
+// ----------------------------------------------------------------------
+
+function BARTPlugin(opts)
+{
+	console.log(opts);
 	assert(opts && _.isObject(opts), 'you must pass an options object');
 	assert(opts.apikey && _.isString(opts.apikey), 'you must pass an `apikey` option');
 	assert(opts.tzOffset && _.isNumber(opts.tzOffset), 'you must pass a `tzOffset` option');
 
 	this.apikey = opts.apikey;
-	this.defaultStation = (opts.station || '12th').toLowerCase();
+	this.defaultStation = (opts.station || '19th').toLowerCase();
 	this.tzOffset = opts.tzOffset;
-	this.log = bole(this.name);
+	this.log = bole('BART');
 };
-
-BARTPlugin.prototype.name = 'BART';
-BARTPlugin.prototype.pattern = /bart(ly)?\s+(\w+)\s?(\w+)?$/i;
 
 BARTPlugin.prototype.stations =
 {
@@ -73,39 +128,6 @@ BARTPlugin.prototype.stations =
 	woak:   'West Oakland',
 };
 
-BARTPlugin.prototype.matches = function matches(msg)
-{
-	return this.pattern.test(msg);
-};
-
-BARTPlugin.prototype.respond = function respond(message)
-{
-	var msg = message.text;
-	var matches = msg.match(this.pattern);
-
-	if (matches[2] === 'help')
-		return message.done(this.help());
-
-	if (matches[2] === 'next')
-		return this.byStation(message, this.defaultStation);
-
-	if (!matches[3])
-		return this.byStation(message, matches[2].toLowerCase());
-
-	this.byStationDestination(message, matches[2].toLowerCase(), matches[3].toUpperCase());
-};
-
-BARTPlugin.prototype.help = function help(msg)
-{
-	return 'answer questions about BART trains\n' +
-		'`bart next` - the next trains to arrive at the default station\n' +
-		'`bart [station]` - next trains to arrive at the named station\n' +
-		'`bart [station] [destination]` - next trains to arrive at _station_ going to _dest_\n' +
-		'Name all stations using BART\'s four-letter abbreviations: <http://api.bart.gov/docs/overview/abbrev.aspx>\n' +
-		'\nDefault station is `' + this.defaultStation + '`.'
-		;
-};
-
 BARTPlugin.prototype.validStation = function validStation(station)
 {
 	return (Object.keys(this.stations).indexOf(station) > -1);
@@ -125,9 +147,8 @@ BARTPlugin.prototype.byStation = function byStation(message, station)
 {
 	if (!this.validStation(station))
 	{
-		message.send(station + ' is not a valid BART station abbreviation.');
-		message.send(this.emitStations());
-		message.done();
+		message.reply(station + ' is not a valid BART station abbreviation.');
+		message.reply(this.emitStations());
 		return;
 	}
 
@@ -145,8 +166,8 @@ BARTPlugin.prototype.byStation = function byStation(message, station)
 
 		if (result.length > 0)
 		{
-			message.done('Trains leaving ' + self.stations[station] + ':\n' + result.join('\n'));
-			client.removeListener(station, respond);
+			message.reply('Trains leaving ' + self.stations[station] + ':\n' + result.join('\n'));
+			client.emitter.removeListener(station, respond);
 		}
 	}
 
@@ -166,7 +187,7 @@ BARTPlugin.prototype.byStationDestination = function byStationDestination(messag
 
 		if (filtered.length < 1)
 		{
-			message.done('No trains found. You must pick an end-of-line station as a destination.');
+			message.reply('No trains found. You must pick an end-of-line station as a destination.');
 		}
 		else
 		{
@@ -175,10 +196,10 @@ BARTPlugin.prototype.byStationDestination = function byStationDestination(messag
 				var dep = moment().zone(self.tzOffset).add('m', e.minutes);
 				return e.minutes + ' minutes @ ' + dep.format('h:mm a');
 			});
-			message.done('Trains leaving ' + self.stations[station] + ' for ' + fullDest + ':\n' + result.join('\n'));
+			message.reply('Trains leaving ' + self.stations[station] + ' for ' + fullDest + ':\n' + result.join('\n'));
 		}
 
-		client.removeListener(station, respond);
+		client.emitter.removeListener(station, respond);
 	}
 
 	client.on(station, respond);
