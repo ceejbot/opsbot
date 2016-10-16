@@ -90,6 +90,7 @@ Karma.prototype.take = function take(target, message)
 function builder(yargs)
 {
 	yargs
+		.usage('karma [command] <person>')
 		.example('karma give harry', 'give karma to harry')
 		.example('karma take voldemort', 'take karma from He Who Must Not Be Named')
 		.example('karma show hermione', 'show how much karma hermione has (protip: a lot)')
