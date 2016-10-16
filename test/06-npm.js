@@ -3,8 +3,8 @@
 
 var
 	demand = require('must'),
-	npm = require('../commands/npm'),
-	sinon  = require('sinon')
+	npm = require('../commands/npm')
+	// sinon  = require('sinon')
 	;
 
 describe('npm', function()
