@@ -13,6 +13,8 @@ describe('rtm-client', function()
 		admin_channel: 'foo'
 	};
 
+	process.env.SLACK_TOKEN = 'fake';
+
 	describe('constructor', function()
 	{
 		it('can be constructed', function()
