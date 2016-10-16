@@ -107,11 +107,9 @@ OwlPlugin.prototype.help = function help()
 
 __bartly:__ Real-time BART departure information by station.  
 __deployer:__ Invoke an ansible deployment playbook; requires customization for your environment.
-__fastly:__ Fetches some current stats from the named Fastly service.  
 __flipit:__ Table flip!  
 __karma:__ Give points and take them away.  
 __npm:__ Fetches package information from npm.  
-__pagerduty:__ Show who's on call now & who's up in the next few days; list open incidents; ack & resolve incidents.  
 __statuscats:__ Show an [http status cat](http://httpcats.herokuapp.com).  
 __levenmorph:__ Morph one word into another using a nice short path.  
 
