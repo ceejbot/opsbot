@@ -41,11 +41,11 @@ Karma.prototype.report = function report(target, message)
 	this.brain.get(target, function(err, karma)
 	{
 		if (err && (err.name === 'NotFoundError'))
-			return message.done(target + ' has no karma at all.');
+			return message.reply(target + ' has no karma at all.');
 
-		if (err) return message.done('There was an error fetching karma: ' + err.message);
+		if (err) return message.reply('There was an error fetching karma: ' + err.message);
 
-		message.done(reportMessage(target, karma));
+		message.reply(reportMessage(target, karma));
 	});
 };
 
@@ -61,7 +61,7 @@ Karma.prototype.give = function give(target, message)
 
 		self.brain.put(target, karma, function(err)
 		{
-			if (err) return message.done('There was an error storing karma: ' + err.message);
+			if (err) return message.reply('There was an error storing karma: ' + err.message);
 
 			message.reply('Gave a karma point to ' + target + '!\n' + reportMessage(target, karma));
 		});
@@ -81,7 +81,7 @@ Karma.prototype.take = function take(target, message)
 
 		self.brain.put(target, karma, function(err)
 		{
-			if (err) return message.done('There was an error storing karma: ' + err.message);
+			if (err) return message.reply('There was an error storing karma: ' + err.message);
 
 			message.reply('Took a karma point from ' + target + '.\n' + reportMessage(target, karma));
 		});
@@ -130,5 +130,7 @@ module.exports = {
 	command: 'karma <command> [person]',
 	describe: 'keep track of karma',
 	builder: builder,
-	handler: handler
+	handler: handler,
+	Karma: Karma, // for testing
+	global: function() { return gKarma; } // for testing
 };
