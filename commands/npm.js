@@ -8,43 +8,45 @@ var
 	Request = require('request')
 	;
 
-var NPMPlugin = module.exports = function NPMPlugin(opts)
+var logger = bole('npm');
+
+function builder(yargs)
 {
-	this.log = bole(this.name);
+	return yargs
+		.example('npm view opsbot', 'view the opsbot package')
+		.example('npm downloads', 'download numbers for the last week')
+		.example('npm downloads [period]', 'downloads for whatever the specified period is');
+}
+
+function handler(argv)
+{
+	switch (argv.command)
+	{
+	case 'downloads':
+		downloadStats(argv, argv.package);
+		break;
+
+	case 'view':
+		if (argv.package) packageInfo(argv, argv.package);
+		break;
+
+	default:
+		argv.reply('I wish I knew how to show help.');
+	}
+}
+
+module.exports = {
+	command: 'npm <command> [package]',
+	describe: 'get information about packages',
+	builder: builder,
+	handler: handler
 };
 
-NPMPlugin.prototype.name = 'npm';
-NPMPlugin.prototype.pattern = /^npm\s+(\S+)\s?(.*)?$/;
-NPMPlugin.prototype.log = null;
-NPMPlugin.prototype.registry = null;
-NPMPlugin.prototype.downloads = null;
+// ----------------------------------------------------------------------
 
-NPMPlugin.prototype.matches = function matches(msg)
-{
-	return this.pattern.test(msg);
-};
-
-NPMPlugin.prototype.respond = function respond(message)
-{
-	var msg = message.text || '';
-	var matches = msg.trim().match(this.pattern);
-
-	if (!matches)
-		return message.done(this.help());
-
-	if (matches[1] === 'downloads')
-		return this.downloadStats(message, matches[2]);
-
-	if (!matches[2])
-		return this.packageInfo(message, matches[1]);
-
-	message.done(this.help());
-};
-
-NPMPlugin.prototype.downloadStats = function downloadStats(message, period)
+function downloadStats(message, period)
 {
 	period = period || 'last-week';
-	var self = this;
 
 	var opts = {
 		uri: 'https://api.npmjs.org/downloads/range/' + period,
@@ -56,8 +58,8 @@ NPMPlugin.prototype.downloadStats = function downloadStats(message, period)
 	{
 		if (err)
 		{
-			self.log.error({ error: err, period: period }, 'fetching download stats');
-			message.done('Problem with download time period ' + period + ': ' + err.message);
+			logger.error({ error: err, period: period }, 'fetching download stats');
+			message.reply('Problem with download time period ' + period + ': ' + err.message);
 			return;
 		}
 
@@ -69,14 +71,13 @@ NPMPlugin.prototype.downloadStats = function downloadStats(message, period)
 		});
 		reply.unshift('*npm downloads by day:*');
 		reply.push('\n*Total:* ' + numeral(total).format('0,0'));
-		message.done(reply.join('\n'));
+		message.reply(reply.join('\n'));
 	});
-};
+}
 
-NPMPlugin.prototype.packageInfo = function packageInfo(message, pkgName)
+function packageInfo(message, pkgName)
 {
 	var tmp;
-	var self = this;
 
 	var opts = {
 		uri: 'https://registry.npmjs.org/' + pkgName,
@@ -88,8 +89,8 @@ NPMPlugin.prototype.packageInfo = function packageInfo(message, pkgName)
 	{
 		if (err)
 		{
-			self.log.error({ error: err, package: pkgName }, 'fetching from registry');
-			message.done(err.message);
+			logger.error({ error: err, package: pkgName }, 'fetching from registry');
+			message.reply(err.message);
 			return;
 		}
 
@@ -154,7 +155,7 @@ NPMPlugin.prototype.packageInfo = function packageInfo(message, pkgName)
 			unfurl_links: true
 		};
 
-		self.downloadsFor(pkgName, function(ignored, downloads)
+		downloadsFor(pkgName, function(ignored, downloads)
 		{
 			if (downloads)
 			{
@@ -167,14 +168,13 @@ NPMPlugin.prototype.packageInfo = function packageInfo(message, pkgName)
 					short: true
 				});
 			}
-			message.done(reply);
+			message.reply(reply);
 		});
 	});
-};
+}
 
-NPMPlugin.prototype.downloadsFor = function downloadsFor(pkgName, callback)
+function downloadsFor(pkgName, callback)
 {
-	var self = this;
 	var result = {};
 
 	var opts = {
@@ -187,7 +187,7 @@ NPMPlugin.prototype.downloadsFor = function downloadsFor(pkgName, callback)
 	{
 		if (err)
 		{
-			self.log.error({error: err, package: pkgName }, 'downloads api error');
+			logger.error({error: err, package: pkgName }, 'downloads api error');
 			return callback(err);
 		}
 
@@ -198,20 +198,11 @@ NPMPlugin.prototype.downloadsFor = function downloadsFor(pkgName, callback)
 		{
 			if (err)
 			{
-				self.log.error({error: err, package: pkgName }, 'downloads api error');
+				logger.error({error: err, package: pkgName }, 'downloads api error');
 				return callback(result);
 			}
 			result.last_month = obj.downloads;
 			callback(null, result);
 		});
 	});
-};
-
-NPMPlugin.prototype.help = function help(msg)
-{
-	return 'get information about packages\n' +
-	'`npm [package]` - package info & download stats\n' +
-	'`npm downloads` - download numbers for the last week\n' +
-	'`npm downloads [period]` - download numbers for any valid downloads API period'
-	;
-};
+}
