@@ -42,7 +42,7 @@ Opsbot.prototype.createParser = function createParser()
 		.epilog('everything is exciting.');
 
 	// now load additional commands
-	var requested = Object.keys(this.config.plugins);
+	var requested = Object.keys(this.config.plugins || {});
 
 	// built-ins
 	var files = fs.readdirSync('./commands');

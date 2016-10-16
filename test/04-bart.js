@@ -10,7 +10,7 @@ var
 var mockConfig =  {
 	plugins: { bartly:
 	{
-		apikey: 'deadbeef',
+		apikey: 'MW9S-E7SL-26DU-VV8V', // This is the PUBLIC bart api key
 		tzOffset: 420,
 		station: '19th',
 	}
@@ -31,7 +31,7 @@ describe('bartly', function()
 		bartly.handler.must.be.a.function();
 	});
 
-	it('stations replies with the stations list', function()
+	it('stations() replies with the stations list', function()
 	{
 		var argv = {
 			command: 'stations',
@@ -44,5 +44,36 @@ describe('bartly', function()
 		var response = argv.reply.lastCall.args[0];
 		response.must.match(/^BART station abbreviations/);
 		response.must.match(/woak: West Oakland/);
+	});
+
+	it('byStation() responds with help if an invalid station is requested', function()
+	{
+		var argv = {
+			command: 'show',
+			station: 'invalid',
+			reply: sinon.spy(),
+			config: mockConfig,
+		};
+
+		bartly.handler(argv);
+		argv.reply.called.must.be.true();
+		var response = argv.reply.firstCall.args[0];
+		response.must.match(/^invalid is not a valid BART station abbreviation/);
+	});
+
+	it('byStationDestination() responds with help if an invalid station is requested', function()
+	{
+		var argv = {
+			command: 'show',
+			station: 'invalid',
+			destination: 'mlbr',
+			reply: sinon.spy(),
+			config: mockConfig,
+		};
+
+		bartly.handler(argv);
+		argv.reply.called.must.be.true();
+		var response = argv.reply.firstCall.args[0];
+		response.must.match(/^invalid is not a valid BART station abbreviation/);
 	});
 });
