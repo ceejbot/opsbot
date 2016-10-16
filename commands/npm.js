@@ -13,40 +13,33 @@ var logger = bole('npm');
 function builder(yargs)
 {
 	return yargs
+		.command('view <package>', 'see package info', noop, packageInfo)
+		.command('downloads [period]', 'see downloads for the given time period', noop, downloadStats)
 		.example('npm view opsbot', 'view the opsbot package')
 		.example('npm downloads', 'download numbers for the last week')
-		.example('npm downloads [period]', 'downloads for whatever the specified period is');
+		.example('npm downloads last-month', 'downloads for whatever the specified period is');
 }
+
+function noop() { }
 
 function handler(argv)
 {
-	switch (argv.command)
-	{
-	case 'downloads':
-		downloadStats(argv, argv.package);
-		break;
-
-	case 'view':
-		if (argv.package) packageInfo(argv, argv.package);
-		break;
-
-	default:
-		argv.reply('I wish I knew how to show help.');
-	}
 }
 
 module.exports = {
-	command: 'npm <command> [package]',
+	command: 'npm <command>',
 	describe: 'get information about packages',
 	builder: builder,
-	handler: handler
+	handler: handler,
+	downloadStats: downloadStats, // for testing
+	packageInfo: packageInfo, // for testing
 };
 
 // ----------------------------------------------------------------------
 
-function downloadStats(message, period)
+function downloadStats(message)
 {
-	period = period || 'last-week';
+	var period = message.period || 'last-week';
 
 	var opts = {
 		uri: 'https://api.npmjs.org/downloads/range/' + period,
@@ -75,8 +68,9 @@ function downloadStats(message, period)
 	});
 }
 
-function packageInfo(message, pkgName)
+function packageInfo(message)
 {
+	var pkgName = message.package;
 	var tmp;
 
 	var opts = {
@@ -128,7 +122,13 @@ function packageInfo(message, pkgName)
 		}
 
 		if (obj.homepage) struct.fields.push({ title: 'homepage', value: '<' + obj.homepage + '>', short: true });
-		if (obj.repository.url) struct.fields.push({ title: 'repo', value: '<' + obj.repository.url + '>', short: true });
+		var repo;
+		if (obj.repository && obj.repository.url)
+		{
+			repo = obj.repository.url;
+			struct.fields.push({ title: 'repo', value: '<' + obj.repository.url + '>', short: true });
+		}
+
 		struct.fields.push({ title: 'version', value: latestrev, short: true });
 
 		var updated = moment(obj.time[latestrev]);
@@ -145,8 +145,9 @@ function packageInfo(message, pkgName)
 
 		struct.fallback = struct.pretext +
 			'\n' + struct.text +
-			'\nversion: ' + latestrev +
-			'\nrepo: ' + obj.repository.url;
+			'\nversion: ' + latestrev;
+		if (repo)
+			struct.fallback += '\nrepo: ' + repo;
 
 		var reply = {
 			text:         pkgName,

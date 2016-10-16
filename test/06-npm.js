@@ -3,8 +3,8 @@
 
 var
 	demand = require('must'),
-	npm = require('../commands/npm')
-	// sinon  = require('sinon')
+	npm = require('../commands/npm'),
+	sinon  = require('sinon')
 	;
 
 describe('npm', function()
@@ -22,17 +22,66 @@ describe('npm', function()
 		npm.handler.must.be.a.function();
 	});
 
-	it('has tests', function()
+	it('fetches package info', function(done)
 	{
-		/*
+		this.timeout(10000);
+
+		function handleReply(reply)
+		{
+			reply.must.be.an.object();
+			reply.must.have.property('text');
+			reply.text.must.equal('tiny-tarball');
+			done();
+		}
+
 		var argv = {
-			text: ['cat'],
-			reply: sinon.spy(),
+			command: 'view',
+			package: 'tiny-tarball',
+			reply: handleReply,
 		};
 
-		flip.handler(argv);
-		argv.reply.called.must.be.true();
-		argv.reply.calledWith('(╯°□°）╯︵ ʇɐɔ').must.be.true();
-		*/
+		npm.packageInfo(argv);
+	});
+
+	it('fetches download stats', function(done)
+	{
+		this.timeout(10000);
+
+		function handleReply(reply)
+		{
+			reply.must.be.a.string();
+			reply.must.match(/^\*npm downloads by day:\*/);
+			reply.split('\n').length.must.be.above(10);
+
+			done();
+		}
+
+		var argv = {
+			command: 'downloads',
+			period: 'last-month',
+			reply: handleReply,
+		};
+
+		npm.downloadStats(argv);
+	});
+
+	it('falls back to week if no period given', function(done)
+	{
+		this.timeout(10000);
+
+		function handleReply(reply)
+		{
+			reply.must.be.a.string();
+			reply.must.match(/^\*npm downloads by day:\*/);
+			reply.split('\n').length.must.equal(10);
+			done();
+		}
+
+		var argv = {
+			command: 'downloads',
+			reply: handleReply,
+		};
+
+		npm.downloadStats(argv);
 	});
 });

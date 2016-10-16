@@ -68,7 +68,6 @@ Karma.prototype.give = function give(target, message)
 	});
 };
 
-// TODO refactor common code out
 Karma.prototype.take = function take(target, message)
 {
 	var self = this;
