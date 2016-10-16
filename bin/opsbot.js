@@ -3,22 +3,17 @@
 var
 	bole   = require('bole'),
 	Opsbot = require('../index'),
-	path   = require('path'),
-	yargs  = require('yargs')
+	path   = require('path')
 	;
 
-var parser = yargs
-	.usage('opsbot path/to/config/file.js')
-	.demand(1)
-	.help('help', 'show this help')
-	.epilog('put your plugins into the configuration file!')
-	;
+if (process.argv.length < 3)
+{
+	console.error('usage: opsbot path/to/config/file.js');
+	process.exit(1);
+}
 
-var argv = parser.argv;
-
-var cf = path.resolve(process.cwd(), argv._[0]);
+var cf = path.resolve(process.cwd(), process.argv[2]);
 var config = require(cf);
-config.listen = process.env.PORT || config.listen || 3000;
 
 var outputs = [];
 if (process.env.NODE_ENV === 'dev')
