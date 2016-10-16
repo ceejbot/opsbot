@@ -60,8 +60,9 @@ Opsbot.prototype.handleMessage = function handleMessage(message)
 			config: this.config,
 		},  message);
 		context.reply = makeReplier(context, self.slack);
+		var text = message.text.replace(this.pattern, '');
 
-		self.parser.parse(message.text, context, function handled(err, argv, output)
+		self.parser.parse(text, context, function handled(err, argv, output)
 		{
 			if (err)
 				self.logger.error(err.message);
