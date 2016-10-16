@@ -28,9 +28,6 @@ function handler(argv)
 	if (!gBart)
 		gBart = new BARTPlugin(argv.config.plugins.bartly);
 
-	console.log(Object.keys(argv));
-	console.log(argv.command);
-
 	switch (argv.command)
 	{
 	case 'next':
@@ -67,7 +64,6 @@ module.exports = {
 
 function BARTPlugin(opts)
 {
-	console.log(opts);
 	assert(opts && _.isObject(opts), 'you must pass an options object');
 	assert(opts.apikey && _.isString(opts.apikey), 'you must pass an `apikey` option');
 	assert(opts.tzOffset && _.isNumber(opts.tzOffset), 'you must pass a `tzOffset` option');
