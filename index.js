@@ -43,6 +43,7 @@ Opsbot.prototype.createParser = function createParser()
 		.commandDir(commanddir)
 		.demand(1)
 		.help()
+		.wrap(300)
 		.epilog('everything is exciting.');
 
 	// now load additional commands
