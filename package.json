@@ -1,7 +1,7 @@
 {
   "name": "opsbot",
   "description": "hermione the npm operations chat bot",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "author": "C J Silverio <ceejceej@gmail.com>",
   "bin": {
     "opsbot": "bin/opsbot.js"
