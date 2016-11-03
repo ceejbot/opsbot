@@ -27,7 +27,7 @@
     "lodash": "~4.16.4",
     "moment": "~2.15.1",
     "numeral": "~1.5.3",
-    "request": "~2.75.0",
+    "request": "~2.78.0",
     "try-require": "~1.2.1",
     "working-bart": "0.0.1",
     "yargs": "~6.3.0"
