@@ -24,7 +24,7 @@
     "level": "~1.5.0",
     "level-sublevel": "~6.6.1",
     "levenmorpher": "~1.2.2",
-    "lodash": "~4.16.4",
+    "lodash": "~4.17.1",
     "moment": "~2.15.1",
     "numeral": "~1.5.3",
     "request": "~2.75.0",
