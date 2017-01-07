@@ -19,7 +19,7 @@
     "bistre": "~1.0.1",
     "bluebird": "~3.4.6",
     "bole": "~3.0.1",
-    "dotenv": "~2.0.0",
+    "dotenv": "~3.0.0",
     "flip": "~1.0.0",
     "level": "~1.5.0",
     "level-sublevel": "~6.6.1",
