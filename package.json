@@ -17,7 +17,7 @@
   "dependencies": {
     "@slack/client": "~3.6.0",
     "bistre": "~1.0.1",
-    "bluebird": "~3.4.6",
+    "bluebird": "~3.5.0",
     "bole": "~3.0.1",
     "dotenv": "~2.0.0",
     "flip": "~1.0.0",
