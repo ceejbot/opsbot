@@ -15,32 +15,32 @@
     "Benjamin Coe <ben@npmjs.com>"
   ],
   "dependencies": {
-    "@slack/client": "~3.6.0",
+    "@slack/client": "~3.9.0",
     "bistre": "~1.0.1",
-    "bluebird": "~3.4.6",
+    "bluebird": "~3.5.0",
     "bole": "~3.0.1",
-    "dotenv": "~2.0.0",
+    "dotenv": "~4.0.0",
     "flip": "~1.0.0",
-    "level": "~1.5.0",
+    "level": "~1.6.0",
     "level-sublevel": "~6.6.1",
     "levenmorpher": "~1.2.2",
-    "lodash": "~4.16.4",
-    "moment": "~2.15.1",
-    "numeral": "~1.5.3",
-    "request": "~2.75.0",
+    "lodash": "~4.17.4",
+    "moment": "~2.18.1",
+    "numeral": "~2.0.4",
+    "request": "~2.81.0",
     "try-require": "~1.2.1",
     "working-bart": "0.0.1",
-    "yargs": "~6.3.0"
+    "yargs": "~7.0.2"
   },
   "devDependencies": {
-    "coveralls": "~2.11.14",
-    "eslint-config-ceejbot": "~1.0.3",
-    "mocha": "~3.1.2",
-    "must": "~0.13.2",
-    "nyc": "~8.3.1",
-    "rimraf": "~2.5.4",
-    "sinon": "~1.17.6",
-    "xo": "~0.17.0"
+    "coveralls": "~2.12.0",
+    "eslint-config-ceejbot": "~1.0.4",
+    "mocha": "~3.2.0",
+    "must": "~0.13.4",
+    "nyc": "~10.1.2",
+    "rimraf": "~2.6.1",
+    "sinon": "~2.1.0",
+    "xo": "~0.18.0"
   },
   "directories": {
     "test": "test"
