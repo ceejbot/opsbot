@@ -30,7 +30,7 @@
     "request": "~2.81.0",
     "try-require": "~1.2.1",
     "working-bart": "0.0.1",
-    "yargs": "~7.0.2"
+    "yargs": "~7.1.0"
   },
   "devDependencies": {
     "coveralls": "~2.12.0",
