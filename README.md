@@ -1,5 +1,7 @@
 # opsbot
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/ceejbot/opsbot.svg)](https://greenkeeper.io/)
+
 Hermione the npm operations [Slack](https://slack.com) chat battlestation is fully operational and is capable of demonstrating its power on a target, a military target. Name the system!
 
 [![on npm](http://img.shields.io/npm/v/opsbot.svg?style=flat)](https://www.npmjs.org/package/opsbot)  [![Tests](http://img.shields.io/travis/ceejbot/opsbot.svg?style=flat)](http://travis-ci.org/ceejbot/opsbot) [![Coverage Status](https://coveralls.io/repos/github/ceejbot/opsbot/badge.svg?branch=master)](https://coveralls.io/github/ceejbot/opsbot?branch=master)  [![Dependencies](http://img.shields.io/david/ceejbot/opsbot.svg?style=flat)](https://david-dm.org/ceejbot/opsbot)
