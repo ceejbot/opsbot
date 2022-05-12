@@ -105,7 +105,7 @@ __rageflip:__ Really table flip!
 __karma:__ Give points and take them away. Requires a database.
 __npm:__ Fetch package information from npm.  
 __statuscats:__ Show an [http status cat](http://http.cat).  
-__statuscats:__ Show an [http status dog](http://httpstatusdogs.com).  
+__statusdogs:__ Show an [http status dog](http://http.dog).  
 __morph:__ Morph one word into another using a nice short path.  
 
 Each plugin has more documentation at the top of its source file.
