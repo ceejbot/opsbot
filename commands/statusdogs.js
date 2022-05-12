@@ -2,7 +2,7 @@ function builder(yargs) {}
 
 function handler(argv)
 {
-	argv.reply(`https://httpstatusdogs.com/${argv.code}`);
+	argv.reply(`https://http.dog/${argv.code}`);
 }
 
 module.exports = {
